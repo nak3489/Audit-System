@@ -103,46 +103,53 @@
 
     <!-- MAIN APP LAYOUT -->
     <div id="main-layout" class="hidden flex h-screen overflow-hidden bg-slate-100">
-        <!-- SIDEBAR -->
-        <aside class="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col transition-all duration-300 z-20 shadow-2xl">
-            <div class="h-16 flex items-center px-6 bg-slate-950 border-b border-slate-800">
-                <i class="fa-solid fa-shield-halved text-primary text-2xl mr-3"></i>
-                <span class="font-bold text-lg tracking-wide">Audit Pro</span>
+        
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
+        <!-- SIDEBAR (Updated for Responsive) -->
+        <aside id="appSidebar" class="w-64 bg-slate-900 text-white flex-shrink-0 flex flex-col transition-transform duration-300 z-30 shadow-2xl fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0">
+            <div class="h-16 flex items-center px-6 bg-slate-950 border-b border-slate-800 justify-between md:justify-start">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-shield-halved text-primary text-2xl mr-3"></i>
+                    <span class="font-bold text-lg tracking-wide">Audit Pro</span>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div class="p-6 border-b border-slate-800 bg-slate-900/50">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center font-bold text-white shadow-lg border border-white/10">
                         <span id="sidebarAvatar">?</span>
                     </div>
-                    <div>
+                    <div class="overflow-hidden">
                         <p id="sidebarName" class="text-sm font-semibold truncate max-w-[120px]">User</p>
                         <p id="sidebarRole" class="text-xs text-slate-400 uppercase tracking-wider">-</p>
                     </div>
                 </div>
             </div>
             <nav class="flex-1 overflow-y-auto py-4 space-y-1 px-3">
-                <a href="#" onclick="switchView('view-dashboard')" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-dashboard'); toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-chart-pie w-6 group-hover:text-primary transition-colors"></i>
                     <span class="font-medium">Dashboard</span>
                 </a>
-                <a href="#" onclick="switchView('view-audit')" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-audit'); toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-clipboard-check w-6 group-hover:text-success transition-colors"></i>
                     <span class="font-medium">เริ่มตรวจสาขา</span>
                 </a>
-                <a href="#" onclick="switchView('view-history')" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-history'); toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-clock-rotate-left w-6 group-hover:text-warning transition-colors"></i>
                     <span class="font-medium">ประวัติการตรวจ</span>
                 </a>
                 <div class="pt-4 pb-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-widest admin-only hidden">Administrator</div>
-                <a href="#" onclick="switchView('view-users')" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-users'); toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-users-gear w-6 group-hover:text-purple-400 transition-colors"></i>
                     <span class="font-medium">จัดการผู้ใช้งาน</span>
                 </a>
-                <a href="#" onclick="switchView('view-questions')" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-questions'); toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-list-check w-6 group-hover:text-pink-400 transition-colors"></i>
                     <span class="font-medium">ตั้งค่าแบบฟอร์ม</span>
                 </a>
-                <a href="#" onclick="switchView('view-logs')" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-logs'); toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-file-shield w-6 group-hover:text-cyan-400 transition-colors"></i>
                     <span class="font-medium">System Logs</span>
                 </a>
@@ -155,24 +162,31 @@
         </aside>
 
         <!-- CONTENT AREA -->
-        <div class="flex-1 flex flex-col h-full relative">
-            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
-                <div class="flex items-center gap-4">
-                    <button class="md:hidden text-slate-500 hover:text-primary"><i class="fa-solid fa-bars text-xl"></i></button>
-                    <h2 id="pageTitle" class="text-xl font-bold text-slate-800">ภาพรวมระบบ</h2>
+        <div class="flex-1 flex flex-col h-full relative w-full">
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 sm:px-6 z-10 sticky top-0">
+                <div class="flex items-center gap-3">
+                    <!-- Hamburger Menu Button -->
+                    <button class="md:hidden text-slate-500 hover:text-primary focus:outline-none p-1 rounded-md active:bg-slate-100" onclick="toggleSidebar()">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <h2 id="pageTitle" class="text-lg sm:text-xl font-bold text-slate-800 truncate">ภาพรวมระบบ</h2>
                 </div>
                 <div class="flex items-center gap-4">
-                    <div class="hidden md:flex items-center text-sm text-green-600 bg-green-50 px-3 py-1.5 rounded-full border border-green-200 shadow-sm">
+                    <div class="hidden sm:flex items-center text-sm text-green-600 bg-green-50 px-3 py-1.5 rounded-full border border-green-200 shadow-sm">
                         <i class="fa-solid fa-wifi mr-2 animate-pulse"></i>
-                        <span id="connectionStatus">Online Mode</span>
+                        <span id="connectionStatus">Online</span>
+                    </div>
+                    <!-- Mobile status icon -->
+                    <div class="sm:hidden text-green-600 text-xs flex items-center gap-1">
+                        <i class="fa-solid fa-circle text-[8px]"></i> Online
                     </div>
                 </div>
             </header>
 
-            <main id="mainContent" class="flex-1 overflow-y-auto p-6 md:p-8 relative">
+            <main id="mainContent" class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 relative w-full">
                 <!-- DASHBOARD -->
                 <div id="view-dashboard" class="page-view fade-in space-y-6">
-                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition">
                             <div><p class="text-sm font-medium text-slate-500">สาขาทั้งหมด</p><h3 id="dashTotalBranches" class="text-3xl font-bold text-slate-800 mt-1">0</h3></div>
                             <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-sm"><i class="fa-solid fa-store"></i></div>
@@ -190,7 +204,7 @@
                             <div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-xl shadow-sm"><i class="fa-solid fa-triangle-exclamation"></i></div>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+                    <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm overflow-hidden">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-map-location-dot text-primary"></i> สถานะสาขาล่าสุด</h3>
                         </div>
@@ -204,14 +218,14 @@
                 <div id="view-audit" class="page-view fade-in hidden max-w-4xl mx-auto">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 mb-6 sticky top-0 z-10">
                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-slate-700">แบบฟอร์มตรวจสอบมาตรฐาน</h3>
+                            <h3 class="font-bold text-slate-700">แบบฟอร์มตรวจสอบ</h3>
                             <span id="auditProgressText" class="text-xs font-bold text-primary bg-indigo-50 px-2 py-1 rounded">0/5 Completed</span>
                         </div>
                         <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                             <div id="auditProgressBar" class="h-full bg-primary w-0 transition-all duration-500"></div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100 mb-6">
+                    <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-slate-100 mb-6">
                         <div class="space-y-6">
                             <div>
                                 <label class="block mb-2 font-medium text-slate-700 flex items-center gap-2"><i class="fa-solid fa-location-crosshairs text-blue-500"></i> พิกัด GPS <span class="text-red-500">*</span></label>
@@ -219,7 +233,7 @@
                                     <div class="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-500 flex items-center justify-between">
                                         <input type="text" id="gpsCoords" class="bg-transparent w-full outline-none font-mono text-green-700 font-bold" readonly placeholder="กดปุ่มเพื่อดึงพิกัด">
                                     </div>
-                                    <button onclick="getLocation()" class="bg-blue-600 text-white px-5 rounded-lg hover:bg-blue-700 transition shadow-sm flex items-center gap-2"><i class="fa-solid fa-location-arrow"></i> ดึงพิกัด</button>
+                                    <button onclick="getLocation()" class="bg-blue-600 text-white px-4 sm:px-5 rounded-lg hover:bg-blue-700 transition shadow-sm flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-location-arrow"></i> <span class="hidden sm:inline">ดึงพิกัด</span></button>
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
@@ -243,18 +257,18 @@
                             </div>
                             <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col">
                                 <div class="flex justify-between mb-3 items-center">
-                                    <label class="font-bold text-slate-700">ลายเซ็น (บันทึกเป็นรูปภาพ)</label>
+                                    <label class="font-bold text-slate-700">ลายเซ็น</label>
                                     <button type="button" onclick="clearSignature()" class="text-xs text-red-500 hover:text-red-700 font-medium bg-red-50 px-2 py-1 rounded">ล้าง</button>
                                 </div>
-                                <div class="flex-1 border-2 border-dashed border-slate-300 bg-slate-50 relative rounded-lg overflow-hidden">
+                                <div class="flex-1 border-2 border-dashed border-slate-300 bg-slate-50 relative rounded-lg overflow-hidden h-40 md:h-auto">
                                     <canvas id="signaturePad" class="w-full h-full absolute inset-0"></canvas>
                                 </div>
                                 <p class="text-[10px] text-slate-400 mt-2 text-center">กรุณาเซ็นชื่อในกรอบ</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4 pt-4 border-t border-slate-200">
-                             <button type="button" onclick="switchView('view-dashboard')" class="px-6 py-3 rounded-lg border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition">ยกเลิก</button>
-                             <button type="submit" class="flex-1 bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูลและอัปโหลด</button>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-slate-200">
+                             <button type="button" onclick="switchView('view-dashboard')" class="w-full sm:w-auto px-6 py-3 rounded-lg border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition">ยกเลิก</button>
+                             <button type="submit" class="w-full sm:flex-1 bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูลและอัปโหลด</button>
                         </div>
                     </form>
                 </div>
@@ -262,13 +276,13 @@
                 <!-- HISTORY VIEW -->
                 <div id="view-history" class="page-view fade-in hidden">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                        <div class="p-6 bg-white border-b border-slate-100 flex justify-between items-center">
+                        <div class="p-4 sm:p-6 bg-white border-b border-slate-100 flex justify-between items-center">
                             <h3 class="font-bold text-lg text-slate-800">ประวัติการตรวจ</h3>
                             <button onclick="fetchHistory()" class="text-sm text-primary flex items-center gap-2 hover:bg-indigo-50 px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-sync"></i> Refresh</button>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left text-slate-600">
-                                <thead class="bg-slate-50 border-b uppercase text-xs font-bold text-slate-500"><tr><th class="px-6 py-4">วันที่</th><th class="px-6 py-4">สาขา</th><th class="px-6 py-4">ผู้ตรวจ</th><th class="px-6 py-4">ผล</th><th class="px-6 py-4 text-center">รายละเอียด</th></tr></thead>
+                                <thead class="bg-slate-50 border-b uppercase text-xs font-bold text-slate-500"><tr><th class="px-6 py-4 whitespace-nowrap">วันที่</th><th class="px-6 py-4 whitespace-nowrap">สาขา</th><th class="px-6 py-4 whitespace-nowrap">ผู้ตรวจ</th><th class="px-6 py-4 whitespace-nowrap">ผล</th><th class="px-6 py-4 text-center whitespace-nowrap">รายละเอียด</th></tr></thead>
                                 <tbody id="auditLogContainer" class="divide-y divide-slate-100"></tbody>
                             </table>
                         </div>
@@ -297,7 +311,7 @@
 
                 <!-- QUESTIONS CONFIG -->
                 <div id="view-questions" class="page-view fade-in hidden max-w-4xl mx-auto">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-6">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2"><i class="fa-solid fa-list-check text-pink-500"></i> ตั้งค่าหัวข้อแบบฟอร์ม (Local)</h3>
                             <button onclick="resetQuestions()" class="text-xs text-red-500 hover:underline">Reset Default</button>
@@ -326,7 +340,7 @@
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left text-slate-600">
-                                <thead class="bg-slate-100 text-slate-700 uppercase font-bold text-xs"><tr><th class="px-6 py-4">เวลา</th><th class="px-6 py-4">ผู้ใช้งาน</th><th class="px-6 py-4">Role</th><th class="px-6 py-4">กิจกรรม</th><th class="px-6 py-4">รายละเอียด</th></tr></thead>
+                                <thead class="bg-slate-100 text-slate-700 uppercase font-bold text-xs"><tr><th class="px-6 py-4 whitespace-nowrap">เวลา</th><th class="px-6 py-4 whitespace-nowrap">ผู้ใช้งาน</th><th class="px-6 py-4 whitespace-nowrap">Role</th><th class="px-6 py-4 whitespace-nowrap">กิจกรรม</th><th class="px-6 py-4 whitespace-nowrap">รายละเอียด</th></tr></thead>
                                 <tbody id="systemLogsContainer" class="divide-y divide-slate-100 font-mono text-xs"><tr><td colspan="5" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr></tbody>
                             </table>
                         </div>
@@ -384,6 +398,22 @@
 
         let questions = JSON.parse(localStorage.getItem(STORAGE.QUESTIONS)) || defaultQuestions;
 
+        // Mobile Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('appSidebar');
+            const overlay = document.getElementById('mobileSidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Open sidebar
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                // Close sidebar
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
         // Enhanced Popups using SweetAlert2
         function showPopup(type, title, text) {
             Swal.fire({
@@ -419,11 +449,15 @@
             document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active', 'bg-slate-800', 'text-white'));
             document.getElementById(viewId).classList.remove('hidden');
-            const activeLink = document.querySelector(`a[onclick="switchView('${viewId}')"]`);
+            const activeLink = document.querySelector(`a[onclick*="switchView('${viewId}')"]`);
             if(activeLink) activeLink.classList.add('active', 'bg-slate-800', 'text-white');
             document.getElementById('pageTitle').innerText = viewId.replace('view-', '').toUpperCase();
             
-            if (viewId === 'view-audit') { initAuditForm(); initSignature(); }
+            if (viewId === 'view-audit') { 
+                initAuditForm(); 
+                // Delay initSignature to ensure visibility for correct size
+                setTimeout(initSignature, 100); 
+            }
             if (viewId === 'view-history') fetchHistory();
             if (viewId === 'view-users') fetchUsers();
             if (viewId === 'view-logs') fetchLogs(); 
@@ -491,14 +525,14 @@
             currentAuditImages = {}; 
             
             document.getElementById('questionsContainer').innerHTML = questions.map((q, i) => `
-                <div class="bg-white p-6 rounded-xl border border-slate-100 hover:shadow-md transition duration-200">
+                <div class="bg-white p-4 sm:p-6 rounded-xl border border-slate-100 hover:shadow-md transition duration-200">
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex gap-4">
-                            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-primary flex items-center justify-center font-bold text-lg">${i+1}</div>
+                            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-primary flex items-center justify-center font-bold text-lg flex-shrink-0">${i+1}</div>
                             <h3 class="font-bold text-slate-800 text-lg pt-1">${q.title}</h3>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-4 ml-14">
+                    <div class="flex flex-col gap-4 ml-0 sm:ml-14">
                         <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                             <div class="flex gap-4">
                                 <label class="cursor-pointer flex items-center gap-2 group"><input type="radio" name="${q.id}" value="ผ่าน" class="w-5 h-5 text-green-600 focus:ring-green-500 cursor-pointer" onchange="updateProgress()"> <span class="group-hover:text-green-700 font-medium text-slate-600">ผ่าน</span></label>
@@ -628,17 +662,35 @@
         // --- Signature ---
         function initSignature() {
             const canvas = document.getElementById('signaturePad');
+            // Wait for layout to allow canvas container to have size
             setTimeout(() => {
                 if(!canvas.parentElement) return;
-                canvas.width = canvas.parentElement.clientWidth;
-                canvas.height = canvas.parentElement.clientHeight;
+                
+                // Function to resize canvas to fit parent
+                const resizeCanvas = () => {
+                    canvas.width = canvas.parentElement.clientWidth;
+                    canvas.height = canvas.parentElement.clientHeight;
+                    // Reset context styles after resize
+                    const ctx = canvas.getContext('2d');
+                    ctx.strokeStyle = "#1e293b"; ctx.lineWidth = 2; ctx.lineCap = "round";
+                };
+
+                resizeCanvas();
+                // Add resize listener
+                window.addEventListener('resize', resizeCanvas);
+
                 const ctx = canvas.getContext('2d');
                 ctx.strokeStyle = "#1e293b"; ctx.lineWidth = 2; ctx.lineCap = "round";
                 let drawing = false;
-                const getPos = (e) => { const r = canvas.getBoundingClientRect(); return { x: (e.clientX||e.touches[0].clientX)-r.left, y: (e.clientY||e.touches[0].clientY)-r.top }; }
+                
+                const getPos = (e) => { 
+                    const r = canvas.getBoundingClientRect(); 
+                    return { x: (e.clientX||e.touches[0].clientX)-r.left, y: (e.clientY||e.touches[0].clientY)-r.top }; 
+                }
                 const start = (e) => { drawing=true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); e.preventDefault(); }
                 const move = (e) => { if(!drawing)return; ctx.lineTo(getPos(e).x, getPos(e).y); ctx.stroke(); e.preventDefault(); }
                 const end = () => drawing=false;
+                
                 canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); canvas.addEventListener('mouseup', end);
                 canvas.addEventListener('touchstart', start); canvas.addEventListener('touchmove', move); canvas.addEventListener('touchend', end);
             }, 500);

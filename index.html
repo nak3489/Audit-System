@@ -1,3 +1,4 @@
+<!-- START OF FILE text/html -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -7,11 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SweetAlert2 for Beautiful Popups -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2pdf.js for Exporting PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <script>
@@ -41,7 +39,6 @@
             #print-area, #print-area * { visibility: visible; }
             #print-area { position: absolute; left: 0; top: 0; width: 100%; z-index: 1000; background: white; }
         }
-        /* Loading Animation */
         .loader-dots div { animation-timing-function: cubic-bezier(0, 1, 1, 0); }
         .loader-dots div:nth-child(1) { left: 8px; animation: loader-dots1 0.6s infinite; }
         .loader-dots div:nth-child(2) { left: 8px; animation: loader-dots2 0.6s infinite; }
@@ -71,7 +68,7 @@
                 <h1 class="text-4xl font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการและตรวจสอบมาตรฐานสาขาแบบครบวงจร</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v3.1 Fix</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v3.4 UserFix</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -154,7 +151,7 @@
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-800 text-center">
-                <div class="text-[10px] text-slate-500 mb-2 font-mono">System v3.1</div>
+                <div class="text-[10px] text-slate-500 mb-2 font-mono">System v3.4</div>
                 <button onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white px-4 py-2 rounded-lg transition-all text-sm font-bold">
                     <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
                 </button>
@@ -179,10 +176,10 @@
                 <!-- DASHBOARD -->
                 <div id="view-dashboard" class="page-view fade-in space-y-6">
                      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition"><div><p class="text-sm font-medium text-slate-500">สาขาทั้งหมด</p><h3 id="dashTotalBranches" class="text-3xl font-bold text-slate-800 mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-sm"><i class="fa-solid fa-store"></i></div></div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition"><div><p class="text-sm font-medium text-slate-500">ตรวจแล้ว</p><h3 id="dashAudited" class="text-3xl font-bold text-success mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-xl shadow-sm"><i class="fa-solid fa-check-circle"></i></div></div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition"><div><p class="text-sm font-medium text-slate-500">คงเหลือ</p><h3 id="dashRemaining" class="text-3xl font-bold text-warning mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center text-xl shadow-sm"><i class="fa-solid fa-hourglass-half"></i></div></div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md transition"><div><p class="text-sm font-medium text-slate-500">ต้องแก้ไข</p><h3 id="dashFailCount" class="text-3xl font-bold text-danger mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-xl shadow-sm"><i class="fa-solid fa-triangle-exclamation"></i></div></div>
+                        <div onclick="filterDashboard('all')" class="cursor-pointer bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md hover:border-primary/50 transition group"><div><p class="text-sm font-medium text-slate-500 group-hover:text-primary transition">สาขาทั้งหมด</p><h3 id="dashTotalBranches" class="text-3xl font-bold text-slate-800 mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-sm group-hover:scale-110 transition"><i class="fa-solid fa-store"></i></div></div>
+                        <div onclick="filterDashboard('all')" class="cursor-pointer bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md hover:border-success/50 transition group"><div><p class="text-sm font-medium text-slate-500 group-hover:text-success transition">ตรวจแล้ว</p><h3 id="dashAudited" class="text-3xl font-bold text-success mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-xl shadow-sm group-hover:scale-110 transition"><i class="fa-solid fa-check-circle"></i></div></div>
+                        <div onclick="showRemainingBranches()" class="cursor-pointer bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md hover:border-warning/50 transition group"><div><p class="text-sm font-medium text-slate-500 group-hover:text-warning transition">คงเหลือ</p><h3 id="dashRemaining" class="text-3xl font-bold text-warning mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center text-xl shadow-sm group-hover:scale-110 transition"><i class="fa-solid fa-hourglass-half"></i></div></div>
+                        <div onclick="filterDashboard('fail')" class="cursor-pointer bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md hover:border-danger/50 transition group"><div><p class="text-sm font-medium text-slate-500 group-hover:text-danger transition">ต้องแก้ไข</p><h3 id="dashFailCount" class="text-3xl font-bold text-danger mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-xl shadow-sm group-hover:scale-110 transition"><i class="fa-solid fa-triangle-exclamation"></i></div></div>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm"><h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-chart-line text-primary"></i> แนวโน้มผลการตรวจ (รายเดือน)</h3><canvas id="trendChart" class="w-full max-h-64"></canvas></div>
@@ -276,6 +273,42 @@
             <div class="p-5 border-t border-slate-100 bg-white rounded-b-2xl flex gap-3"><button onclick="downloadPDF()" class="flex-1 bg-red-600 text-white py-2.5 rounded-lg hover:bg-red-700 font-medium transition flex items-center justify-center gap-2"><i class="fa-solid fa-file-pdf"></i> Download PDF</button><button onclick="printReport()" class="flex-1 bg-slate-800 text-white py-2.5 rounded-lg hover:bg-slate-700 font-medium transition flex items-center justify-center gap-2"><i class="fa-solid fa-print"></i> พิมพ์รายงาน</button></div>
         </div>
     </div>
+    
+    <!-- Edit User Modal (ADDED) -->
+    <div id="editUserModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl animate-fade-in-up">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <h3 class="font-bold text-lg text-slate-800">แก้ไขข้อมูลผู้ใช้งาน</h3>
+                <button onclick="document.getElementById('editUserModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form onsubmit="handleEditUserSubmit(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Username</label>
+                    <!-- ReadOnly เพื่อป้องกันชื่อหาย -->
+                    <input type="text" id="editUsername" name="user" class="w-full mt-1 p-2.5 bg-slate-100 border border-slate-200 rounded-lg text-slate-500 outline-none cursor-not-allowed" readonly>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Full Name</label>
+                    <input type="text" id="editName" name="name" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Role</label>
+                    <select id="editRole" name="role" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">New Password (Optional)</label>
+                    <input type="password" name="pass" placeholder="เว้นว่างถ้าไม่ต้องการเปลี่ยน" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition">
+                </div>
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="document.getElementById('editUserModal').classList.add('hidden')" class="flex-1 py-2.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">ยกเลิก</button>
+                    <button type="submit" class="flex-1 bg-primary text-white py-2.5 rounded-lg hover:bg-indigo-700">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="hidden fixed inset-0 bg-white/90 z-[100] flex flex-col items-center justify-center backdrop-blur-sm transition-opacity duration-300">
@@ -284,7 +317,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwQ3PAtmKc46CNCwKGYrMsULKja6P08LFh_b96w37L0CUCs9YSwMei6iiyxUxohFzf4/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwQ3PAtmKc46CNCwKGYrMsULKja6P08LFh_b96w37L0CUCs9YSwMei6iiyxUxohFzf4/exec"; // *** เปลี่ยน URL ตรงนี้ ***
         const STORAGE = { QUESTIONS: 'app_v2_questions', DRAFT: 'app_v2_draft' };
         let currentUser = null;
         let branchData = {}; 
@@ -371,9 +404,11 @@
                 if (currentUser.role !== 'admin') document.querySelectorAll('.admin-only').forEach(e => e.classList.add('hidden'));
                 else document.querySelectorAll('.admin-only').forEach(e => e.classList.remove('hidden'));
 
-                toggleLoading(true, "กำลังโหลดข้อมูลสาขา...");
+                toggleLoading(true, "กำลังโหลดข้อมูล...");
                 await fetchBranches(); 
+                await fetchHistory(false); // โหลดประวัติไว้เบื้องหลังเพื่ออัปเดตตัวเลข
                 toggleLoading(false);
+
                 switchView('view-dashboard');
                 const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
                 Toast.fire({ icon: 'success', title: `ยินดีต้อนรับ, ${currentUser.name}` });
@@ -384,19 +419,90 @@
         async function fetchBranches() {
             const res = await callAPI('getBranches');
             if (res.success) {
-                branchData = {}; zoneList = []; let totalB = 0; allBranchDetails = [];
+                branchData = {}; zoneList = []; allBranchDetails = [];
                 res.data.forEach(item => {
                     if (!branchData[item.zone]) { branchData[item.zone] = []; zoneList.push(item.zone); }
                     branchData[item.zone].push({ id: item.id, name: item.name }); 
-                    allBranchDetails.push(item); totalB++;
+                    allBranchDetails.push(item);
                 });
-                document.getElementById('dashTotalBranches').innerText = totalB;
+                updateDashboardCounts();
                 document.getElementById('zoneStatList').innerHTML = zoneList.map(z => 
                     `<div class="bg-white p-4 rounded-lg border border-slate-100 text-center shadow-sm hover:shadow-md transition">
                         <div class="text-xs text-slate-400 mb-1">เขต</div><div class="font-bold text-primary text-lg">${z}</div><div class="text-xs text-slate-500 mt-1 bg-slate-50 rounded py-1">${branchData[z].length} สาขา</div>
                     </div>`
                 ).join('');
             }
+        }
+
+        function updateDashboardCounts() {
+             const totalBranches = allBranchDetails.length;
+             if (totalBranches === 0) return;
+             const auditedCount = auditRecords.length;
+             const failCount = auditRecords.filter(r => r.result === 'ไม่ผ่าน').length;
+             const uniqueAuditedBranches = new Set(auditRecords.map(r => r.branch)).size;
+             const remaining = totalBranches - uniqueAuditedBranches;
+             document.getElementById('dashTotalBranches').innerText = totalBranches;
+             document.getElementById('dashAudited').innerText = auditedCount;
+             document.getElementById('dashRemaining').innerText = remaining < 0 ? 0 : remaining;
+             document.getElementById('dashFailCount').innerText = failCount;
+        }
+
+        async function filterDashboard(type) {
+            switchView('view-history');
+            if (auditRecords.length === 0) {
+                toggleLoading(true, "กำลังโหลดข้อมูล...");
+                await fetchHistory(false);
+                toggleLoading(false);
+            }
+            let filteredRecords = [];
+            let titleText = "";
+            if (type === 'fail') {
+                filteredRecords = auditRecords.filter(r => r.result === 'ไม่ผ่าน');
+                titleText = "รายการที่ต้องแก้ไข (ไม่ผ่าน)";
+            } else {
+                filteredRecords = auditRecords;
+                titleText = "ประวัติการตรวจทั้งหมด";
+            }
+            renderHistoryTable(filteredRecords);
+            const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+            Toast.fire({ icon: 'info', title: `แสดง: ${titleText}` });
+        }
+
+        function showRemainingBranches() {
+            const auditedBranchNames = new Set(auditRecords.map(r => r.branch));
+            const remaining = allBranchDetails.filter(b => {
+                const fullName = b.id && b.id !== '-' ? `[${b.id}] ${b.name}` : b.name;
+                return !auditedBranchNames.has(fullName);
+            });
+            if (remaining.length === 0) {
+                Swal.fire('ยอดเยี่ยม!', 'ตรวจครบทุกสาขาแล้ว', 'success');
+                return;
+            }
+            let htmlList = `<div class="text-left max-h-60 overflow-y-auto space-y-2">`;
+            remaining.forEach(b => {
+                htmlList += `<div class="p-2 bg-slate-50 border rounded text-sm flex justify-between"><span>${b.name}</span> <span class="text-xs bg-slate-200 px-2 py-1 rounded text-slate-600">${b.zone}</span></div>`;
+            });
+            htmlList += `</div>`;
+            Swal.fire({ title: `สาขาที่คงเหลือ (${remaining.length})`, html: htmlList, confirmButtonText: 'ปิด' });
+        }
+
+        function renderHistoryTable(records) {
+            const container = document.getElementById('auditLogContainer');
+            if (records.length === 0) {
+                container.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400">ไม่พบข้อมูลตามเงื่อนไข</td></tr>`;
+                return;
+            }
+            container.innerHTML = records.map(r => `
+                <tr class="border-b hover:bg-slate-50 transition">
+                    <td class="p-3">${r.date}</td>
+                    <td class="p-3 font-bold text-slate-700">${r.branch}</td>
+                    <td class="p-3 text-slate-600">${r.auditor}</td>
+                    <td class="p-3"><span class="px-2 py-1 rounded-md text-xs border ${r.result==='ผ่าน'?'bg-green-50 text-green-700 border-green-200':'bg-red-50 text-red-700 border-red-200'} font-bold">${r.result}</span></td>
+                    <td class="p-3 text-center flex items-center justify-center gap-2">
+                        <button onclick='openDetail("${r.id}")' class="text-primary text-xs border border-primary px-3 py-1 rounded hover:bg-primary hover:text-white transition">View</button>
+                        ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteAudit('${r.id}')" class="text-red-500 text-xs border border-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition"><i class="fa-solid fa-trash"></i></button>` : ''}
+                    </td>
+                </tr>`).join('');
         }
 
         // --- Audit Form & Helpers ---
@@ -415,7 +521,6 @@
             updateProgress();
         }
 
-        // Draft & Image Functions (Standard)
         function saveDraft() {
             const formData = { zone: document.getElementById('zoneSelect').value, branch: document.getElementById('branchSelect').value, summary: document.getElementById('summaryComment').value, answers: {} };
             questions.forEach(q => { const checked = document.querySelector(`input[name="${q.id}"]:checked`); if(checked) formData.answers[q.id] = checked.value; formData.answers[`note_${q.id}`] = document.getElementById(`note_${q.id}`).value; });
@@ -491,7 +596,7 @@
         function removeQ(id) { Swal.fire({ title: 'ยืนยันการลบ?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบ' }).then((result) => { if (result.isConfirmed) { questions = questions.filter(q => q.id !== id); localStorage.setItem(STORAGE.QUESTIONS, JSON.stringify(questions)); renderQuestionsConfig(); Swal.fire('ลบสำเร็จ!', '', 'success'); } }) }
         function resetQuestions() { Swal.fire({ title: 'คืนค่าเริ่มต้น?', icon: 'warning', showCancelButton: true, confirmButtonText: 'รีเซ็ต' }).then((result) => { if (result.isConfirmed) { questions = defaultQuestions; localStorage.setItem(STORAGE.QUESTIONS, JSON.stringify(questions)); renderQuestionsConfig(); } }) }
 
-        // --- NEW: Analytics Charts ---
+        // --- Analytics ---
         async function fetchAnalytics() {
             const ctx1 = document.getElementById('trendChart');
             const ctx2 = document.getElementById('failChart');
@@ -508,30 +613,20 @@
             }
         }
 
-        // --- NEW: PDF Export ---
+        // --- Export ---
         function downloadPDF() { const element = document.getElementById('detailContent'); const opt = { margin: 10, filename: 'audit-report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }; html2pdf().set(opt).from(element).save(); }
         function printReport() { const content = document.getElementById('detailContent').innerHTML; const printArea = document.getElementById('print-area'); printArea.innerHTML = `<div class="p-8"><h1 class="text-2xl font-bold mb-4 text-center">รายงานการตรวจสอบมาตรฐานสาขา</h1>${content}</div>`; window.print(); }
         function logout() { Swal.fire({ title: 'ออกจากระบบ?', showCancelButton: true, confirmButtonText: 'ยืนยัน', confirmButtonColor: '#d33' }).then((res) => { if(res.isConfirmed) { currentUser = null; location.reload(); } }); }
         
-        // --- MISSING FUNCTIONS RESTORED ---
-        async function fetchHistory() { 
-            toggleLoading(true, "กำลังโหลดประวัติ...");
+        // --- History ---
+        async function fetchHistory(shouldRender = true) { 
+            if(shouldRender) toggleLoading(true, "กำลังโหลดประวัติ...");
             const res = await callAPI('getHistory'); 
-            toggleLoading(false);
+            if(shouldRender) toggleLoading(false);
             if(res.success) { 
                 auditRecords = res.data; 
-                document.getElementById('dashAudited').innerText = auditRecords.length;
-                document.getElementById('auditLogContainer').innerHTML = auditRecords.map(r => `
-                    <tr class="border-b hover:bg-slate-50">
-                        <td class="p-3">${r.date}</td>
-                        <td class="p-3 font-bold">${r.branch}</td>
-                        <td class="p-3">${r.auditor}</td>
-                        <td class="p-3"><span class="px-2 py-1 rounded text-xs ${r.result==='ผ่าน'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'} font-bold">${r.result}</span></td>
-                        <td class="p-3 text-center flex items-center justify-center gap-2">
-                            <button onclick='openDetail("${r.id}")' class="text-primary text-xs border border-primary px-2 py-1 rounded hover:bg-primary hover:text-white transition">View</button>
-                            ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteAudit('${r.id}')" class="text-red-500 text-xs border border-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition"><i class="fa-solid fa-trash"></i></button>` : ''}
-                        </td>
-                    </tr>`).join(''); 
+                updateDashboardCounts(); // Sync dashboard
+                if(shouldRender) renderHistoryTable(auditRecords);
             } 
         }
 
@@ -560,11 +655,52 @@
             document.getElementById('detailModal').classList.remove('hidden');
         }
 
+        // --- User Management (FIXED) ---
         async function fetchUsers() { 
             toggleLoading(true, "กำลังโหลดรายชื่อ...");
             const res = await callAPI('getUsers'); 
             toggleLoading(false);
-            if(res.success) { document.getElementById('userListContainerBody').innerHTML = res.data.map(u => `<tr class="border-b"><td class="p-3 font-bold">${u.user}</td><td class="p-3">${u.role}</td><td class="p-3 text-right"><button onclick="deleteUser('${u.user}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); } 
+            if(res.success) { 
+                document.getElementById('userListContainerBody').innerHTML = res.data.map(u => `
+                <tr class="border-b">
+                    <td class="p-3 font-bold">${u.user} <div class="text-xs text-slate-400 font-normal">${u.name}</div></td>
+                    <td class="p-3"><span class="bg-slate-100 px-2 py-1 rounded text-xs uppercase">${u.role}</span></td>
+                    <td class="p-3 text-right">
+                        <button onclick="openEditUser('${u.user}', '${u.name}', '${u.role}')" class="text-blue-500 hover:text-blue-700 mx-2"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteUser('${u.user}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`).join(''); 
+            } 
+        }
+
+        // ฟังก์ชันเปิด Modal แก้ไข (ล็อค Username)
+        function openEditUser(user, name, role) {
+            document.getElementById('editUsername').value = user; // Set Value
+            document.getElementById('editName').value = name;
+            document.getElementById('editRole').value = role;
+            document.getElementById('editUserModal').classList.remove('hidden');
+        }
+
+        async function handleEditUserSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            toggleLoading(true, "กำลังบันทึกข้อมูล...");
+            
+            const res = await callAPI('editUser', {
+                user: formData.get('user'), // ReadOnly Value
+                name: formData.get('name'),
+                role: formData.get('role'),
+                pass: formData.get('pass') // Optional
+            });
+
+            toggleLoading(false);
+            if(res.success) {
+                document.getElementById('editUserModal').classList.add('hidden');
+                Swal.fire('สำเร็จ', 'แก้ไขข้อมูลผู้ใช้เรียบร้อย', 'success');
+                fetchUsers();
+            } else {
+                showPopup('error', 'ผิดพลาด', res.message);
+            }
         }
         
         async function handleAddUser(e) { 

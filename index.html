@@ -32,63 +32,58 @@
         .fade-in { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .nav-link.active { background-color: rgba(255, 255, 255, 0.1); border-left: 4px solid #6366f1; }
-        canvas#signaturePad { cursor: crosshair; touch-action: none; }
+        canvas#signaturePad { cursor: crosshair; touch-action: none; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
         @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
             #print-area { position: absolute; left: 0; top: 0; width: 100%; z-index: 1000; background: white; }
         }
         
-        /* --- LOADER CSS --- */
-        .loader {
-            width: 48px;
-            height: 48px;
-            display: inline-block;
-            position: relative;
-            border: 2px solid #FFF;
-            box-sizing: border-box;
-            animation: rotation 2s linear infinite;
-        }
-        .loader::after,
-        .loader::before {
-            content: '';  
-            box-sizing: border-box;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            margin: auto;
-            border: 2px solid #FF3D00;
-            width: 38px;
-            height: 38px;
-            animation: rotationBack 1.5s linear infinite;
-            transform-origin: center center;
-        }
-        .loader::before {
-            width: 28px;
-            height: 28px;
-            border-color: #FFF;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
+        /* --- LOADER --- */
+        .loader { width: 48px; height: 48px; display: inline-block; position: relative; border: 2px solid #FFF; box-sizing: border-box; animation: rotation 2s linear infinite; }
+        .loader::after, .loader::before { content: ''; box-sizing: border-box; position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: auto; border: 2px solid #FF3D00; width: 38px; height: 38px; animation: rotationBack 1.5s linear infinite; transform-origin: center center; }
+        .loader::before { width: 28px; height: 28px; border-color: #FFF; box-sizing: border-box; animation: rotation 1s linear infinite; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } 
+        @keyframes rotationBack { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+
+        /* --- MODERN FORM CSS (เฉพาะส่วนฟอร์ม) --- */
+        .form-card { @apply bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6 relative overflow-hidden transition-all hover:shadow-md; }
+        .form-header { @apply flex items-center gap-3 mb-6 pb-3 border-b border-slate-50; }
+        .form-title { @apply text-lg font-bold text-slate-800; }
+        .form-label { @apply block text-sm font-bold text-slate-600 mb-2; }
+        .form-input { 
+            @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 transition-all;
+            @apply focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none;
         }
 
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        } 
-        @keyframes rotationBack {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(-360deg); }
+        /* Modern Rating 1-5 */
+        .rating-wrapper { @apply flex gap-2; }
+        .rating-radio { @apply hidden peer; }
+        .rating-box { 
+            @apply w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 font-bold cursor-pointer transition-all shadow-sm;
+            @apply hover:border-primary hover:text-primary hover:-translate-y-1;
+            @apply peer-checked:bg-primary peer-checked:border-primary peer-checked:text-white peer-checked:shadow-lg peer-checked:scale-110;
         }
+
+        /* Modern Switch Yes/No */
+        .switch-wrapper { @apply flex bg-slate-100 p-1 rounded-lg w-fit; }
+        .switch-radio { @apply hidden peer; }
+        .switch-label { 
+            @apply px-4 py-2 rounded-md text-sm font-bold text-slate-500 cursor-pointer transition-all flex items-center gap-2;
+            @apply hover:text-slate-700;
+        }
+        /* State Styles */
+        .switch-radio[value="ผ่าน"]:checked + .switch-label { @apply bg-green-500 text-white shadow-sm; }
+        .switch-radio[value="ไม่ผ่าน"]:checked + .switch-label { @apply bg-red-500 text-white shadow-sm; }
+        
+        /* Section Decorator */
+        .section-tag { @apply w-1.5 h-6 rounded-r-full absolute left-0 top-8; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased h-screen overflow-hidden flex flex-col">
 
-    <!-- Print Area -->
     <div id="print-area" class="hidden bg-white text-black p-10"></div>
 
-    <!-- LOGIN SCREEN -->
     <div id="view-login" class="fixed inset-0 z-50 flex bg-white fade-in">
         <div class="hidden lg:flex w-1/2 bg-slate-900 relative items-center justify-center overflow-hidden">
             <div class="absolute inset-0 opacity-20">
@@ -102,7 +97,7 @@
                 <h1 class="text-4xl font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการและตรวจสอบมาตรฐานสาขาแบบครบวงจร</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v4.0 Production</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v4.2 BeautifulForm</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -131,21 +126,17 @@
                     <button type="submit" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-3.5 rounded-lg shadow-lg hover:shadow-indigo-500/30 transition transform active:scale-[0.98]">
                         เข้าสู่ระบบ
                     </button>
-                    <!-- Version Display (Static) -->
                     <div class="mt-6 text-center">
-                        <p class="text-xs text-slate-400 select-none">Version 4.0</p>
+                        <p class="text-xs text-slate-400 select-none">Version 4.2</p>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- MAIN APP LAYOUT -->
     <div id="main-layout" class="hidden flex h-screen overflow-hidden bg-slate-100">
-        <!-- Mobile Sidebar Overlay -->
         <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden transition-opacity" onclick="toggleSidebar()"></div>
 
-        <!-- SIDEBAR -->
         <aside id="appSidebar" class="w-64 bg-slate-900 text-white flex-shrink-0 flex flex-col transition-transform duration-300 z-30 shadow-2xl fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0">
             <div class="h-16 flex items-center px-6 bg-slate-950 border-b border-slate-800 justify-between md:justify-start">
                 <div class="flex items-center">
@@ -187,14 +178,13 @@
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-800 text-center">
-                <div class="text-[10px] text-slate-500 mb-2 font-mono">System v4.0</div>
+                <div class="text-[10px] text-slate-500 mb-2 font-mono">System v4.2</div>
                 <button type="button" onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white px-4 py-2 rounded-lg transition-all text-sm font-bold">
                     <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
                 </button>
             </div>
         </aside>
 
-        <!-- CONTENT AREA -->
         <div class="flex-1 flex flex-col h-full relative w-full">
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 sm:px-6 z-10 sticky top-0">
                 <div class="flex items-center gap-3">
@@ -208,8 +198,7 @@
                 </div>
             </header>
 
-            <main id="mainContent" class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 relative w-full">
-                <!-- DASHBOARD -->
+            <main id="mainContent" class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 relative w-full bg-slate-50">
                 <div id="view-dashboard" class="page-view fade-in space-y-6">
                      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                         <div onclick="filterDashboard('all')" class="cursor-pointer bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between hover:shadow-md hover:border-primary/50 transition group"><div><p class="text-sm font-medium text-slate-500 group-hover:text-primary transition">สาขาทั้งหมด</p><h3 id="dashTotalBranches" class="text-3xl font-bold text-slate-800 mt-1">0</h3></div><div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-sm group-hover:scale-110 transition"><i class="fa-solid fa-store"></i></div></div>
@@ -224,36 +213,143 @@
                     <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm overflow-hidden"><div class="flex items-center justify-between mb-6"><h3 class="font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-map-location-dot text-primary"></i> สถานะสาขาล่าสุด</h3></div><div id="zoneStatList" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 text-sm"><div class="col-span-full text-center py-4 text-slate-400">กำลังโหลดข้อมูล...</div></div></div>
                 </div>
 
-                <!-- AUDIT FORM -->
-                <div id="view-audit" class="page-view fade-in hidden max-w-4xl mx-auto">
-                    <div id="draftNotice" class="hidden mb-4 bg-yellow-50 text-yellow-700 p-3 rounded-lg text-sm flex justify-between items-center border border-yellow-200"><span><i class="fa-solid fa-save mr-2"></i> มีข้อมูลร่างบันทึกไว้</span><button onclick="clearDraft()" class="text-xs font-bold underline text-red-600 hover:text-red-800">ลบทิ้ง</button></div>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 mb-6 sticky top-0 z-10">
-                        <div class="flex justify-between items-center mb-2"><h3 class="font-bold text-slate-700">แบบฟอร์มตรวจสอบ</h3><span id="auditProgressText" class="text-xs font-bold text-primary bg-indigo-50 px-2 py-1 rounded">0/5 Completed</span></div>
-                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div id="auditProgressBar" class="h-full bg-primary w-0 transition-all duration-500"></div></div>
+                <div id="view-audit" class="page-view fade-in hidden max-w-5xl mx-auto pb-20">
+                    <div id="draftNotice" class="hidden mb-6 bg-amber-50 text-amber-800 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-center border border-amber-200 shadow-sm gap-4">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-clock-rotate-left text-amber-500 text-xl"></i>
+                            <div><span class="font-bold">พบข้อมูลร่างล่าสุด</span> <span class="text-sm opacity-80">คุณต้องการกู้คืนหรือไม่?</span></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="clearDraft()" class="px-4 py-2 text-slate-500 hover:text-slate-800 font-bold text-sm">ลบทิ้ง</button>
+                            <button onclick="restoreDraft(JSON.parse(localStorage.getItem(STORAGE.DRAFT)))" class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm font-bold text-sm">กู้คืนข้อมูล</button>
+                        </div>
                     </div>
-                    <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-slate-100 mb-6">
-                        <div class="space-y-6">
-                            <div><label class="block mb-2 font-medium text-slate-700 flex items-center gap-2"><i class="fa-solid fa-location-crosshairs text-blue-500"></i> พิกัด GPS <span class="text-red-500">*</span></label><div class="flex gap-2"><div class="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-500 flex items-center justify-between"><input type="text" id="gpsCoords" class="bg-transparent w-full outline-none font-mono text-green-700 font-bold" readonly placeholder="กดปุ่มเพื่อดึงพิกัด"></div><button onclick="getLocation()" class="bg-blue-600 text-white px-4 sm:px-5 rounded-lg hover:bg-blue-700 transition shadow-sm flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-location-arrow"></i> <span class="hidden sm:inline">ดึงพิกัด</span></button></div></div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
-                                <div><label class="block mb-2 font-medium text-slate-700 flex items-center gap-2"><i class="fa-solid fa-map text-blue-500"></i> เลือกเขต (Zone) <span class="text-red-500">*</span></label><select id="zoneSelect" onchange="handleZoneChange()" class="w-full p-3 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition"><option value="">-- รอข้อมูล --</option></select></div>
-                                <div><label class="block mb-2 font-medium text-slate-700 flex items-center gap-2"><i class="fa-solid fa-store text-blue-500"></i> เลือกสาขา (Branch) <span class="text-red-500">*</span></label><select id="branchSelect" class="w-full p-3 border border-slate-200 rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition disabled:bg-slate-100" disabled><option value="">-- เลือกเขตก่อน --</option></select></div>
+
+                    <div class="mb-6 flex justify-between items-end">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">บันทึกการตรวจสาขา</h2>
+                            <p class="text-slate-500 text-sm">กรุณากรอกข้อมูลตามความเป็นจริงเพื่อมาตรฐาน</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-slate-400 font-bold uppercase">Today</div>
+                            <div class="text-primary font-mono font-bold" id="headerDate">-</div>
+                        </div>
+                    </div>
+                    
+                    <form id="auditForm" onsubmit="submitAudit(event)" oninput="saveDraft()" class="space-y-2">
+                        
+                        <div class="form-card">
+                            <div class="section-tag bg-blue-500"></div>
+                            <div class="form-header">
+                                <i class="fa-solid fa-store text-blue-500 text-xl"></i>
+                                <h4 class="form-title">ข้อมูลสาขา (Branch Info)</h4>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                <div class="lg:col-span-2">
+                                    <label class="form-label">พิกัด GPS <span class="text-red-500">*</span></label>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="gpsCoords" class="form-input font-mono bg-slate-100 text-slate-500" readonly placeholder="กดปุ่ม Check-in">
+                                        <button type="button" onclick="getLocation()" class="bg-blue-600 text-white px-5 rounded-xl hover:bg-blue-700 transition shadow-lg active:scale-95 font-bold whitespace-nowrap"><i class="fa-solid fa-location-dot mr-1"></i> Check-in</button>
+                                    </div>
+                                </div>
+                                <div><label class="form-label">เวลาเข้าเยี่ยม</label><input type="text" class="form-input bg-slate-100 text-center font-bold text-blue-600" id="visitDate" readonly></div>
+                                
+                                <div><label class="form-label">เขต (Zone)</label><div class="relative"><select id="zoneSelect" onchange="handleZoneChange()" class="form-input appearance-none"><option value="">-- รอข้อมูล --</option></select><i class="fa-solid fa-chevron-down absolute right-4 top-4 text-slate-400 pointer-events-none"></i></div></div>
+                                <div><label class="form-label">สาขา (Branch)</label><div class="relative"><select id="branchSelect" class="form-input appearance-none disabled:bg-slate-100" disabled><option value="">-- เลือกเขตก่อน --</option></select><i class="fa-solid fa-chevron-down absolute right-4 top-4 text-slate-400 pointer-events-none"></i></div></div>
+                                <div><label class="form-label">ไซต์สาขา</label><input type="text" id="f_site" class="form-input" placeholder="S, M, L"></div>
+                                
+                                <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-5 bg-blue-50/50 p-4 rounded-xl border border-blue-100 mt-2">
+                                    <div><label class="form-label text-blue-800">เป้าสาขา</label><input type="number" id="f_target" class="form-input bg-white border-blue-200"></div>
+                                    <div><label class="form-label text-blue-800">ยอดทำได้จริง</label><input type="number" id="f_actual" class="form-input bg-white border-blue-200"></div>
+                                    <div><label class="form-label text-blue-800">% เทียบเป้า</label><input type="text" id="f_percent" class="form-input bg-white border-blue-200 font-bold text-blue-600"></div>
+                                </div>
+                                
+                                <div class="hidden"><input id="f_age"><input id="f_lease"><input id="f_ar"><input id="f_acc_count"><input id="f_od1"><input id="f_od2"><input id="f_npl"><input id="f_npl_ar"><input id="f_npl_acc"></div>
                             </div>
                         </div>
-                    </div>
-                    <form id="auditForm" onsubmit="submitAudit(event)" oninput="saveDraft()" class="space-y-6">
-                        <div id="questionsContainer" class="space-y-6"></div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm"><label class="font-bold block mb-3 text-slate-700">สรุปผล / หมายเหตุ</label><textarea id="summaryComment" rows="5" class="w-full p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition text-sm" placeholder="ระบุรายละเอียดเพิ่มเติม..."></textarea></div>
-                            <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col"><div class="flex justify-between mb-3 items-center"><label class="font-bold text-slate-700">ลายเซ็น</label><button type="button" onclick="clearSignature()" class="text-xs text-red-500 hover:text-red-700 font-medium bg-red-50 px-2 py-1 rounded">ล้าง</button></div><div class="flex-1 border-2 border-dashed border-slate-300 bg-slate-50 relative rounded-lg overflow-hidden h-40 md:h-auto"><canvas id="signaturePad" class="w-full h-full absolute inset-0"></canvas></div><p class="text-[10px] text-slate-400 mt-2 text-center">กรุณาเซ็นชื่อในกรอบ</p></div>
+
+                        <div class="form-card">
+                            <div class="section-tag bg-purple-500"></div>
+                            <div class="form-header">
+                                <i class="fa-solid fa-user-tie text-purple-500 text-xl"></i>
+                                <h4 class="form-title">พนักงาน (Employee)</h4>
+                            </div>
+                            <div class="space-y-6">
+                                <div><label class="form-label">ชื่อพนักงาน</label><input type="text" id="emp_name" class="form-input text-lg font-bold" placeholder="ระบุชื่อพนักงาน..."></div>
+                                
+                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                                    <h5 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-star text-yellow-400"></i> การประเมิน (5=ดีมาก)</h5>
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        <div><label class="form-label">บุคลิกภาพ/การแต่งกาย</label><div class="rating-wrapper" id="rate_person"></div></div>
+                                        <div><label class="form-label">ทักษะการขาย</label><div class="rating-wrapper" id="rate_sale"></div></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                                    <h5 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-brain text-purple-400"></i> ความรู้ผลิตภัณฑ์</h5>
+                                    <div class="space-y-4">
+                                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-2"><span class="text-sm font-medium">สินเชื่อ M</span><div class="rating-wrapper" id="rate_k_m"></div></div>
+                                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-2"><span class="text-sm font-medium">สินเชื่อ CTV</span><div class="rating-wrapper" id="rate_k_ctv"></div></div>
+                                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-2"><span class="text-sm font-medium">สินเชื่อ HL</span><div class="rating-wrapper" id="rate_k_hl"></div></div>
+                                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-2"><span class="text-sm font-medium">โปรโมชั่น</span><div class="rating-wrapper" id="rate_k_promo"></div></div>
+                                    </div>
+                                </div>
+                                <div class="hidden"><input id="k_insure"><input id="p_target_contract"><input id="p_actual_contract"><input id="p_target_amount"><input id="p_actual_amount"><input id="txt_strength"><input id="txt_weakness"><input id="txt_suggestion"></div>
+                            </div>
                         </div>
-                        <div class="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-slate-200">
-                             <button type="button" onclick="switchView('view-dashboard')" class="w-full sm:w-auto px-6 py-3 rounded-lg border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition">ยกเลิก</button>
-                             <button type="submit" class="w-full sm:flex-1 bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> บันทึกข้อมูลและอัปโหลด</button>
+
+                        <div class="form-card">
+                            <div class="section-tag bg-orange-500"></div>
+                            <div class="form-header">
+                                <i class="fa-solid fa-broom text-orange-500 text-xl"></i>
+                                <h4 class="form-title">สภาพสาขา (5ส.)</h4>
+                            </div>
+                            <div class="space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-100">
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-3"><span class="text-sm font-bold text-slate-600">ความสะอาดหน้าสาขา</span><div class="rating-wrapper" id="rate_c_branch"></div></div>
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-3"><span class="text-sm font-bold text-slate-600">โต๊ะทำงาน/อุปกรณ์</span><div class="rating-wrapper" id="rate_c_desk"></div></div>
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-3"><span class="text-sm font-bold text-slate-600">จุดบริการน้ำดื่ม</span><div class="rating-wrapper" id="rate_c_coffee"></div></div>
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-3"><span class="text-sm font-bold text-slate-600">ห้องน้ำ</span><div class="rating-wrapper" id="rate_c_toilet"></div></div>
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-3"><span class="text-sm font-bold text-slate-600">พื้นที่เก็บของ</span><div class="rating-wrapper" id="rate_c_storage"></div></div>
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-200 pb-3"><span class="text-sm font-bold text-slate-600">หลังสาขา</span><div class="rating-wrapper" id="rate_c_back"></div></div>
+                            </div>
+                            <div class="mt-4"><label class="form-label">บันทึกสภาพแวดล้อมเพิ่มเติม</label><textarea id="area_comment" rows="2" class="form-input" placeholder="..."></textarea></div>
+                            <div class="hidden"><input id="area_comp_near"><input id="area_comp_dist"><input id="area_sign"><input id="area_env"><input id="rate_area_target"></div>
+                        </div>
+
+                        <div class="form-card">
+                            <div class="section-tag bg-pink-500"></div>
+                            <div class="form-header">
+                                <i class="fa-solid fa-list-check text-pink-500 text-xl"></i>
+                                <h4 class="form-title">รายการตรวจสอบ (Checklist)</h4>
+                            </div>
+                            <div id="questionsContainer" class="space-y-4"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                                <label class="form-label text-lg"><i class="fa-solid fa-comment-dots text-primary mr-2"></i> สรุปผลการตรวจ</label>
+                                <textarea id="summaryComment" rows="5" class="form-input h-40 resize-none" placeholder="สรุปภาพรวม..."></textarea>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+                                <div class="flex justify-between mb-2">
+                                    <label class="form-label text-lg"><i class="fa-solid fa-signature text-primary mr-2"></i> ลายเซ็น</label>
+                                    <button type="button" onclick="clearSignature()" class="text-xs text-red-500 font-bold hover:underline">ล้างลายเซ็น</button>
+                                </div>
+                                <div class="flex-1 border-2 border-dashed border-slate-300 bg-slate-50 relative rounded-xl overflow-hidden h-40 cursor-crosshair">
+                                    <canvas id="signaturePad" class="w-full h-full absolute inset-0"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col-reverse sm:flex-row items-center gap-4 pt-4 border-t border-slate-200">
+                             <button type="button" onclick="switchView('view-dashboard')" class="w-full sm:w-auto px-8 py-3 rounded-xl border border-slate-300 text-slate-600 font-bold hover:bg-white transition">ยกเลิก</button>
+                             <button type="submit" class="w-full sm:flex-1 bg-primary text-white py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:shadow-xl hover:-translate-y-0.5 transition flex items-center justify-center gap-2 text-lg">
+                                <i class="fa-solid fa-paper-plane"></i> บันทึกและส่งรายงาน
+                             </button>
                         </div>
                     </form>
                 </div>
 
-                <!-- HISTORY VIEW -->
                 <div id="view-history" class="page-view fade-in hidden">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                         <div class="p-4 sm:p-6 bg-white border-b border-slate-100 flex justify-between items-center"><h3 class="font-bold text-lg text-slate-800">ประวัติการตรวจ</h3><button onclick="fetchHistory()" class="text-sm text-primary flex items-center gap-2 hover:bg-indigo-50 px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-sync"></i> Refresh</button></div>
@@ -261,7 +357,6 @@
                     </div>
                 </div>
 
-                <!-- USERS VIEW -->
                 <div id="view-users" class="page-view fade-in hidden">
                      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="md:col-span-1 bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
@@ -281,7 +376,6 @@
                      </div>
                 </div>
 
-                <!-- QUESTIONS CONFIG -->
                 <div id="view-questions" class="page-view fade-in hidden max-w-4xl mx-auto">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-6">
                         <div class="flex justify-between items-center mb-6"><h3 class="font-bold text-slate-800 text-lg flex items-center gap-2"><i class="fa-solid fa-list-check text-pink-500"></i> ตั้งค่าหัวข้อแบบฟอร์ม (Local)</h3><button onclick="resetQuestions()" class="text-xs text-red-500 hover:underline">Reset Default</button></div>
@@ -290,7 +384,6 @@
                     </div>
                 </div>
 
-                <!-- LOGS -->
                 <div id="view-logs" class="page-view fade-in hidden">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                         <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50"><h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-shield text-cyan-500"></i> บันทึกกิจกรรมระบบ (Server Logs)</h3><button onclick="fetchLogs()" class="text-sm text-primary hover:underline"><i class="fa-solid fa-sync"></i> Refresh</button></div>
@@ -301,7 +394,6 @@
         </div>
     </div>
 
-    <!-- Modal for Details -->
     <div id="detailModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl animate-fade-in-up">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl"><h3 class="font-bold text-lg text-slate-800">รายละเอียดใบตรวจสอบ</h3><button onclick="document.getElementById('detailModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button></div>
@@ -310,7 +402,6 @@
         </div>
     </div>
     
-    <!-- Edit User Modal -->
     <div id="editUserModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl animate-fade-in-up">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
@@ -345,7 +436,6 @@
         </div>
     </div>
 
-    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/50 z-[100] flex flex-col items-center justify-center transition-opacity duration-300">
         <span class="loader"></span>
         <p id="loadingText" class="font-bold text-white mt-4 text-lg animate-pulse shadow-black drop-shadow-md">กำลังประมวลผล...</p>
@@ -363,11 +453,8 @@
         let inactivityTimer;
         
         const defaultQuestions = [
-            { id: 'q1', title: 'ความสะอาดและความเรียบร้อยภายในร้าน', allowImage: true }, 
-            { id: 'q2', title: 'การจัดเรียงสินค้าถูกต้องตามแผน (Planogram)', allowImage: false },
-            { id: 'q3', title: 'ความพร้อมของพนักงานและการให้บริการ', allowImage: false }, 
-            { id: 'q4', title: 'สื่อประชาสัมพันธ์และป้ายราคาถูกต้อง', allowImage: true },
-            { id: 'q5', title: 'อุปกรณ์และระบบต่างๆ ใช้งานได้ปกติ', allowImage: true }
+            { id: 'q1', title: 'ตู้เซฟปิดล็อคเรียบร้อย', allowImage: true }, 
+            { id: 'q2', title: 'เอกสารสำคัญเก็บเข้าตู้', allowImage: true }
         ];
 
         let questions = JSON.parse(localStorage.getItem(STORAGE.QUESTIONS)) || defaultQuestions;
@@ -385,7 +472,6 @@
         function resetTimer() {
             clearTimeout(inactivityTimer);
             if (currentUser) {
-                // Set timeout for 10 minutes (10 * 60 * 1000 ms)
                 inactivityTimer = setTimeout(() => {
                     localStorage.removeItem(STORAGE.USER);
                     Swal.fire({
@@ -400,7 +486,6 @@
             }
         }
 
-        // Restore Session on Load
         window.addEventListener('load', () => {
             const storedUser = localStorage.getItem(STORAGE.USER);
             if(storedUser) {
@@ -419,7 +504,6 @@
             if (currentUser.role !== 'admin') document.querySelectorAll('.admin-only').forEach(e => e.classList.add('hidden'));
             else document.querySelectorAll('.admin-only').forEach(e => e.classList.remove('hidden'));
 
-            // Load data in background
             fetchBranches(); 
             fetchHistory(false); 
             
@@ -427,7 +511,6 @@
             startInactivityTimer();
         }
 
-        // Mobile Sidebar Toggle
         function toggleSidebar() {
             const sidebar = document.getElementById('appSidebar');
             const overlay = document.getElementById('mobileSidebarOverlay');
@@ -456,7 +539,13 @@
             if(activeLink) activeLink.classList.add('active', 'bg-slate-800', 'text-white');
             document.getElementById('pageTitle').innerText = viewId.replace('view-', '').toUpperCase();
             
-            if (viewId === 'view-audit') { initAuditForm(); setTimeout(initSignature, 100); checkDraft(); }
+            if (viewId === 'view-audit') { 
+                initAuditForm(); 
+                setTimeout(initSignature, 100); 
+                document.getElementById('visitDate').value = new Date().toLocaleString('th-TH');
+                document.getElementById('headerDate').innerText = new Date().toLocaleDateString('th-TH');
+                checkDraft(); 
+            }
             if (viewId === 'view-history') fetchHistory();
             if (viewId === 'view-users') fetchUsers();
             if (viewId === 'view-logs') fetchLogs(); 
@@ -464,29 +553,22 @@
             if (viewId === 'view-dashboard') fetchAnalytics();
         }
 
-        // --- Login ---
         async function handleLogin(e) {
             e.preventDefault();
             if(API_URL.includes("REPLACE")) { showPopup('error', 'Configuration Error', 'กรุณาใส่ API URL ในโค้ดก่อนใช้งาน'); return; }
-            
             toggleLoading(true, "กำลังเข้าสู่ระบบ...");
             const res = await callAPI('login', { user: document.getElementById('loginUser').value, pass: document.getElementById('loginPass').value });
             toggleLoading(false);
-            
             if (res.success) {
                 currentUser = res.user;
-                // Save Session
                 localStorage.setItem(STORAGE.USER, JSON.stringify(currentUser));
-                
                 initSystemAfterLogin();
-
                 const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
                 Toast.fire({ icon: 'success', title: `ยินดีต้อนรับ, ${currentUser.name}` });
                 callAPI('logSystem', { user: currentUser.user, role: currentUser.role, logAction: 'LOGIN', details: 'Success' });
             } else { showPopup('error', 'เข้าสู่ระบบไม่สำเร็จ', res.message); }
         }
 
-        // --- FIXED LOGOUT FUNCTION ---
         function logout() {
             Swal.fire({
                 title: 'ออกจากระบบ?',
@@ -499,13 +581,9 @@
                 cancelButtonColor: '#3085d6'
             }).then((res) => {
                 if (res.isConfirmed) {
-                    // 1. Clear Timer
                     clearTimeout(inactivityTimer);
-                    // 2. Clear Storage (FIXED HERE)
                     localStorage.removeItem(STORAGE.USER);
-                    // 3. Clear Variable
                     currentUser = null;
-                    // 4. Reload
                     location.reload();
                 }
             });
@@ -600,69 +678,181 @@
                 </tr>`).join('');
         }
 
-        // --- Audit Form & Helpers ---
+        // --- UPDATED: New Rating Component Generator ---
+        function genRating(id) {
+            return [1,2,3,4,5].map(v => `
+                <label class="cursor-pointer group relative">
+                    <input type="radio" name="${id}" value="${v}" class="rating-radio" onchange="saveDraft()">
+                    <div class="rating-box">${v}</div>
+                </label>`).join('');
+        }
+
         function initAuditForm() {
             const zSel = document.getElementById('zoneSelect');
             zSel.innerHTML = '<option value="">-- กรุณาเลือกเขต --</option>';
             zoneList.forEach(z => { zSel.innerHTML += `<option value="${z}">${z}</option>`; });
+            
+            // Setup Rating Areas
+            const ratings = ['rate_person', 'rate_sale', 'rate_k_m', 'rate_k_ctv', 'rate_k_hl', 'rate_k_promo', 
+                             'rate_area_target', 'rate_c_branch', 'rate_c_desk', 'rate_c_coffee', 'rate_c_toilet', 'rate_c_storage', 'rate_c_back'];
+            ratings.forEach(id => { document.getElementById(id).innerHTML = genRating(id); });
+
             currentAuditImages = {}; 
+            // Render Dynamic Questions (Part 4) - BEAUTIFIED & ORGANIZED
             document.getElementById('questionsContainer').innerHTML = questions.map((q, i) => `
-                <div class="bg-white p-4 sm:p-6 rounded-xl border border-slate-100 hover:shadow-md transition duration-200">
-                    <div class="flex justify-between items-start mb-4"><div class="flex gap-4"><div class="w-10 h-10 rounded-lg bg-indigo-50 text-primary flex items-center justify-center font-bold text-lg flex-shrink-0">${i+1}</div><h3 class="font-bold text-slate-800 text-lg pt-1">${q.title}</h3></div></div>
-                    <div class="flex flex-col gap-4 ml-0 sm:ml-14"><div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center"><div class="flex gap-4"><label class="cursor-pointer flex items-center gap-2 group"><input type="radio" name="${q.id}" value="ผ่าน" class="w-5 h-5 text-green-600 focus:ring-green-500 cursor-pointer" onchange="updateProgress(); saveDraft();"> <span class="group-hover:text-green-700 font-medium text-slate-600">ผ่าน</span></label><label class="cursor-pointer flex items-center gap-2 group"><input type="radio" name="${q.id}" value="ไม่ผ่าน" class="w-5 h-5 text-red-600 focus:ring-red-500 cursor-pointer" onchange="updateProgress(); saveDraft();"> <span class="group-hover:text-red-700 font-medium text-slate-600">ไม่ผ่าน</span></label></div><input type="text" id="note_${q.id}" placeholder="ระบุหมายเหตุ..." class="border border-slate-200 p-2.5 rounded-lg flex-1 w-full text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition bg-slate-50 focus:bg-white"></div>
-                        ${q.allowImage ? `<div class="flex items-center gap-2"><label for="file_${q.id}" class="cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-2"><i class="fa-solid fa-camera"></i> แนบรูปภาพ</label><input type="file" id="file_${q.id}" accept="image/*" class="hidden" onchange="handleImageSelect(this, '${q.id}')"><span id="file_status_${q.id}" class="text-xs text-slate-400 italic">ยังไม่ได้เลือกรูป</span></div>` : ''}
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 hover:border-pink-300 transition">
+                    <div class="flex justify-between items-start mb-3">
+                        <h5 class="font-bold text-slate-800 text-base flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-sm font-bold shadow-sm">${i+1}</span> 
+                            ${q.title}
+                        </h5>
+                    </div>
+                    <div class="ml-0 md:ml-11 flex flex-col md:flex-row gap-4 items-start md:items-center">
+                        <div class="switch-wrapper">
+                             <label>
+                                <input type="radio" name="${q.id}" value="ผ่าน" class="switch-radio" onchange="saveDraft()">
+                                <div class="switch-label text-slate-500"><i class="fa-solid fa-check"></i> ผ่าน</div>
+                             </label>
+                             <label>
+                                <input type="radio" name="${q.id}" value="ไม่ผ่าน" class="switch-radio" onchange="saveDraft()">
+                                <div class="switch-label text-slate-500"><i class="fa-solid fa-xmark"></i> ไม่ผ่าน</div>
+                             </label>
+                        </div>
+                        <input type="text" id="note_${q.id}" placeholder="ระบุหมายเหตุ..." class="form-input flex-1 bg-white" oninput="saveDraft()">
+                        ${q.allowImage ? `<div class="flex items-center gap-2"><label for="file_${q.id}" class="cursor-pointer bg-white border border-slate-300 px-3 py-2 text-xs font-bold rounded-lg hover:border-primary hover:text-primary transition flex items-center gap-2 text-slate-500 shadow-sm whitespace-nowrap"><i class="fa-solid fa-camera"></i> หลักฐาน</label><input type="file" id="file_${q.id}" accept="image/*" class="hidden" onchange="handleImageSelect(this, '${q.id}')"><span id="file_status_${q.id}" class="text-xs font-bold"></span></div>` : ''}
                     </div>
                 </div>`).join('');
-            updateProgress();
+        }
+
+        // Collect all form data including inputs, selects, textareas, and ratings
+        function collectFormData() {
+            const formData = {};
+            // 1. Inputs/Selects/Textareas
+            const elements = document.getElementById('auditForm').querySelectorAll('input[type="text"], input[type="number"], input[type="date"], select, textarea');
+            elements.forEach(el => { if(el.id) formData[el.id] = el.value; });
+            
+            // 2. Ratings (Radio Groups)
+            const ratings = ['rate_person', 'rate_sale', 'rate_k_m', 'rate_k_ctv', 'rate_k_hl', 'rate_k_promo', 
+                             'rate_area_target', 'rate_c_branch', 'rate_c_desk', 'rate_c_coffee', 'rate_c_toilet', 'rate_c_storage', 'rate_c_back'];
+            ratings.forEach(id => {
+                const checked = document.querySelector(`input[name="${id}"]:checked`);
+                if(checked) formData[id] = checked.value;
+            });
+
+            // 3. Dynamic Questions
+            formData.dynamic = {};
+            questions.forEach(q => {
+                const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+                if(checked) formData.dynamic[q.id] = checked.value;
+                formData.dynamic[`note_${q.id}`] = document.getElementById(`note_${q.id}`).value;
+            });
+            
+            return formData;
         }
 
         function saveDraft() {
-            const formData = { zone: document.getElementById('zoneSelect').value, branch: document.getElementById('branchSelect').value, summary: document.getElementById('summaryComment').value, answers: {} };
-            questions.forEach(q => { const checked = document.querySelector(`input[name="${q.id}"]:checked`); if(checked) formData.answers[q.id] = checked.value; formData.answers[`note_${q.id}`] = document.getElementById(`note_${q.id}`).value; });
-            localStorage.setItem(STORAGE.DRAFT, JSON.stringify(formData));
+            const data = collectFormData();
+            localStorage.setItem(STORAGE.DRAFT, JSON.stringify(data));
         }
+
         function checkDraft() {
             const draft = localStorage.getItem(STORAGE.DRAFT);
-            if(draft) { document.getElementById('draftNotice').classList.remove('hidden'); Swal.fire({ title: 'พบข้อมูลร่าง', text: 'ต้องการกู้คืนข้อมูลที่ทำค้างไว้หรือไม่?', icon: 'question', showCancelButton: true, confirmButtonText: 'กู้คืน', cancelButtonText: 'เริ่มใหม่' }).then(res => { if(res.isConfirmed) restoreDraft(JSON.parse(draft)); else clearDraft(); }); }
+            if(draft) { document.getElementById('draftNotice').classList.remove('hidden'); }
         }
+
         function restoreDraft(data) {
-            document.getElementById('zoneSelect').value = data.zone; handleZoneChange(); setTimeout(() => { document.getElementById('branchSelect').value = data.branch; }, 100); document.getElementById('summaryComment').value = data.summary;
-            Object.keys(data.answers).forEach(key => { if(key.startsWith('note_')) { const el = document.getElementById(key); if(el) el.value = data.answers[key]; } else { const el = document.querySelector(`input[name="${key}"][value="${data.answers[key]}"]`); if(el) el.checked = true; } }); updateProgress();
+            document.getElementById('zoneSelect').value = data['zoneSelect']; 
+            handleZoneChange(); 
+            setTimeout(() => { 
+                // Restore all inputs
+                for (const key in data) {
+                    if (key === 'dynamic') continue;
+                    const el = document.getElementById(key);
+                    if (el) {
+                        el.value = data[key];
+                    } else {
+                        // Try radio buttons
+                        const radio = document.querySelector(`input[name="${key}"][value="${data[key]}"]`);
+                        if(radio) radio.checked = true;
+                    }
+                }
+                // Restore Dynamic
+                if(data.dynamic) {
+                    Object.keys(data.dynamic).forEach(key => {
+                        if(key.startsWith('note_')) { const el = document.getElementById(key); if(el) el.value = data.dynamic[key]; } 
+                        else { const el = document.querySelector(`input[name="${key}"][value="${data.dynamic[key]}"]`); if(el) el.checked = true; }
+                    });
+                }
+                document.getElementById('draftNotice').classList.add('hidden');
+            }, 200);
         }
-        function clearDraft() { localStorage.removeItem(STORAGE.DRAFT); document.getElementById('draftNotice').classList.add('hidden'); }
-        function handleImageSelect(input, qId) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = function(e) { currentAuditImages[qId] = e.target.result; document.getElementById(`file_status_${qId}`).innerHTML = `<span class="text-green-600 font-bold"><i class="fa-solid fa-check-circle"></i> พร้อมอัปโหลด</span>`; saveDraft(); }; reader.readAsDataURL(input.files[0]); } else { delete currentAuditImages[qId]; document.getElementById(`file_status_${qId}`).innerText = "ยังไม่ได้เลือกรูป"; } }
-        function updateProgress() { let answered = 0; questions.forEach(q => { if(document.querySelector(`input[name="${q.id}"]:checked`)) answered++; }); const pct = (answered / questions.length) * 100; document.getElementById('auditProgressBar').style.width = `${pct}%`; document.getElementById('auditProgressText').innerText = `${answered}/${questions.length} Completed`; }
+
+        function clearDraft() { localStorage.removeItem(STORAGE.DRAFT); document.getElementById('draftNotice').classList.add('hidden'); document.getElementById('auditForm').reset(); }
+        function handleImageSelect(input, qId) { 
+            if (input.files && input.files[0]) { 
+                const reader = new FileReader(); 
+                reader.onload = function(e) { 
+                    currentAuditImages[qId] = e.target.result; 
+                    document.getElementById(`file_status_${qId}`).innerHTML = `<i class="fa-solid fa-circle-check text-green-500 text-lg"></i>`; 
+                    saveDraft(); 
+                }; 
+                reader.readAsDataURL(input.files[0]); 
+            } 
+        }
         function handleZoneChange() { const z = document.getElementById('zoneSelect').value; const bSel = document.getElementById('branchSelect'); bSel.innerHTML = '<option value="">-- กรุณาเลือกสาขา --</option>'; if (z && branchData[z]) { bSel.disabled = false; branchData[z].forEach(b => { const display = b.id && b.id !== '-' ? `[${b.id}] ${b.name}` : b.name; bSel.innerHTML += `<option value="${display}">${display}</option>`; }); } else { bSel.disabled = true; } saveDraft(); }
         function getLocation() { const gpsInput = document.getElementById('gpsCoords'); gpsInput.value = "กำลังค้นหา..."; if(navigator.geolocation) { navigator.geolocation.getCurrentPosition(pos => { gpsInput.value = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`; }, err => { gpsInput.value = ""; showPopup('error', 'GPS Error', err.message); }); } else { showPopup('error', 'Error', "Browser ไม่รองรับ GPS"); } }
-        function calculateDistance(lat1, lon1, lat2, lon2) { const R = 6371; const dLat = (lat2 - lat1) * Math.PI / 180; const dLon = (lon2 - lon1) * Math.PI / 180; const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2); return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); }
 
         async function submitAudit(e) {
             e.preventDefault();
             const gps = document.getElementById('gpsCoords').value;
-            const branchNameFull = document.getElementById('branchSelect').value;
-            if(!gps || gps === "กำลังค้นหา..." || gps === "") { showPopup('warning', 'แจ้งเตือน', 'กรุณาระบุพิกัด GPS ก่อนบันทึก'); return; }
+            if(!gps || gps === "กำลังค้นหา..." || gps === "") { showPopup('warning', 'แจ้งเตือน', 'กรุณาระบุพิกัด GPS'); return; }
             
-            const branchInfo = allBranchDetails.find(b => (b.id && b.id !== '-' ? `[${b.id}] ${b.name}` : b.name) === branchNameFull);
-            if (branchInfo && branchInfo.lat && branchInfo.lng) {
-                const [lat, lng] = gps.split(',').map(s => parseFloat(s.trim()));
-                const dist = calculateDistance(lat, lng, branchInfo.lat, branchInfo.lng);
-                if (dist > 0.5) showPopup('warning', 'พิกัดไม่ถูกต้อง', `คุณอยู่ห่างจากสาขา ${dist.toFixed(2)} กม. (เกิน 500ม.)`);
+            const rawData = collectFormData();
+            // Transform rawData into Details Array for backend compatibility
+            const details = [];
+            
+            // Map Static Fields to Details Array
+            const fieldMap = {
+                'f_site': 'ไซต์สาขา', 'f_age': 'อายุสาขา', 'f_target': 'เป้าสาขา', 'f_actual': 'ยอดทำได้จริง',
+                'emp_name': 'ชื่อพนักงาน', 'rate_person': 'ประเมินบุคลิก', 'rate_sale': 'ทักษะการขาย',
+                'area_comp_near': 'คู่แข่งติดกัน', 'area_sign': 'สภาพป้าย'
+                // Add more mappings as needed for critical report fields
+            };
+
+            // Loop through all collected data to create a flat report
+            for (const key in rawData) {
+                if (key === 'dynamic' || key === 'zoneSelect' || key === 'branchSelect' || key === 'summaryComment') continue;
+                // Use label mapping or key name
+                const label = fieldMap[key] || key;
+                details.push({ q: label, res: rawData[key], note: '' });
             }
 
-            let allAnswered = true;
-            for(const q of questions) { if(!document.querySelector(`input[name="${q.id}"]:checked`)) { allAnswered = false; break; } }
-            if(!allAnswered) { showPopup('warning', 'แจ้งเตือน', 'กรุณาประเมินให้ครบทุกหัวข้อ'); return; }
-            
-            const confirm = await Swal.fire({ title: 'ยืนยันการบันทึก?', text: "ตรวจสอบข้อมูลให้ถูกต้องก่อนบันทึก", icon: 'question', showCancelButton: true, confirmButtonColor: '#4f46e5', cancelButtonColor: '#d33', confirmButtonText: 'ยืนยัน', cancelButtonText: 'ยกเลิก' });
-            if(!confirm.isConfirmed) return;
+            // Add Dynamic Questions
+            if(rawData.dynamic) {
+                questions.forEach(q => {
+                    if(rawData.dynamic[q.id]) {
+                        details.push({ q: q.title, res: rawData.dynamic[q.id], note: rawData.dynamic[`note_${q.id}`], image: currentAuditImages[q.id] || "" });
+                    }
+                });
+            }
 
-            toggleLoading(true, "กำลังบันทึกข้อมูลและอัปโหลดรูปภาพ...");
-            const details = questions.map(q => ({ q: q.title, res: document.querySelector(`input[name="${q.id}"]:checked`)?.value || '-', note: document.getElementById(`note_${q.id}`).value, image: currentAuditImages[q.id] || "" }));
-            const record = { id: Date.now().toString(), date: new Date().toLocaleString('th-TH'), auditor: currentUser.name, zone: document.getElementById('zoneSelect').value, branch: branchNameFull, gps: gps, result: details.some(d => d.res === 'ไม่ผ่าน') ? 'ไม่ผ่าน' : 'ผ่าน', summary: document.getElementById('summaryComment').value, signature: document.getElementById('signaturePad').toDataURL(), details: details };
+            const record = { 
+                id: Date.now().toString(), 
+                date: new Date().toLocaleString('th-TH'), 
+                auditor: currentUser.name, 
+                zone: document.getElementById('zoneSelect').value, 
+                branch: document.getElementById('branchSelect').value, 
+                gps: gps, 
+                result: details.some(d => d.res === 'ไม่ผ่าน' || d.res === '1' || d.res === 'ชำรุด') ? 'ไม่ผ่าน' : 'ผ่าน', // Simple logic
+                summary: document.getElementById('summaryComment').value, 
+                signature: document.getElementById('signaturePad').toDataURL(), 
+                details: details 
+            };
             
+            toggleLoading(true, "กำลังบันทึกข้อมูล...");
             const res = await callAPI('submitAudit', { record });
             toggleLoading(false);
-            if (res.success) { Swal.fire('บันทึกสำเร็จ!', 'ข้อมูลถูกบันทึกเรียบร้อยแล้ว', 'success'); document.getElementById('auditForm').reset(); document.getElementById('gpsCoords').value = ""; clearSignature(); clearDraft(); document.getElementById('branchSelect').disabled = true; currentAuditImages = {}; switchView('view-history'); } 
+            if (res.success) { Swal.fire('บันทึกสำเร็จ!', '', 'success'); clearDraft(); document.getElementById('branchSelect').disabled = true; currentAuditImages = {}; switchView('view-history'); } 
             else { showPopup('error', 'เกิดข้อผิดพลาด', res.message); }
         }
 
@@ -696,10 +886,8 @@
             const ctx1 = document.getElementById('trendChart');
             const ctx2 = document.getElementById('failChart');
             if(!ctx1 || !ctx2) return; 
-
             if(window.trendChartInstance) window.trendChartInstance.destroy();
             if(window.failChartInstance) window.failChartInstance.destroy();
-
             const res = await callAPI('getAnalytics');
             if(res.success) {
                 const { trend, failed } = res.data;
@@ -740,8 +928,8 @@
             document.getElementById('detailContent').innerHTML = `
                 <div class="mb-4 bg-slate-50 p-3 rounded border border-slate-100"><strong>สาขา:</strong> ${rec.branch} (${rec.zone})<br><strong>วันที่:</strong> ${rec.date} <br><strong>ผู้ตรวจ:</strong> ${rec.auditor}</div>
                 <table class="w-full text-sm border">
-                    <thead class="bg-slate-100"><tr><th class="p-2 border">หัวข้อ</th><th class="p-2 border">ผล</th><th class="p-2 border">รูปภาพ</th></tr></thead>
-                    <tbody>${rec.details.map(d => `<tr><td class="p-2 border">${d.q} <br><span class="text-xs text-slate-400 italic">${d.note||''}</span></td><td class="p-2 border text-center font-bold ${d.res==='ไม่ผ่าน'?'text-red-500':'text-green-500'}">${d.res}</td><td class="p-2 border text-center">${d.image && d.image.startsWith('http') ? `<img src="${d.image}" class="h-16 inline-block rounded border">` : '-'}</td></tr>`).join('')}</tbody>
+                    <thead class="bg-slate-100"><tr><th class="p-2 border">หัวข้อ</th><th class="p-2 border">ผล/ข้อมูล</th><th class="p-2 border">หมายเหตุ/รูปภาพ</th></tr></thead>
+                    <tbody>${rec.details.map(d => `<tr><td class="p-2 border">${d.q}</td><td class="p-2 border text-center font-bold ${d.res==='ไม่ผ่าน'?'text-red-500':'text-slate-700'}">${d.res||'-'}</td><td class="p-2 border text-center">${d.image && d.image.startsWith('http') ? `<img src="${d.image}" class="h-16 inline-block rounded border">` : (d.note || '-')}</td></tr>`).join('')}</tbody>
                 </table>
                 <div class="mt-4 border p-3 rounded bg-white"><strong class="text-xs text-slate-400 uppercase">สรุป:</strong> <br>${rec.summary||'-'}</div>
                 ${rec.signature ? `<div class="mt-4 text-right"><img src="${rec.signature}" class="h-20 border inline-block rounded"></div>` : ''}
@@ -749,7 +937,7 @@
             document.getElementById('detailModal').classList.remove('hidden');
         }
 
-        // --- User Management (FIXED) ---
+        // --- User Management (Original) ---
         async function fetchUsers() { 
             toggleLoading(true, "กำลังโหลดรายชื่อ...");
             const res = await callAPI('getUsers'); 

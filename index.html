@@ -154,7 +154,6 @@
             </div>
             <div class="relative z-10 text-center text-white px-10">
                 <div class="mb-6 inline-block p-4 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl">
-                    <!-- 1. Revert to Green Icon -->
                     <i class="fa-solid fa-database text-6xl text-green-400"></i>
                 </div>
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
@@ -183,7 +182,7 @@
                     <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg shadow-lg transition transform active:scale-[0.98]">
                         เข้าสู่ระบบ
                     </button>
-                    <!-- 2. Version below button & Credit -->
+                    <!-- Version below button & Credit -->
                     <div class="text-center mt-4">
                         <div class="text-xs text-slate-400">Version 4.5.1 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
@@ -243,7 +242,7 @@
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-800 text-center">
-                <!-- 3. Credit Moved Here -->
+                <!-- Credit Moved Here -->
                 <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">© 2026 ADMIN OK</div>
                 <button type="button" onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white px-4 py-2 rounded-lg transition-all text-sm font-bold">
                     <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
@@ -291,8 +290,6 @@
 
                 <!-- 2. Audit Form (Professional Layout) -->
                 <div id="view-audit" class="page-view fade-in hidden max-w-5xl mx-auto pb-20">
-                    
-                    <!-- Draft Notice -->
                     <div id="draftNotice" class="hidden mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex justify-between items-center shadow-sm">
                         <div class="flex items-center gap-3 text-amber-800">
                             <i class="fa-solid fa-clock-rotate-left text-xl"></i>
@@ -316,7 +313,7 @@
                     </div>
                     
                     <form id="auditForm" onsubmit="submitAudit(event)" oninput="saveDraft()">
-                        
+                        <!-- ... (Form content remains the same) ... -->
                         <!-- 1. ข้อมูลสาขา -->
                         <div class="card">
                             <div class="card-header border-l-4 border-blue-500">
@@ -685,8 +682,8 @@
 
             <!-- Footer: Static, No Sticky -->
             <div class="p-5 border-t border-slate-100 bg-white rounded-b-2xl flex gap-3 flex-shrink-0">
-                <button onclick="downloadPDF()" class="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 font-medium transition flex items-center justify-center gap-2 shadow-lg shadow-red-200"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
-                <button onclick="printReport()" class="flex-1 bg-slate-800 text-white py-3 rounded-lg hover:bg-slate-700 font-medium transition flex items-center justify-center gap-2 shadow-lg shadow-slate-300"><i class="fa-solid fa-print"></i> พิมพ์รายงาน</button>
+                <button id="btnDownloadPDF" onclick="downloadPDF()" class="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 font-medium transition flex items-center justify-center gap-2 shadow-lg shadow-red-200"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                <button id="btnPrintReport" onclick="printReport()" class="flex-1 bg-slate-800 text-white py-3 rounded-lg hover:bg-slate-700 font-medium transition flex items-center justify-center gap-2 shadow-lg shadow-slate-300"><i class="fa-solid fa-print"></i> พิมพ์รายงาน</button>
             </div>
         </div>
     </div>
@@ -1056,6 +1053,7 @@
             if(!gps || gps === "กำลังค้นหา..." || gps.includes("กรุณา")) { showPopup('warning', 'แจ้งเตือน', 'กรุณาระบุพิกัด GPS'); return; }
             
             const sigCanvas = document.getElementById('signaturePad');
+            // FIX: Check if blank
             const blank = document.createElement('canvas'); blank.width = sigCanvas.width; blank.height = sigCanvas.height;
             if(sigCanvas.toDataURL() === blank.toDataURL()) { showPopup('warning', 'แจ้งเตือน', 'กรุณาลงลายเซ็นผู้ตรวจ'); return; }
 
@@ -1218,7 +1216,7 @@
                     <div class="flex-1">
                         <div class="font-semibold text-slate-700">${d.q}</div>
                         ${d.note ? `<div class="text-xs text-slate-500">${d.note}</div>` : ''}
-                        ${d.image ? `<div class="mt-1"><img src="${d.image}" class="h-20 rounded border border-slate-200"></div>` : ''}
+                        ${d.image ? `<div class="mt-1"><img src="${d.image}" referrerpolicy="no-referrer" class="h-20 rounded border border-slate-200"></div>` : ''}
                     </div>
                 </div>`;
             });
@@ -1233,7 +1231,7 @@
                     </div>
                     <div class="border p-3 rounded bg-white text-center">
                         <h5 class="font-bold text-xs text-slate-500 uppercase mb-2">ลงชื่อผู้ตรวจ</h5>
-                        ${rec.signature ? `<img src="${rec.signature}" class="h-16 mx-auto">` : '<div class="h-16"></div>'}
+                        ${rec.signature ? `<img src="${rec.signature}" class="h-16 mx-auto" referrerpolicy="no-referrer">` : '<div class="h-16"></div>'}
                         <div class="text-xs text-slate-400 mt-1">${rec.auditor}</div>
                     </div>
                 </div>
@@ -1306,6 +1304,74 @@
             const res = await callAPI('getLogs'); 
             toggleLoading(false);
             if(res.success && res.data.length > 0) { document.getElementById('systemLogsContainer').innerHTML = res.data.map(l => `<tr class="border-b"><td class="px-6 py-3 text-slate-500">${l.timestamp}</td><td class="px-6 py-3 font-bold">${l.user}</td><td class="px-6 py-3">${l.role}</td><td class="px-6 py-3">${l.action}</td><td class="px-6 py-3 text-xs font-mono">${l.details}</td></tr>`).join(''); } 
+        }
+
+        // --- NEW: Better Print Function (Iframe Isolation) ---
+        function printReport() {
+            const content = document.getElementById('detailContent').innerHTML;
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'absolute';
+            iframe.style.width = '0px';
+            iframe.style.height = '0px';
+            iframe.style.border = 'none';
+            document.body.appendChild(iframe);
+            
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <html>
+                <head>
+                    <title>Audit Report</title>
+                    <script src="https://cdn.tailwindcss.com"><\/script>
+                    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Sarabun', sans-serif; padding: 20px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+                        img { max-height: 100px; }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                    <script>
+                        window.onload = function() { setTimeout(() => { window.print(); }, 500); }
+                    <\/script>
+                </body>
+                </html>
+            `);
+            doc.close();
+            
+            // Clean up iframe after print dialog closes (approximate)
+            setTimeout(() => { document.body.removeChild(iframe); }, 10000);
+        }
+
+        // --- NEW: Better PDF Function (Error Handling) ---
+        function downloadPDF() {
+            const btn = document.getElementById('btnDownloadPDF');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
+            btn.disabled = true;
+
+            const element = document.getElementById('detailContent');
+            const opt = { 
+                margin: 10, 
+                filename: 'audit-report.pdf', 
+                image: { type: 'jpeg', quality: 0.98 }, 
+                html2canvas: { scale: 2, useCORS: true, logging: true }, 
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+            };
+            
+            html2pdf().set(opt).from(element).save()
+            .then(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            })
+            .catch(err => {
+                console.error(err);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                Swal.fire('PDF Error', 'ไม่สามารถสร้าง PDF ได้เนื่องจากรูปภาพติดสิทธิ์ (CORS) หรือปัญหาเครือข่าย ลองใช้ปุ่ม "พิมพ์รายงาน" แล้วเลือก "Save as PDF"', 'warning');
+            });
         }
     </script>
 </body>

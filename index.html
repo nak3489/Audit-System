@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <script>
@@ -338,38 +337,18 @@
                         </div>
                     </div>
 
-                    <!-- Charts Section -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow">
-                            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center"><i class="fa-solid fa-chart-pie"></i></div>
-                                <h3 class="font-bold text-slate-700">แนวโน้มผลการตรวจ</h3>
-                            </div>
-                            <div class="p-6">
-                                <canvas id="trendChart" class="w-full max-h-64"></canvas>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow">
-                            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center"><i class="fa-solid fa-chart-column"></i></div>
-                                <h3 class="font-bold text-slate-700">หัวข้อที่ตกบ่อย</h3>
-                            </div>
-                            <div class="p-6">
-                                <canvas id="failChart" class="w-full max-h-64"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Zone Status List -->
-                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+                    <!-- Zone Status List (Expanded as Main View) -->
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mt-8">
+                        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                             <h3 class="font-bold text-slate-800 flex items-center gap-2 text-lg">
-                                <i class="fa-solid fa-map-location-dot text-primary"></i> สถานะสาขาแยกตามเขต
+                                <i class="fa-solid fa-map-location-dot text-primary"></i> สถานะสาขาแยกตามเขต (Zone Status)
                             </h3>
                         </div>
-                        <div class="p-6">
-                            <div id="zoneStatList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 text-sm">
-                                <div class="col-span-full text-center py-4 text-slate-400">กำลังโหลดข้อมูล...</div>
+                        <div class="p-6 bg-slate-50/20">
+                            <div id="zoneStatList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-sm">
+                                <div class="col-span-full text-center py-10 text-slate-400">
+                                    <i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i><br>กำลังโหลดข้อมูล...
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -790,6 +769,7 @@
                                 <div><label class="text-xs font-bold text-slate-500 uppercase">Password</label><input name="newPassword" type="password" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required></div>
                                 <div><label class="text-xs font-bold text-slate-500 uppercase">Full Name</label><input name="newName" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required></div>
                                 <div><label class="text-xs font-bold text-slate-500 uppercase">Role</label><select name="newRole" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition"><option value="user">User (พนักงาน)</option><option value="admin">Admin (ผู้ดูแล)</option></select></div>
+                                <div><label class="text-xs font-bold text-slate-500 uppercase">Permission Area (โซนที่ดูแล)</label><input name="newPermissionArea" placeholder="เช่น BKK,UPC หรือพิมพ์ ALL เพื่อดูได้ทั้งหมด" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition"></div>
                                 <button class="w-full bg-slate-800 text-white p-3 rounded-lg font-bold hover:bg-slate-700 transition mt-2"><i class="fa-solid fa-plus mr-2"></i> บันทึกข้อมูล</button>
                              </form>
                         </div>
@@ -858,6 +838,10 @@
                     </select>
                 </div>
                 <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Permission Area (โซนที่ดูแล)</label>
+                    <input type="text" id="editPermissionArea" name="permissionArea" placeholder="เช่น BKK,UPC หรือพิมพ์ ALL เพื่อดูได้ทั้งหมด" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition">
+                </div>
+                <div>
                     <label class="text-xs font-bold text-slate-500 uppercase">New Password (Optional)</label>
                     <input type="password" name="pass" placeholder="เว้นว่างถ้าไม่ต้องการเปลี่ยน" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition">
                 </div>
@@ -877,7 +861,7 @@
 
     <script>
         // *** REPLACE WITH YOUR REAL DEPLOYED WEB APP URL HERE ***
-        const API_URL = "https://script.google.com/macros/s/AKfycbxyv8_yBg_nPA_1ncgctxHDFlni-W6N0aY9lpQwuvGpWiFjjw4oiH3D8T6FRadr2Bo4/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwV89uY_KDkvJNJ2CUwxNfPX6I4XqQoTMn5L7Novu-6jQDhSBC46DQUBly0j-_O_eWzCw/exec"; 
         
         const STORAGE = { QUESTIONS: 'app_v2_questions', DRAFT: 'app_v2_draft', USER: 'audit_user_session' };
         let currentUser = null;
@@ -886,6 +870,7 @@
         let auditRecords = [];
         let currentAuditImages = {};
         let allBranchDetails = []; 
+        let globalAllBranches = []; // เก็บสาขาทั้งหมดไว้ใช้เชื่อมโยง ภาค -> เขต
         let inactivityTimer;
         
         // Initial questions placeholder (will be overwritten by server)
@@ -906,7 +891,8 @@
             if(storedUser) { currentUser = JSON.parse(storedUser); initSystemAfterLogin(); }
         });
 
-        function initSystemAfterLogin() {
+        // ทำให้ init เป็น async เพื่อรอโหลดข้อมูลสาขาให้เสร็จก่อนโหลดประวัติ
+        async function initSystemAfterLogin() {
             document.getElementById('view-login').classList.add('hidden');
             document.getElementById('main-layout').classList.remove('hidden');
             document.getElementById('sidebarName').innerText = currentUser.name;
@@ -917,10 +903,10 @@
             const welcomeName = document.getElementById('dashWelcomeName');
             if(welcomeName) welcomeName.innerText = currentUser.name;
 
-            if (currentUser.role !== 'admin') document.querySelectorAll('.admin-only').forEach(e => e.classList.add('hidden'));
+            if (currentUser.role.toLowerCase() !== 'admin') document.querySelectorAll('.admin-only').forEach(e => e.classList.add('hidden'));
             else document.querySelectorAll('.admin-only').forEach(e => e.classList.remove('hidden'));
 
-            fetchBranches(); 
+            await fetchBranches(); 
             fetchHistory(false); 
             fetchQuestionsFromAPI(); // NEW: Fetch questions on startup
             switchView('view-dashboard');
@@ -964,6 +950,7 @@
 
         async function callAPI(action, payload = {}) {
             try {
+                if (currentUser && !payload.requestUser) payload.requestUser = currentUser;
                 const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, ...payload }) });
                 return await response.json();
             } catch (error) { return { success: false, message: error.message }; }
@@ -1063,7 +1050,7 @@
             if (viewId === 'view-users') fetchUsers();
             if (viewId === 'view-logs') fetchLogs(); 
             if (viewId === 'view-questions') renderQuestionsConfig();
-            if (viewId === 'view-dashboard') fetchAnalytics();
+            if (viewId === 'view-dashboard') updateDashboardCounts();
             if (viewId === 'view-settings') fetchSettings(); // Load Settings
         }
 
@@ -1084,28 +1071,28 @@
         async function fetchBranches() {
             const res = await callAPI('getBranches');
             if (res.success) {
-                branchData = {}; zoneList = []; allBranchDetails = [];
-                res.data.forEach(item => {
-                    if (!branchData[item.zone]) { branchData[item.zone] = []; zoneList.push(item.zone); }
-                    branchData[item.zone].push({ id: item.id, name: item.name }); allBranchDetails.push(item);
-                });
-                updateDashboardCounts();
-                const zoneContainer = document.getElementById('zoneStatList');
-                if(zoneContainer) {
-                    zoneContainer.innerHTML = zoneList.map(z => 
-                        `<div class="bg-white p-4 rounded-xl border border-slate-100 flex items-center justify-between shadow-sm hover:shadow-md transition cursor-default group overflow-hidden relative">
-                            <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-400 to-indigo-500"></div>
-                            <div class="pl-2">
-                                <div class="text-xs text-slate-400 mb-0.5 group-hover:text-primary transition font-bold uppercase tracking-wider">Zone</div>
-                                <div class="font-bold text-slate-700 text-lg group-hover:scale-105 transition origin-left">${z}</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-xs text-slate-400">สาขา</div>
-                                <span class="font-bold text-lg text-primary">${branchData[z].length}</span>
-                            </div>
-                        </div>`
-                    ).join('');
+                globalAllBranches = res.data; // เก็บไว้เป็นข้อมูลอ้างอิงตอนดึงประวัติการตรวจ
+                let rawBranches = res.data;
+                
+                // --- ระบบ Permission Area ---
+                if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea.trim() !== '' && currentUser.permissionArea.trim().toUpperCase() !== 'ALL') {
+                    const allowedZones = currentUser.permissionArea.split(',').map(z => z.trim().toUpperCase());
+                    rawBranches = rawBranches.filter(b => 
+                        allowedZones.includes((b.region || '').toUpperCase()) || 
+                        allowedZones.includes((b.zone || '').toUpperCase()) || 
+                        allowedZones.includes((b.id || '').toUpperCase())
+                    );
                 }
+
+                branchData = {}; zoneList = []; allBranchDetails = [];
+                rawBranches.forEach(item => {
+                    const zoneName = item.zone || 'ไม่ระบุเขต';
+                    if (!branchData[zoneName]) { branchData[zoneName] = []; zoneList.push(zoneName); }
+                    branchData[zoneName].push({ id: item.id, name: item.name }); 
+                    allBranchDetails.push(item);
+                });
+                
+                updateDashboardCounts();
             }
         }
 
@@ -1113,11 +1100,81 @@
              const total = allBranchDetails.length; if(total===0) return;
              const audited = auditRecords.length;
              const fail = auditRecords.filter(r => r.result === 'ไม่ผ่าน').length;
-             const unique = new Set(auditRecords.map(r => r.branch)).size;
+             const uniqueSet = new Set();
+             auditRecords.forEach(r => {
+                 let branchName = r.branch;
+                 if(branchName.includes('] ')) branchName = branchName.split('] ')[1];
+                 uniqueSet.add(branchName.trim());
+             });
+             
              document.getElementById('dashTotalBranches').innerText = total;
-             document.getElementById('dashAudited').innerText = audited;
-             document.getElementById('dashRemaining').innerText = Math.max(0, total - unique);
+             document.getElementById('dashAudited').innerText = audited; // overall total audit count
+             document.getElementById('dashRemaining').innerText = Math.max(0, total - uniqueSet.size);
              document.getElementById('dashFailCount').innerText = fail;
+
+             // Refresh Zone Stats Cards
+             renderZoneStats();
+        }
+
+        function renderZoneStats() {
+            const zoneContainer = document.getElementById('zoneStatList');
+            if(!zoneContainer) return;
+            
+            zoneContainer.innerHTML = zoneList.map(z => {
+                const totalInZone = branchData[z].length;
+                
+                // นับสาขาที่ตรวจแล้วแบบไม่ซ้ำ (Unique) ในเขตนั้นๆ
+                const auditedSet = new Set();
+                auditRecords.filter(r => r.zone === z).forEach(r => {
+                    let bName = r.branch;
+                    if(bName.includes('] ')) bName = bName.split('] ')[1];
+                    auditedSet.add(bName.trim());
+                });
+                const auditedInZone = auditedSet.size;
+                const remainingInZone = Math.max(0, totalInZone - auditedInZone);
+                
+                // คำนวณเปอร์เซ็นต์
+                const progress = totalInZone > 0 ? (auditedInZone / totalInZone) * 100 : 0;
+
+                return `
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-default group overflow-hidden relative flex flex-col">
+                    <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-400 to-indigo-500"></div>
+                    <div class="pl-2 mb-4 flex justify-between items-start">
+                        <div>
+                            <div class="text-[10px] text-slate-400 mb-0.5 group-hover:text-primary transition font-bold uppercase tracking-wider">เขต (Zone)</div>
+                            <div class="font-bold text-slate-700 text-xl group-hover:scale-105 transition origin-left">${z}</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center text-lg shadow-sm border border-blue-100">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="pl-2 grid grid-cols-3 gap-2 text-center mt-auto">
+                        <div class="bg-slate-50 rounded-lg p-2 border border-slate-100 shadow-sm hover:bg-slate-100 transition">
+                            <div class="text-[9px] sm:text-[10px] text-slate-500 font-bold mb-1">ทั้งหมด</div>
+                            <div class="font-bold text-slate-800 text-lg sm:text-xl">${totalInZone}</div>
+                        </div>
+                        <div class="bg-green-50 rounded-lg p-2 border border-green-100 shadow-sm hover:bg-green-100 transition">
+                            <div class="text-[9px] sm:text-[10px] text-green-600 font-bold mb-1">ตรวจแล้ว</div>
+                            <div class="font-bold text-green-700 text-lg sm:text-xl">${auditedInZone}</div>
+                        </div>
+                        <div class="bg-orange-50 rounded-lg p-2 border border-orange-100 shadow-sm hover:bg-orange-100 transition">
+                            <div class="text-[9px] sm:text-[10px] text-orange-600 font-bold mb-1">คงเหลือ</div>
+                            <div class="font-bold text-orange-700 text-lg sm:text-xl">${remainingInZone}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="pl-2 mt-5">
+                        <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1.5">
+                            <span>ความคืบหน้า</span>
+                            <span class="${progress === 100 ? 'text-green-500' : ''}">${progress.toFixed(0)}%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 shadow-inner overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-400 to-green-500 h-2 rounded-full transition-all duration-1000" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         function initAuditForm() {
@@ -1342,14 +1399,44 @@
         }
 
         // --- Others (History, Users, Analytics, PDF) ---
-        async function fetchHistory(render=true) { if(render) toggleLoading(true); const res = await callAPI('getHistory'); if(render) toggleLoading(false); if(res.success) { auditRecords = res.data; updateDashboardCounts(); if(render) renderHistoryTable(res.data); } }
+        async function fetchHistory(render=true) { 
+            if(render) toggleLoading(true); 
+            const res = await callAPI('getHistory'); 
+            if(render) toggleLoading(false); 
+            
+            if(res.success) { 
+                let rawRecords = res.data;
+                // --- ระบบ Permission Area (เชื่อมโยง ภาค -> เขต -> ประวัติ) ---
+                if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea.trim() !== '' && currentUser.permissionArea.trim().toUpperCase() !== 'ALL') {
+                    const allowedZones = currentUser.permissionArea.split(',').map(z => z.trim().toUpperCase());
+                    
+                    // ดึงชื่อเขต (Zone) ทั้งหมดที่อยู่ภายใต้ภาค (Region) ที่ได้รับสิทธิ์ จาก globalAllBranches
+                    const mappedZones = globalAllBranches
+                        .filter(b => allowedZones.includes((b.region || '').toUpperCase()))
+                        .map(b => (b.zone || '').toUpperCase());
+
+                    rawRecords = rawRecords.filter(r => {
+                        const rZone = (r.zone || '').toUpperCase();
+                        const rBranch = (r.branch || '').toUpperCase();
+                        return allowedZones.includes(rZone) || 
+                               mappedZones.includes(rZone) || 
+                               allowedZones.some(az => rBranch.includes(`[${az}]`));
+                    });
+                }
+
+                auditRecords = rawRecords; 
+                updateDashboardCounts(); 
+                if(render) renderHistoryTable(auditRecords); 
+            } 
+        }
+
         function renderHistoryTable(records) { 
             const c = document.getElementById('auditLogContainer'); c.innerHTML = records.map(r => `
                 <tr class="border-b hover:bg-slate-50"><td class="p-3">${r.date}</td><td class="p-3 font-bold">${r.branch}</td><td class="p-3">${r.auditor}</td>
                 <td class="p-3"><span class="px-2 py-1 rounded-md text-xs border ${r.result==='ผ่าน'?'bg-green-50 text-green-700':'bg-red-50 text-red-700'} font-bold">${r.result}</span></td>
                 <td class="p-3 text-center flex items-center justify-center gap-2">
                     <button onclick='openDetail("${r.id}")' class="text-primary text-xs border border-primary px-3 py-1 rounded hover:bg-primary hover:text-white transition">View</button>
-                    ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteAudit('${r.id}')" class="text-red-500 text-xs border border-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition"><i class="fa-solid fa-trash"></i></button>` : ''}
+                    ${currentUser && currentUser.role.toLowerCase() === 'admin' ? `<button onclick="deleteAudit('${r.id}')" class="text-red-500 text-xs border border-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition"><i class="fa-solid fa-trash"></i></button>` : ''}
                 </td></tr>`).join('');
         }
         
@@ -1626,80 +1713,6 @@
                 btn.innerHTML = originalText;
                 btn.disabled = false;
                 Swal.fire('PDF Error', 'ไม่สามารถสร้าง PDF ได้เนื่องจากรูปภาพติดสิทธิ์ (CORS) หรือปัญหาเครือข่าย ลองใช้ปุ่ม "พิมพ์รายงาน" แล้วเลือก "Save as PDF"', 'warning');
-            });
-        }
-
-        // --- NEW: Dashboard Analytics & Actions ---
-        let trendChartInstance = null;
-        let failChartInstance = null;
-
-        function fetchAnalytics() {
-            updateDashboardCounts();
-            
-            // Generate Charts
-            if(auditRecords.length === 0) return;
-
-            // 1. Trend Chart (Pass vs Fail Ratio)
-            const passCount = auditRecords.filter(r => r.result === 'ผ่าน').length;
-            const failCount = auditRecords.filter(r => r.result === 'ไม่ผ่าน').length;
-            
-            const ctxTrend = document.getElementById('trendChart').getContext('2d');
-            if (trendChartInstance) trendChartInstance.destroy();
-            trendChartInstance = new Chart(ctxTrend, {
-                type: 'doughnut',
-                data: {
-                    labels: ['ผ่าน (Pass)', 'ไม่ผ่าน (Fail)'],
-                    datasets: [{
-                        data: [passCount, failCount],
-                        backgroundColor: ['#22c55e', '#ef4444'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 12, font: { family: "'Sarabun', sans-serif" } } }
-                    }
-                }
-            });
-
-            // 2. Fail Chart (Top 5 Failed Topics)
-            const failCounts = {};
-            auditRecords.forEach(r => {
-                if(r.details) {
-                    r.details.forEach(d => {
-                        if(d.res === 'ไม่ผ่าน') {
-                            failCounts[d.q] = (failCounts[d.q] || 0) + 1;
-                        }
-                    });
-                }
-            });
-            
-            const sortedFail = Object.entries(failCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
-            const ctxFail = document.getElementById('failChart').getContext('2d');
-            if (failChartInstance) failChartInstance.destroy();
-            
-            failChartInstance = new Chart(ctxFail, {
-                type: 'bar',
-                data: {
-                    labels: sortedFail.map(x => x[0]),
-                    datasets: [{
-                        label: 'จำนวนครั้ง',
-                        data: sortedFail.map(x => x[1]),
-                        backgroundColor: '#ef4444',
-                        borderRadius: 4,
-                        barThickness: 20
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    plugins: { legend: { display: false } },
-                    scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } }, y: { ticks: { font: { family: "'Sarabun', sans-serif" } } } }
-                }
             });
         }
 

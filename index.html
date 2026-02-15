@@ -198,7 +198,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.0.1 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.3 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -223,7 +223,7 @@
                     </button>
                     <!-- 2. Version below button & Credit -->
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 5.0.1 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 5.3 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -266,6 +266,12 @@
                 <a href="#" onclick="switchView('view-history'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-clock-rotate-left w-6 group-hover:text-warning transition-colors"></i><span class="font-medium">ประวัติการตรวจ</span>
                 </a>
+                
+                <!-- NEW: Change Password Menu (Visible to Everyone) -->
+                <a href="#" onclick="openChangePasswordModal(); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                    <i class="fa-solid fa-key w-6 group-hover:text-orange-400 transition-colors"></i><span class="font-medium">เปลี่ยนรหัสผ่าน</span>
+                </a>
+
                 <!-- Admin Menu -->
                 <div class="pt-4 pb-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-widest admin-only hidden">Administrator</div>
                 <a href="#" onclick="switchView('view-users'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
@@ -904,6 +910,35 @@
             </form>
         </div>
     </div>
+
+    <!-- NEW: Change Password Modal (For Self Service) -->
+    <div id="changePasswordModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl animate-fade-in-up">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <h3 class="font-bold text-lg text-slate-800">เปลี่ยนรหัสผ่าน</h3>
+                <button onclick="document.getElementById('changePasswordModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <form onsubmit="handleChangePasswordSubmit(event)" class="p-6 space-y-4">
+                <!-- Added: Old Password Field -->
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">รหัสผ่านเดิม</label>
+                    <input type="password" id="cp_oldPass" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required placeholder="ระบุรหัสผ่านปัจจุบัน">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">รหัสผ่านใหม่</label>
+                    <input type="password" id="cp_newPass" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required placeholder="ระบุรหัสผ่านใหม่">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">ยืนยันรหัสผ่านใหม่</label>
+                    <input type="password" id="cp_confirmPass" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required placeholder="ระบุรหัสผ่านอีกครั้ง">
+                </div>
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="document.getElementById('changePasswordModal').classList.add('hidden')" class="flex-1 py-2.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">ยกเลิก</button>
+                    <button type="submit" class="flex-1 bg-primary text-white py-2.5 rounded-lg hover:bg-indigo-700">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <!-- 4. Updated Loading Overlay with New Animation & Opacity -->
     <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/20 z-[100] flex flex-col items-center justify-center transition-opacity duration-300 backdrop-blur-[2px]">
@@ -1138,7 +1173,24 @@
             } else { showPopup('error', 'ล้มเหลว', res.message); }
         }
 
-        function logout() { localStorage.removeItem(STORAGE.USER); location.reload(); }
+        // UPDATED: Logout with Confirmation Popup
+        function logout() { 
+            Swal.fire({
+                title: 'ยืนยันการออกจากระบบ?',
+                text: "คุณต้องการออกจากระบบใช่หรือไม่",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ออกจากระบบ',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem(STORAGE.USER); 
+                    location.reload(); 
+                }
+            });
+        }
 
         async function fetchBranches() {
             const res = await callAPI('getBranches');
@@ -1785,6 +1837,64 @@
         async function deleteUser(u) { 
             const confirm = await Swal.fire({ title: 'ยืนยันลบผู้ใช้?', text: u, icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ลบ' });
             if(confirm.isConfirmed) { toggleLoading(true, "กำลังลบผู้ใช้..."); await callAPI('deleteUser', {targetUser: u}); toggleLoading(false); fetchUsers(); } 
+        }
+
+        // --- NEW: Change Password Logic ---
+        function openChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('cp_oldPass').value = ''; // Clear old pass
+            document.getElementById('cp_newPass').value = '';
+            document.getElementById('cp_confirmPass').value = '';
+        }
+
+        async function handleChangePasswordSubmit(e) {
+            e.preventDefault();
+            const oldPass = document.getElementById('cp_oldPass').value;
+            const newPass = document.getElementById('cp_newPass').value;
+            const confirmPass = document.getElementById('cp_confirmPass').value;
+
+            if (newPass !== confirmPass) {
+                showPopup('error', 'ผิดพลาด', 'รหัสผ่านใหม่ไม่ตรงกัน');
+                return;
+            }
+
+            if (newPass.length < 4) {
+                showPopup('warning', 'แจ้งเตือน', 'รหัสผ่านใหม่ควรมีความยาวอย่างน้อย 4 ตัวอักษร');
+                return;
+            }
+
+            toggleLoading(true, "กำลังตรวจสอบรหัสผ่านเดิม...");
+            
+            // 1. Verify old password using login API
+            const verifyRes = await callAPI('login', { user: currentUser.user, pass: oldPass });
+            
+            if (!verifyRes.success) {
+                toggleLoading(false);
+                showPopup('error', 'ผิดพลาด', 'รหัสผ่านเดิมไม่ถูกต้อง');
+                return;
+            }
+
+            // 2. If verified, proceed to change password
+            toggleLoading(true, "กำลังเปลี่ยนรหัสผ่าน...");
+            const res = await callAPI('editUser', {
+                user: currentUser.user,
+                name: currentUser.name,
+                role: currentUser.role,
+                pass: newPass
+            });
+            toggleLoading(false);
+
+            if (res.success) {
+                document.getElementById('changePasswordModal').classList.add('hidden');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'สำเร็จ',
+                    text: 'เปลี่ยนรหัสผ่านเรียบร้อย กรุณาเข้าสู่ระบบใหม่ด้วยรหัสผ่านใหม่',
+                    confirmButtonText: 'ตกลง'
+                });
+            } else {
+                showPopup('error', 'ผิดพลาด', res.message);
+            }
         }
 
         async function fetchLogs() { 

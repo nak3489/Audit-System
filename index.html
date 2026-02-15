@@ -198,7 +198,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v4.5.1 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.0.1 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -223,7 +223,7 @@
                     </button>
                     <!-- 2. Version below button & Credit -->
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 4.5.1 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 5.0.1 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -271,7 +271,8 @@
                 <a href="#" onclick="switchView('view-users'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-users-gear w-6 group-hover:text-purple-400 transition-colors"></i><span class="font-medium">จัดการผู้ใช้งาน</span>
                 </a>
-                <a href="#" onclick="switchView('view-questions'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <!-- UPDATED: Removed 'admin-only hidden' to allow general users to access -->
+                <a href="#" onclick="switchView('view-questions'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-list-check w-6 group-hover:text-pink-400 transition-colors"></i><span class="font-medium">ตั้งค่าแบบฟอร์ม</span>
                 </a>
                 <a href="#" onclick="switchView('view-settings'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
@@ -1417,8 +1418,18 @@
         function renderQuestionsConfig() { 
             const list = document.getElementById('questionsListConfig');
             if(!questions || questions.length === 0) { list.innerHTML = `<tr><td colspan="3" class="text-center py-4">No Questions</td></tr>`; return; }
+            
+            // UPDATED: Logic to protect specific questions for non-admins
+            const protectedIds = ['q1', 'q2', 'q3', 'q4'];
+            const isAdmin = currentUser && currentUser.role.toLowerCase() === 'admin';
+
             list.innerHTML = questions.map(q => {
                 const safeTitle = q.title ? q.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "";
+                
+                // Determine if actions should be shown
+                // Show if User is Admin OR (User is not Admin AND Question is NOT in protected list)
+                const showActions = isAdmin || !protectedIds.includes(q.id);
+
                 return `
                 <div class="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md transition group">
                     <div class="flex-1">
@@ -1426,15 +1437,18 @@
                         <div class="text-xs text-slate-400 font-mono mt-1 flex items-center gap-2">
                             <span>ID: ${q.id}</span>
                             ${q.allowImage ? '<span class="text-green-600 bg-green-50 px-2 py-0.5 rounded text-[10px] font-bold border border-green-100"><i class="fa-solid fa-camera mr-1"></i>รูปภาพ</span>' : ''}
+                            ${!showActions ? '<span class="text-xs text-red-500 bg-red-50 px-2 py-0.5 rounded border border-red-100"><i class="fa-solid fa-lock mr-1"></i>System Locked</span>' : ''}
                         </div>
                     </div>
                     <div class="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                        ${showActions ? `
                         <button onclick="openAddQuestionModal('${q.id}', '${safeTitle}', ${q.allowImage})" class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center shadow-sm" title="แก้ไข">
                             <i class="fa-solid fa-pen"></i>
                         </button>
                         <button onclick="deleteQuestion('${q.id}')" class="w-10 h-10 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition flex items-center justify-center shadow-sm" title="ลบ">
                             <i class="fa-solid fa-trash"></i>
                         </button>
+                        ` : ''}
                     </div>
                 </div>`;
             }).join(''); 

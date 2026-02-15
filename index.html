@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -37,6 +36,9 @@
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .nav-link.active { background-color: rgba(255, 255, 255, 0.1); border-left: 4px solid #60a5fa; }
+
+        /* Helper class for desktop sidebar toggle */
+        .desktop-collapsed { display: none !important; }
 
         /* --- PRO FORM STYLES --- */
         .card { 
@@ -141,6 +143,40 @@
         .report-table th, .report-table td { border: 1px solid #e2e8f0; padding: 8px; text-align: center; }
         .report-table th { background-color: #f1f5f9; font-weight: bold; }
         .report-table td.text-left { text-align: left; }
+
+        /* NEW: Preview Modal Styles (Match Print Exactly) */
+        #detailContent { 
+            font-family: 'Sarabun', sans-serif; 
+            color: #000; 
+            background: white;
+            /* Force padding to match print paper feel if needed */
+        }
+        #detailContent .text-sm { font-size: 11px !important; }
+        #detailContent h2 { font-size: 16px !important; margin-bottom: 2px !important; }
+        #detailContent h4 { font-size: 13px !important; margin-top: 8px !important; margin-bottom: 4px !important; border-bottom-width: 1px !important; }
+        
+        /* Compact Spacing for Preview */
+        #detailContent .mb-6 { margin-bottom: 8px !important; }
+        #detailContent .mb-4 { margin-bottom: 5px !important; }
+        #detailContent .mt-8 { margin-top: 10px !important; }
+        #detailContent .p-4 { padding: 8px !important; }
+        #detailContent .gap-6 { gap: 8px !important; }
+        #detailContent .gap-4 { gap: 8px !important; }
+        
+        /* Tables for Preview */
+        #detailContent table { width: 100%; border-collapse: collapse; margin-bottom: 6px; table-layout: fixed; }
+        #detailContent table th, #detailContent table td { 
+            padding: 2px 4px !important; 
+            font-size: 10px !important; /* Matched to Print Report */
+            border: 1px solid #94a3b8;
+        }
+        #detailContent table th { background-color: #f1f5f9; text-align: center; font-weight: bold; }
+        #detailContent table td.text-center.font-bold.text-green-600.text-lg { font-size: 12px !important; }
+        
+        /* Images & Height overrides for Preview */
+        #detailContent img { max-height: 200px !important; width: auto; object-fit: contain; }
+        #detailContent .h-16 { height: 50px !important; }
+        #detailContent .h-20 { height: 200px !important; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased h-screen overflow-hidden flex flex-col">
@@ -206,6 +242,7 @@
                     <i class="fa-solid fa-shield-halved text-primary text-2xl mr-3"></i>
                     <span class="font-display font-bold text-lg tracking-wide">Audit Pro</span>
                 </div>
+                <!-- Updated: Removed md:hidden to allow toggle on desktop -->
                 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div class="p-6 border-b border-slate-800 bg-slate-900/50">
@@ -220,27 +257,27 @@
                 </div>
             </div>
             <nav class="flex-1 overflow-y-auto py-4 space-y-1 px-3">
-                <a href="#" onclick="switchView('view-dashboard'); toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-dashboard'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-chart-pie w-6 group-hover:text-primary transition-colors"></i><span class="font-medium">Dashboard</span>
                 </a>
-                <a href="#" onclick="switchView('view-audit'); toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-audit'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-clipboard-check w-6 group-hover:text-success transition-colors"></i><span class="font-medium">เริ่มตรวจสาขา</span>
                 </a>
-                <a href="#" onclick="switchView('view-history'); toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-history'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-clock-rotate-left w-6 group-hover:text-warning transition-colors"></i><span class="font-medium">ประวัติการตรวจ</span>
                 </a>
                 <!-- Admin Menu -->
                 <div class="pt-4 pb-2 px-4 text-xs font-bold text-slate-500 uppercase tracking-widest admin-only hidden">Administrator</div>
-                <a href="#" onclick="switchView('view-users'); toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-users'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-users-gear w-6 group-hover:text-purple-400 transition-colors"></i><span class="font-medium">จัดการผู้ใช้งาน</span>
                 </a>
-                <a href="#" onclick="switchView('view-questions'); toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-questions'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-list-check w-6 group-hover:text-pink-400 transition-colors"></i><span class="font-medium">ตั้งค่าแบบฟอร์ม</span>
                 </a>
-                <a href="#" onclick="switchView('view-settings'); toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-settings'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-bell w-6 group-hover:text-yellow-400 transition-colors"></i><span class="font-medium">การแจ้งเตือน</span>
                 </a>
-                <a href="#" onclick="switchView('view-logs'); toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                <a href="#" onclick="switchView('view-logs'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-file-shield w-6 group-hover:text-cyan-400 transition-colors"></i><span class="font-medium">System Logs</span>
                 </a>
             </nav>
@@ -254,10 +291,11 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col h-full relative w-full">
+        <div class="flex-1 flex flex-col h-full relative w-full transition-all duration-300">
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 sm:px-6 z-10 sticky top-0">
                 <div class="flex items-center gap-3">
-                    <button class="md:hidden text-slate-500 hover:text-primary focus:outline-none p-1 rounded-md active:bg-slate-100" onclick="toggleSidebar()"><i class="fa-solid fa-bars text-xl"></i></button>
+                    <!-- Updated Toggle Button: Visible on Desktop now -->
+                    <button class="text-slate-500 hover:text-primary focus:outline-none p-1 rounded-md active:bg-slate-100 mr-2" onclick="toggleSidebar()"><i class="fa-solid fa-bars text-xl"></i></button>
                     <h2 id="pageTitle" class="text-lg sm:text-xl font-bold text-slate-800 truncate">ภาพรวมระบบ</h2>
                 </div>
                 <div class="flex items-center gap-4">
@@ -359,6 +397,7 @@
 
                 <!-- 2. Audit Form (Professional Layout) -->
                 <div id="view-audit" class="page-view fade-in hidden max-w-5xl mx-auto pb-20">
+                    <!-- ... existing form code ... -->
                     
                     <!-- Draft Notice -->
                     <div id="draftNotice" class="hidden mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex justify-between items-center shadow-sm">
@@ -711,6 +750,7 @@
                     </form>
                 </div>
 
+                <!-- ... existing history, questions, settings, users, logs views ... -->
                 <!-- 3. History View -->
                 <div id="view-history" class="page-view fade-in hidden">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
@@ -725,7 +765,6 @@
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2"><i class="fa-solid fa-list-check text-pink-500"></i> รายการคำถาม (จาก Google Sheets)</h3>
                             <div class="flex items-center gap-3">
-                                <!-- UPDATED: Add Question Button -->
                                 <button onclick="openAddQuestionModal()" class="flex items-center gap-2 bg-primary hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-lg transition shadow-sm">
                                     <i class="fa-solid fa-plus"></i> เพิ่มคำถาม
                                 </button>
@@ -820,7 +859,8 @@
 
             <!-- Footer: Static, No Sticky -->
             <div class="p-5 border-t border-slate-100 bg-white rounded-b-2xl flex gap-3 flex-shrink-0">
-                <button id="btnDownloadPDF" onclick="downloadPDF()" class="flex-1 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 font-medium transition flex items-center justify-center gap-2 shadow-lg shadow-red-200"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                <!-- Changed: Replace Download PDF with Download Excel -->
+                <button id="btnDownloadExcel" onclick="downloadExcel()" class="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 font-medium transition flex items-center justify-center gap-2 shadow-lg shadow-green-200"><i class="fa-solid fa-file-excel"></i> Download Excel</button>
                 <button id="btnPrintReport" onclick="printReport()" class="flex-1 bg-slate-800 text-white py-3 rounded-lg hover:bg-slate-700 font-medium transition flex items-center justify-center gap-2 shadow-lg shadow-slate-300"><i class="fa-solid fa-print"></i> พิมพ์รายงาน</button>
             </div>
         </div>
@@ -924,11 +964,30 @@
             startInactivityTimer();
         }
 
+        // Updated Toggle Sidebar for Desktop & Mobile
         function toggleSidebar() {
             const sidebar = document.getElementById('appSidebar');
             const overlay = document.getElementById('mobileSidebarOverlay');
-            if (sidebar.classList.contains('-translate-x-full')) { sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); } 
-            else { sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden'); }
+            
+            if (window.innerWidth < 768) {
+                // Mobile behavior: Translate
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('hidden');
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+            } else {
+                // Desktop behavior: Hide completely
+                if (sidebar.classList.contains('hidden')) {
+                    sidebar.classList.remove('hidden');
+                    sidebar.classList.add('flex'); // Ensure flex is restored
+                } else {
+                    sidebar.classList.add('hidden');
+                    sidebar.classList.remove('flex');
+                }
+            }
         }
 
         function showPopup(type, title, text) { Swal.fire({ icon: type, title: title, text: text, confirmButtonColor: '#2563eb' }); }
@@ -937,10 +996,9 @@
             if(show) overlay.classList.remove('hidden'); else overlay.classList.add('hidden'); 
         }
         
-        // --- NEW: View Image in Full Size ---
+        // ... (Keep existing image functions) ...
         function viewImage(url) {
             if (!url) return;
-            // Extract the big image URL if it's a thumbnail link
             let bigUrl = url;
             if(url.includes("drive.google.com") && url.includes("id=")) {
                 const idMatch = url.match(/id=([^&]+)/);
@@ -967,7 +1025,7 @@
             } catch (error) { return { success: false, message: error.message }; }
         }
 
-        // --- NEW: Question & Settings Config Logic ---
+        // ... (Keep existing logic functions) ...
         async function fetchQuestionsFromAPI(isReload = false) {
             if(isReload) toggleLoading(true);
             try {
@@ -982,6 +1040,8 @@
             if(isReload) toggleLoading(false);
         }
 
+        // ... (Keep existing functions: openAddQuestionModal, deleteQuestion, fetchSettings, handleSaveSettings, switchView, handleLogin, logout, fetchBranches, updateDashboardCounts, renderZoneStats, initAuditForm, calculateDebt, formatInputCurrency, calculatePerformance, compressImage, handleImageSelect, collectFormData, saveDraft, checkDraft, restoreDraft, clearDraft, handleZoneChange, getLocation, submitAudit, initSignature, clearSignature, renderQuestionsConfig, fetchHistory, renderHistoryTable, getVal, fixDriveUrl, genReportTable, openDetail, preloadImages, deleteAudit, fetchUsers, openEditUser, handleEditUserSubmit, handleAddUser, deleteUser, fetchLogs, printReport, filterDashboard, showRemainingBranches) ...
+        
         async function openAddQuestionModal(id = null, title = '', allowImage = false) {
             const { value: formValues } = await Swal.fire({
                 title: id ? 'แก้ไขคำถาม' : 'เพิ่มคำถามใหม่',
@@ -1082,10 +1142,8 @@
         async function fetchBranches() {
             const res = await callAPI('getBranches');
             if (res.success) {
-                globalAllBranches = res.data; // เก็บไว้เป็นข้อมูลอ้างอิงตอนดึงประวัติการตรวจ
+                globalAllBranches = res.data; 
                 let rawBranches = res.data;
-                
-                // --- ระบบ Permission Area ---
                 if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea.trim() !== '' && currentUser.permissionArea.trim().toUpperCase() !== 'ALL') {
                     const allowedZones = currentUser.permissionArea.split(',').map(z => z.trim().toUpperCase());
                     rawBranches = rawBranches.filter(b => 
@@ -1094,7 +1152,6 @@
                         allowedZones.includes((b.id || '').toUpperCase())
                     );
                 }
-
                 branchData = {}; zoneList = []; allBranchDetails = [];
                 rawBranches.forEach(item => {
                     const zoneName = item.zone || 'ไม่ระบุเขต';
@@ -1102,7 +1159,6 @@
                     branchData[zoneName].push({ id: item.id, name: item.name }); 
                     allBranchDetails.push(item);
                 });
-                
                 updateDashboardCounts();
             }
         }
@@ -1117,24 +1173,18 @@
                  if(branchName.includes('] ')) branchName = branchName.split('] ')[1];
                  uniqueSet.add(branchName.trim());
              });
-             
              document.getElementById('dashTotalBranches').innerText = total;
-             document.getElementById('dashAudited').innerText = audited; // overall total audit count
+             document.getElementById('dashAudited').innerText = audited; 
              document.getElementById('dashRemaining').innerText = Math.max(0, total - uniqueSet.size);
              document.getElementById('dashFailCount').innerText = fail;
-
-             // Refresh Zone Stats Cards
              renderZoneStats();
         }
 
         function renderZoneStats() {
             const zoneContainer = document.getElementById('zoneStatList');
             if(!zoneContainer) return;
-            
             zoneContainer.innerHTML = zoneList.map(z => {
                 const totalInZone = branchData[z].length;
-                
-                // นับสาขาที่ตรวจแล้วแบบไม่ซ้ำ (Unique) ในเขตนั้นๆ
                 const auditedSet = new Set();
                 auditRecords.filter(r => r.zone === z).forEach(r => {
                     let bName = r.branch;
@@ -1143,10 +1193,7 @@
                 });
                 const auditedInZone = auditedSet.size;
                 const remainingInZone = Math.max(0, totalInZone - auditedInZone);
-                
-                // คำนวณเปอร์เซ็นต์
                 const progress = totalInZone > 0 ? (auditedInZone / totalInZone) * 100 : 0;
-
                 return `
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition cursor-default group overflow-hidden relative flex flex-col">
                     <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-400 to-indigo-500"></div>
@@ -1159,7 +1206,6 @@
                             <i class="fa-solid fa-map-location-dot"></i>
                         </div>
                     </div>
-                    
                     <div class="pl-2 grid grid-cols-3 gap-2 text-center mt-auto">
                         <div class="bg-slate-50 rounded-lg p-2 border border-slate-100 shadow-sm hover:bg-slate-100 transition">
                             <div class="text-[9px] sm:text-[10px] text-slate-500 font-bold mb-1">ทั้งหมด</div>
@@ -1174,7 +1220,6 @@
                             <div class="font-bold text-orange-700 text-lg sm:text-xl">${remainingInZone}</div>
                         </div>
                     </div>
-                    
                     <div class="pl-2 mt-5">
                         <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1.5">
                             <span>ความคืบหน้า</span>
@@ -1192,10 +1237,8 @@
             const zSel = document.getElementById('zoneSelect');
             zSel.innerHTML = '<option value="">-- กรุณาเลือกเขต --</option>';
             zoneList.forEach(z => { zSel.innerHTML += `<option value="${z}">${z}</option>`; });
-            
             currentAuditImages = {}; 
             if(questions.length > 0) {
-                // Filter active questions for user view (unless admin preview)
                 const activeQs = questions.filter(q => q.active !== false);
                 document.getElementById('questionsContainer').innerHTML = activeQs.map((q, i) => `
                     <div class="check-item group">
@@ -1217,7 +1260,6 @@
             }
         }
 
-        // --- NEW: Calculate Debt NPL ---
         function calculateDebt() {
             const ar = parseFloat(document.getElementById('f_ar').value.replace(/,/g, '')) || 0;
             const netAr = parseFloat(document.getElementById('f_net_ar').value.replace(/,/g, '')) || 0;
@@ -1226,7 +1268,6 @@
             saveDraft();
         }
         
-        // --- NEW: Format on Blur ---
         function formatInputCurrency(el) {
             let val = parseFloat(el.value.replace(/,/g, ''));
             if(!isNaN(val)) {
@@ -1234,7 +1275,6 @@
             }
         }
 
-        // --- NEW: Auto Calculation ---
         function calculatePerformance() {
             const target = parseFloat(document.getElementById('f_target').value) || 0;
             const actual = parseFloat(document.getElementById('f_actual').value) || 0;
@@ -1247,7 +1287,6 @@
             saveDraft();
         }
 
-        // --- NEW: Image Compression ---
         function compressImage(file, maxWidth = 1000) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -1261,7 +1300,7 @@
                         if (w > maxWidth) { h *= maxWidth / w; w = maxWidth; }
                         canvas.width = w; canvas.height = h;
                         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', 0.7)); // Compress Quality 0.7
+                        resolve(canvas.toDataURL('image/jpeg', 0.7)); 
                     };
                 };
             });
@@ -1279,7 +1318,6 @@
             } 
         }
 
-        // Collect Form Data
         function collectFormData() {
             const formData = {};
             const elements = document.getElementById('auditForm').querySelectorAll('input:not([type="radio"]), select, textarea');
@@ -1310,17 +1348,13 @@
         function handleZoneChange() { const z = document.getElementById('zoneSelect').value; const bSel = document.getElementById('branchSelect'); bSel.innerHTML = '<option value="">-- กรุณาเลือกสาขา --</option>'; if (z && branchData[z]) { bSel.disabled = false; branchData[z].forEach(b => { const d = b.id && b.id !== '-' ? `[${b.id}] ${b.name}` : b.name; bSel.innerHTML += `<option value="${d}">${d}</option>`; }); } else { bSel.disabled = true; } saveDraft(); }
         function getLocation() { const g = document.getElementById('gpsCoords'); g.value = "กำลังค้นหา..."; navigator.geolocation.getCurrentPosition(p => { g.value = `${p.coords.latitude.toFixed(6)}, ${p.coords.longitude.toFixed(6)}`; saveDraft(); }, e => { g.value = ""; showPopup('error', 'GPS Error', e.message); }); }
 
-        // --- NEW: Submit with Retry & Validation ---
         async function submitAudit(e) {
             e.preventDefault();
             const gps = document.getElementById('gpsCoords').value;
             if(!gps || gps === "กำลังค้นหา..." || gps.includes("กรุณา")) { showPopup('warning', 'แจ้งเตือน', 'กรุณาระบุพิกัด GPS'); return; }
-            
             const sigCanvas = document.getElementById('signaturePad');
-            // FIX: Check if blank
             const blank = document.createElement('canvas'); blank.width = sigCanvas.width; blank.height = sigCanvas.height;
             if(sigCanvas.toDataURL() === blank.toDataURL()) { showPopup('warning', 'แจ้งเตือน', 'กรุณาลงลายเซ็นผู้ตรวจ'); return; }
-
             const rawData = collectFormData();
             const details = [];
             const fieldMap = { 
@@ -1331,27 +1365,23 @@
                 'rate_person': 'บุคลิกภาพ', 'rate_sale': 'การขาย', 'rate_k_m': 'สินค้าM', 'rate_k_ctv': 'สินค้าCTV', 'rate_k_hl': 'สินค้าHL', 'rate_k_promo': 'โปรโมชั่น', 
                 'rate_c_branch':'ความสะอาดหน้าสาขา', 'rate_c_desk':'โต๊ะทำงาน', 'rate_c_coffee':'จุดน้ำดื่ม', 'rate_c_toilet':'ห้องน้ำ', 'rate_c_storage':'ที่เก็บของ', 'rate_c_back':'หลังสาขา' 
             }; 
-            
             for (const key in rawData) {
                 if (questions.some(q => q.id === key) || key.startsWith('note_') || key === 'zoneSelect' || key === 'branchSelect' || key === 'summaryComment' || key === 'gpsCoords') continue;
                 if(key.startsWith('rate_') || key.startsWith('f_') || key.startsWith('emp_') || key === 'area_comment') {
                     details.push({ q: fieldMap[key] || key, res: rawData[key], note: '' });
                 }
             }
-            
             questions.forEach(q => {
                 if(rawData[q.id]) {
                     details.push({ q: q.title, res: rawData[q.id], note: rawData[`note_${q.id}`], image: currentAuditImages[q.id] || "" });
                 }
             });
-
             const record = { 
                 id: Date.now().toString(), date: new Date().toLocaleString('th-TH'), auditor: currentUser.name, 
                 zone: document.getElementById('zoneSelect').value, branch: document.getElementById('branchSelect').value, 
                 gps: gps, result: details.some(d => d.res === 'ไม่ผ่าน') ? 'ไม่ผ่าน' : 'ผ่าน', 
                 summary: document.getElementById('summaryComment').value, signature: sigCanvas.toDataURL(), details: details 
             };
-            
             toggleLoading(true, "กำลังบันทึกข้อมูล...");
             let attempts = 0, success = false;
             while (attempts < 2 && !success) {
@@ -1362,13 +1392,11 @@
                     attempts++; await new Promise(r => setTimeout(r, 1000));
                 }
             }
-
             toggleLoading(false);
             if (success) { Swal.fire('สำเร็จ', 'บันทึกเรียบร้อย', 'success'); clearDraft(); document.getElementById('branchSelect').disabled = true; currentAuditImages = {}; switchView('view-history'); } 
             else { showPopup('error', 'ส่งข้อมูลล้มเหลว', 'กรุณาตรวจสอบอินเทอร์เน็ต'); }
         }
 
-        // --- Signature & Config UI ---
         function initSignature() {
             const c = document.getElementById('signaturePad');
             setTimeout(() => {
@@ -1389,52 +1417,44 @@
         function renderQuestionsConfig() { 
             const list = document.getElementById('questionsListConfig');
             if(!questions || questions.length === 0) { list.innerHTML = `<tr><td colspan="3" class="text-center py-4">No Questions</td></tr>`; return; }
-            list.innerHTML = questions.map(q => `
-            <div class="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md transition group">
-                <div class="flex-1">
-                    <div class="font-bold text-slate-700 text-lg">${q.title}</div>
-                    <div class="text-xs text-slate-400 font-mono mt-1 flex items-center gap-2">
-                        <span>ID: ${q.id}</span>
-                        ${q.allowImage ? '<span class="text-green-600 bg-green-50 px-2 py-0.5 rounded text-[10px] font-bold border border-green-100"><i class="fa-solid fa-camera mr-1"></i>รูปภาพ</span>' : ''}
+            list.innerHTML = questions.map(q => {
+                const safeTitle = q.title ? q.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "";
+                return `
+                <div class="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md transition group">
+                    <div class="flex-1">
+                        <div class="font-bold text-slate-700 text-lg">${q.title}</div>
+                        <div class="text-xs text-slate-400 font-mono mt-1 flex items-center gap-2">
+                            <span>ID: ${q.id}</span>
+                            ${q.allowImage ? '<span class="text-green-600 bg-green-50 px-2 py-0.5 rounded text-[10px] font-bold border border-green-100"><i class="fa-solid fa-camera mr-1"></i>รูปภาพ</span>' : ''}
+                        </div>
                     </div>
-                </div>
-                <div class="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                    <button onclick="openAddQuestionModal('${q.id}', '${q.title}', ${q.allowImage})" class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center shadow-sm" title="แก้ไข">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                    <button onclick="deleteQuestion('${q.id}')" class="w-10 h-10 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition flex items-center justify-center shadow-sm" title="ลบ">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>`).join(''); 
+                    <div class="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                        <button onclick="openAddQuestionModal('${q.id}', '${safeTitle}', ${q.allowImage})" class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center shadow-sm" title="แก้ไข">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteQuestion('${q.id}')" class="w-10 h-10 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition flex items-center justify-center shadow-sm" title="ลบ">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+            }).join(''); 
         }
 
-        // --- Others (History, Users, Analytics, PDF) ---
         async function fetchHistory(render=true) { 
             if(render) toggleLoading(true); 
             const res = await callAPI('getHistory'); 
             if(render) toggleLoading(false); 
-            
             if(res.success) { 
                 let rawRecords = res.data;
-                // --- ระบบ Permission Area (เชื่อมโยง ภาค -> เขต -> ประวัติ) ---
                 if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea.trim() !== '' && currentUser.permissionArea.trim().toUpperCase() !== 'ALL') {
                     const allowedZones = currentUser.permissionArea.split(',').map(z => z.trim().toUpperCase());
-                    
-                    // ดึงชื่อเขต (Zone) ทั้งหมดที่อยู่ภายใต้ภาค (Region) ที่ได้รับสิทธิ์ จาก globalAllBranches
-                    const mappedZones = globalAllBranches
-                        .filter(b => allowedZones.includes((b.region || '').toUpperCase()))
-                        .map(b => (b.zone || '').toUpperCase());
-
+                    const mappedZones = globalAllBranches.filter(b => allowedZones.includes((b.region || '').toUpperCase())).map(b => (b.zone || '').toUpperCase());
                     rawRecords = rawRecords.filter(r => {
                         const rZone = (r.zone || '').toUpperCase();
                         const rBranch = (r.branch || '').toUpperCase();
-                        return allowedZones.includes(rZone) || 
-                               mappedZones.includes(rZone) || 
-                               allowedZones.some(az => rBranch.includes(`[${az}]`));
+                        return allowedZones.includes(rZone) || mappedZones.includes(rZone) || allowedZones.some(az => rBranch.includes(`[${az}]`));
                     });
                 }
-
                 auditRecords = rawRecords; 
                 updateDashboardCounts(); 
                 if(render) renderHistoryTable(auditRecords); 
@@ -1451,15 +1471,23 @@
                 </td></tr>`).join('');
         }
         
-        // --- NEW: Professional Report Generator ---
         function getVal(arr, key) { const f = arr.find(x => x.q === key); return f ? f.res : '-'; }
         
+        // Helper to remove decimals and add commas for currency
+        function formatNoDecimal(valStr) {
+            if (!valStr || valStr === '-') return '0';
+            // Remove commas first to parse float properly
+            const num = parseFloat(valStr.toString().replace(/,/g, ''));
+            if (isNaN(num)) return valStr;
+            return num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+        }
+
         function fixDriveUrl(url) {
             if (!url) return "";
             if (url.includes("drive.google.com") && url.includes("id=")) {
                 const idMatch = url.match(/id=([^&]+)/);
                 if (idMatch) {
-                    return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000`;
+                    return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=s1000`;
                 }
             }
             return url;
@@ -1472,8 +1500,8 @@
                 const val = getVal(details, item.key);
                 html += `<tr><td class="border border-slate-300 p-2">${item.label}</td>`;
                 for(let i=1; i<=5; i++) {
-                    // Changed bullet to checkmark
-                    html += `<td class="border border-slate-300 p-1 text-center font-bold text-green-600 text-lg">${val == i ? '✓' : ''}</td>`;
+                    // Added w-10 class to td to match header width and force alignment
+                    html += `<td class="border border-slate-300 p-1 w-10 text-center font-bold text-green-600 text-lg">${val == i ? '✓' : ''}</td>`;
                 }
                 html += `</tr>`;
             });
@@ -1484,7 +1512,19 @@
         function openDetail(id) { 
             const rec = auditRecords.find(r => r.id == id); if(!rec) return; 
             
-            // Build Layout
+            // Format currency fields (No decimals)
+            const nplBaht = formatNoDecimal(getVal(rec.details, 'NPL (บาท)'));
+            const arVal = formatNoDecimal(getVal(rec.details, 'AR'));
+            const netArVal = formatNoDecimal(getVal(rec.details, 'NET AR'));
+
+            // Format Percent fields (Add %)
+            const od1 = getVal(rec.details, 'OD1 %') !== '-' ? getVal(rec.details, 'OD1 %') + '%' : '-';
+            const od2 = getVal(rec.details, 'OD2 %') !== '-' ? getVal(rec.details, 'OD2 %') + '%' : '-';
+            const od3 = getVal(rec.details, 'OD3 %') !== '-' ? getVal(rec.details, 'OD3 %') + '%' : '-';
+            const nplPct = getVal(rec.details, 'NPL %') !== '-' ? getVal(rec.details, 'NPL %') + '%' : '-';
+
+            // UPDATED: Re-arranged summary section using Table for alignment with lower tables
+            // This ensures the gray border width matches the tables below exactly.
             let content = `
                 <div class="text-center mb-6 border-b-2 border-primary pb-4">
                     <h2 class="text-2xl font-bold text-slate-800">รายงานการตรวจสอบมาตรฐานสาขา</h2>
@@ -1498,31 +1538,76 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-4 gap-4 mb-6 text-sm bg-slate-50 p-4 rounded border border-slate-200">
-                    <div><strong>พนักงาน:</strong> ${getVal(rec.details, 'ชื่อ')} ${getVal(rec.details, 'นามสกุล')} (${getVal(rec.details, 'รหัสพนักงาน')})</div>
-                    <div><strong>ไซต์:</strong> ${getVal(rec.details, 'ไซต์')}</div>
-                    <div><strong>เป้า:</strong> ${getVal(rec.details, 'เป้าหมาย')}</div>
-                    <div><strong>ทำได้:</strong> ${getVal(rec.details, 'ยอดทำได้')} (${getVal(rec.details, '% เทียบเป้า')})</div>
-                    <div><strong>OD1:</strong> ${getVal(rec.details, 'OD1 %')}</div>
-                    <div><strong>NPL%:</strong> ${getVal(rec.details, 'NPL %')}</div>
-                    <div class="col-span-2"><strong>NPL(บาท):</strong> ${getVal(rec.details, 'NPL (บาท)')}</div>
-                </div>
+                <!-- Summary Table (Structure changed to Table to match borders with lower sections) -->
+                <table class="w-full text-xs border-collapse border border-slate-300 mb-6">
+                    <!-- Row 1: Employee (Centered & Larger - text-2xl to match report header) -->
+                    <tr class="bg-slate-50">
+                        <td colspan="5" class="border border-slate-300 p-4 text-center">
+                            <span class="font-bold text-2xl text-slate-800">
+                                พนักงาน: ${getVal(rec.details, 'ชื่อ')} ${getVal(rec.details, 'นามสกุล')} (${getVal(rec.details, 'รหัสพนักงาน')})
+                            </span>
+                        </td>
+                    </tr>
+                    
+                    <!-- Row 2: 5 Items -->
+                    <tr>
+                        <td class="border border-slate-300 p-2 text-center" width="20%">
+                            <div class="font-bold text-slate-500 mb-1">ไซต์</div>
+                            <div class="font-bold text-slate-800">${getVal(rec.details, 'ไซต์')}</div>
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center" width="20%">
+                            <div class="font-bold text-slate-500 mb-1">เป้า</div>
+                            <div>${getVal(rec.details, 'เป้าหมาย')}</div>
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center" width="20%">
+                            <div class="font-bold text-slate-500 mb-1">ทำได้</div>
+                            <div>${getVal(rec.details, 'ยอดทำได้')} <span class="text-[10px] text-slate-400">(${getVal(rec.details, '% เทียบเป้า')})</span></div>
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center" width="20%">
+                            <div class="font-bold text-slate-500 mb-1">OD1</div>
+                            <div>${od1}</div>
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center" width="20%">
+                            <div class="font-bold text-slate-500 mb-1">OD2</div>
+                            <div>${od2}</div>
+                        </td>
+                    </tr>
+
+                    <!-- Row 3: 5 Items -->
+                    <tr>
+                        <td class="border border-slate-300 p-2 text-center">
+                            <div class="font-bold text-slate-500 mb-1">OD3</div>
+                            <div>${od3}</div>
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center">
+                            <div class="font-bold text-slate-500 mb-1">NPL%</div>
+                            <div>${nplPct}</div>
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center">
+                            <div class="font-bold text-slate-500 mb-1">NPL(บาท)</div>
+                            <div class="text-red-600 font-bold">${nplBaht}</div>
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center">
+                            <div class="font-bold text-slate-500 mb-1">AR</div>
+                            <div>${arVal}</div>
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center">
+                            <div class="font-bold text-slate-500 mb-1">NET AR</div>
+                            <div>${netArVal}</div>
+                        </td>
+                    </tr>
+                </table>
             `;
 
-            // Employee Tables
             content += genReportTable('ทักษะพนักงาน', [{label:'บุคลิกภาพ', key:'บุคลิกภาพ'}, {label:'การขาย', key:'การขาย'}], rec.details);
             content += genReportTable('ความรู้ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:'สินค้าM'}, {label:'สินเชื่อ CTV', key:'สินค้าCTV'}, {label:'สินเชื่อ HL', key:'สินค้าHL'}, {label:'โปรโมชั่น', key:'โปรโมชั่น'}], rec.details);
-            
-            // 5S Table
             content += genReportTable('สภาพสาขา (5ส.)', [{label:'หน้าสาขา', key:'ความสะอาดหน้าสาขา'}, {label:'โต๊ะทำงาน', key:'โต๊ะทำงาน'}, {label:'จุดน้ำดื่ม', key:'จุดน้ำดื่ม'}, {label:'ห้องน้ำ', key:'ห้องน้ำ'}, {label:'ที่เก็บของ', key:'ที่เก็บของ'}, {label:'หลังสาขา', key:'หลังสาขา'}], rec.details);
             const areaNote = getVal(rec.details, 'area_comment');
             if(areaNote && areaNote !== '-') content += `<div class="text-xs text-slate-500 mt-1 italic">* หมายเหตุ 5ส.: ${areaNote}</div>`;
 
-            // Checklist
             content += `<h4 class="font-bold text-slate-700 mb-2 mt-6 text-sm border-b pb-1">รายการตรวจสอบ (Checklist)</h4>`;
             content += `<div class="space-y-2">`;
             rec.details.forEach(d => {
-                // Filter out non-checklist items
                 if(['พนักงาน','ไซต์','เป้าหมาย','ยอดทำได้','% เทียบเป้า','area_comment', 'รหัสพนักงาน', 'ชื่อ', 'นามสกุล', 'OD1 %', 'OD2 %', 'OD3 %', 'NPL %', 'AR', 'NET AR', 'NPL (บาท)'].includes(d.q) || ['1','2','3','4','5'].includes(d.res)) return;
                 
                 content += `
@@ -1537,13 +1622,8 @@
             });
             content += `</div>`;
 
-            // Summary & Sign
-            // Use fixDriveUrl for signature too, just in case
             let sigUrl = rec.signature;
-            // Check if signature is base64 (older records) or drive url (newer)
-            if(sigUrl && sigUrl.includes("drive.google.com")) {
-                 sigUrl = fixDriveUrl(sigUrl);
-            }
+            if(sigUrl && sigUrl.includes("drive.google.com")) { sigUrl = fixDriveUrl(sigUrl); }
 
             content += `
                 <div class="mt-8 grid grid-cols-2 gap-6">
@@ -1563,7 +1643,55 @@
             document.getElementById('detailModal').classList.remove('hidden');
         }
 
-        // --- NEW: Wait for Images before PDF ---
+        // --- NEW: Download Excel Function (Replaces PDF) ---
+        function downloadExcel() {
+            const element = document.getElementById('detailContent');
+            const clone = element.cloneNode(true);
+            
+            // Excel HTML Template
+            const template = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <!--[if gte mso 9]>
+                    <xml>
+                        <x:ExcelWorkbook>
+                            <x:ExcelWorksheets>
+                                <x:ExcelWorksheet>
+                                    <x:Name>Audit Report</x:Name>
+                                    <x:WorksheetOptions>
+                                        <x:DisplayGridlines/>
+                                    </x:WorksheetOptions>
+                                </x:ExcelWorksheet>
+                            </x:ExcelWorksheets>
+                        </x:ExcelWorkbook>
+                    </xml>
+                    <![endif]-->
+                    <meta charset="UTF-8">
+                    <style>
+                        body { font-family: 'Sarabun', sans-serif; font-size: 14px; }
+                        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+                        th, td { border: 1px solid #000; padding: 8px; vertical-align: top; }
+                        th { background-color: #f0f0f0; font-weight: bold; text-align: center; }
+                        .text-center { text-align: center; }
+                        .font-bold { font-weight: bold; }
+                        img { max-height: 150px; width: auto; }
+                    </style>
+                </head>
+                <body>
+                    ${clone.innerHTML}
+                </body>
+                </html>`;
+
+            const blob = new Blob([template], { type: 'application/vnd.ms-excel' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Audit_Report_${new Date().toISOString().slice(0,10)}.xls`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
         function preloadImages(element) {
             return new Promise((resolve) => {
                 const images = Array.from(element.querySelectorAll('img'));
@@ -1571,23 +1699,16 @@
                     resolve();
                     return;
                 }
-
                 let loadedCount = 0;
                 const checkDone = () => {
                     loadedCount++;
                     if (loadedCount === images.length) resolve();
                 };
-
                 images.forEach(img => {
-                    if (img.complete) {
-                        checkDone();
-                    } else {
-                        img.onload = checkDone;
-                        img.onerror = checkDone; // Proceed even if error
-                    }
+                    if (img.complete) checkDone();
+                    else { img.onload = checkDone; img.onerror = checkDone; }
                 });
-                // Fallback timeout
-                setTimeout(resolve, 3000); 
+                setTimeout(resolve, 5000); 
             });
         }
         
@@ -1601,10 +1722,15 @@
              }
         }
 
-        async function fetchUsers() { const res = await callAPI('getUsers'); if(res.success) document.getElementById('userListContainerBody').innerHTML = res.data.map(u => `<tr class="border-b"><td class="p-2 font-bold">${u.user}<br><span class="font-normal text-xs text-gray-400">${u.name}</span></td><td class="p-2"><span class="bg-slate-100 px-2 py-1 rounded text-xs uppercase">${u.role}</span></td><td class="p-2 text-right">
-            <button onclick="openEditUser('${u.user}', '${u.name}', '${u.role}')" class="text-blue-500 hover:text-blue-700 mx-2"><i class="fa-solid fa-pen-to-square"></i></button>
-            <button onclick="deleteUser('${u.user}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-        </td></tr>`).join(''); }
+        async function fetchUsers() { const res = await callAPI('getUsers'); if(res.success) document.getElementById('userListContainerBody').innerHTML = res.data.map(u => {
+            const safeUser = String(u.user).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            const safeName = String(u.name).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            const safeRole = String(u.role).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            return `<tr class="border-b"><td class="p-2 font-bold">${u.user}<br><span class="font-normal text-xs text-gray-400">${u.name}</span></td><td class="p-2"><span class="bg-slate-100 px-2 py-1 rounded text-xs uppercase">${u.role}</span></td><td class="p-2 text-right">
+            <button onclick="openEditUser('${safeUser}', '${safeName}', '${safeRole}')" class="text-blue-500 hover:text-blue-700 mx-2"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteUser('${safeUser}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+        </td></tr>`;
+        }).join(''); }
 
         function openEditUser(user, name, role) {
             document.getElementById('editUsername').value = user;
@@ -1617,14 +1743,12 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             toggleLoading(true, "กำลังบันทึกข้อมูล...");
-            
             const res = await callAPI('editUser', {
                 user: formData.get('user'),
                 name: formData.get('name'),
                 role: formData.get('role'),
                 pass: formData.get('pass')
             });
-
             toggleLoading(false);
             if(res.success) {
                 document.getElementById('editUserModal').classList.add('hidden');
@@ -1656,7 +1780,6 @@
             if(res.success && res.data.length > 0) { document.getElementById('systemLogsContainer').innerHTML = res.data.map(l => `<tr class="border-b"><td class="px-6 py-3 text-slate-500">${l.timestamp}</td><td class="px-6 py-3 font-bold">${l.user}</td><td class="px-6 py-3">${l.role}</td><td class="px-6 py-3">${l.action}</td><td class="px-6 py-3 text-xs font-mono">${l.details}</td></tr>`).join(''); } 
         }
 
-        // --- NEW: Better Print Function (Iframe Isolation) ---
         function printReport() {
             const content = document.getElementById('detailContent').innerHTML;
             const iframe = document.createElement('iframe');
@@ -1665,7 +1788,6 @@
             iframe.style.height = '0px';
             iframe.style.border = 'none';
             document.body.appendChild(iframe);
-            
             const doc = iframe.contentWindow.document;
             doc.open();
             doc.write(`
@@ -1675,91 +1797,81 @@
                     <script src="https://cdn.tailwindcss.com"><\/script>
                     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
                     <style>
-                        body { font-family: 'Sarabun', sans-serif; padding: 20px; }
-                        table { width: 100%; border-collapse: collapse; }
-                        /* Removed text-align: left from global th/td to allow classes or defaults to work */
-                        th, td { border: 1px solid #ccc; padding: 8px; } 
-                        /* Explicitly center headers as requested */
-                        th { text-align: center; background-color: #f3f4f6; } 
-                        img { max-height: 100px; }
+                        @page { size: A4; margin: 10mm; }
+                        body { font-family: 'Sarabun', sans-serif; padding: 0; margin: 0; font-size: 11px; line-height: 1.25; color: #000; }
+                        .mb-6 { margin-bottom: 8px !important; }
+                        .mb-4 { margin-bottom: 5px !important; }
+                        .mt-8 { margin-top: 10px !important; }
+                        .p-4 { padding: 8px !important; }
+                        .p-8 { padding: 0 !important; border: none !important; box-shadow: none !important; }
+                        .gap-6 { gap: 8px !important; }
+                        .gap-4 { gap: 8px !important; }
+                        h2 { font-size: 16px !important; margin-bottom: 2px !important; }
+                        h4 { font-size: 13px !important; margin-top: 8px !important; margin-bottom: 4px !important; border-bottom-width: 1px !important; }
+                        .text-2xl { font-size: 16px !important; }
+                        .text-sm { font-size: 11px !important; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+                        th, td { border: 1px solid #94a3b8; padding: 2px 4px !important; font-size: 10px !important; }
+                        th { background-color: #f1f5f9 !important; text-align: center; font-weight: bold; color: #334155; -webkit-print-color-adjust: exact; }
+                        td.text-center.font-bold.text-green-600.text-lg { font-size: 12px !important; }
+                        th.text-left, td.text-left { text-align: left !important; }
+                        img { max-height: 200px !important; width: auto; object-fit: contain; }
+                        .h-16 { height: 50px !important; } 
+                        .h-20 { height: 200px !important; } 
+                        .no-print { display: none !important; }
                     </style>
                 </head>
                 <body>
                     ${content}
                     <script>
-                        window.onload = function() { setTimeout(() => { window.print(); }, 500); }
+                        window.onload = function() {
+                            const images = document.querySelectorAll('img');
+                            let loadedCount = 0;
+                            const totalImages = images.length;
+                            function tryPrint() { setTimeout(() => { window.print(); }, 500); }
+                            if (totalImages === 0) { tryPrint(); } else {
+                                images.forEach(img => {
+                                    if (img.complete) {
+                                        loadedCount++;
+                                        if (loadedCount === totalImages) tryPrint();
+                                    } else {
+                                        img.onload = () => { loadedCount++; if (loadedCount === totalImages) tryPrint(); };
+                                        img.onerror = () => { loadedCount++; if (loadedCount === totalImages) tryPrint(); };
+                                    }
+                                });
+                                setTimeout(tryPrint, 3000);
+                            }
+                        }
                     <\/script>
                 </body>
                 </html>
             `);
             doc.close();
-            
-            // Clean up iframe after print dialog closes (approximate)
             setTimeout(() => { document.body.removeChild(iframe); }, 10000);
-        }
-
-        // --- NEW: Better PDF Function (Error Handling) ---
-        function downloadPDF() {
-            const btn = document.getElementById('btnDownloadPDF');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
-            btn.disabled = true;
-
-            const element = document.getElementById('detailContent');
-            const opt = { 
-                margin: 10, 
-                filename: 'audit-report.pdf', 
-                image: { type: 'jpeg', quality: 0.98 }, 
-                html2canvas: { scale: 2, useCORS: true, logging: true }, 
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
-            };
-            
-            html2pdf().set(opt).from(element).save()
-            .then(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            })
-            .catch(err => {
-                console.error(err);
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                Swal.fire('PDF Error', 'ไม่สามารถสร้าง PDF ได้เนื่องจากรูปภาพติดสิทธิ์ (CORS) หรือปัญหาเครือข่าย ลองใช้ปุ่ม "พิมพ์รายงาน" แล้วเลือก "Save as PDF"', 'warning');
-            });
         }
 
         function filterDashboard(type) {
             if(!auditRecords) return;
             switchView('view-history');
-            
             let filtered = auditRecords;
             let title = "ประวัติการตรวจ (ทั้งหมด)";
-            
             if(type === 'fail') {
                 filtered = auditRecords.filter(r => r.result === 'ไม่ผ่าน');
                 title = "ประวัติการตรวจ (ต้องแก้ไข)";
             }
-            
             renderHistoryTable(filtered);
-            // Update title to indicate filter
             const header = document.querySelector('#view-history h3');
             if(header) header.innerText = title;
         }
 
         function showRemainingBranches() {
             if(!allBranchDetails.length) return;
-            // It's safer to match by Name since IDs might be "-"
-            
             const remaining = allBranchDetails.filter(b => {
-                // Check if this branch name exists in auditRecords
-                // auditRecords stores 'branch' which is "Name" or "[ID] Name"
-                // Let's assume strict match or contains
                 return !auditRecords.some(r => r.branch.includes(b.name));
             });
-            
             const listHtml = remaining.length > 0 
                 ? remaining.map(b => `<div class="flex justify-between p-2 border-b text-sm"><span>${b.name}</span><span class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">${b.zone}</span></div>`).join('')
                 : '<div class="text-center p-4 text-green-500 font-bold">ตรวจครบทุกสาขาแล้ว!</div>';
-
             Swal.fire({
                 title: `สาขาที่คงเหลือ (${remaining.length})`,
                 html: `<div class="max-h-[60vh] overflow-y-auto text-left">${listHtml}</div>`,

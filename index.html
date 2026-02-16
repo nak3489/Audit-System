@@ -47,6 +47,7 @@
         .ts-control:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         .ts-dropdown { border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); z-index: 50; }
 
+        /* Form Styles */
         .card { 
             background: white; 
             border-radius: 12px; 
@@ -73,39 +74,24 @@
 
         .rating-table-container { border: 1px solid #e2e8f0; border-radius: 8px; overflow-x: auto; }
         .rating-table { width: 100%; border-collapse: collapse; }
-        .rating-table th {
-            background-color: #f8fafc; padding: 12px; font-size: 0.75rem; font-weight: 700;
-            color: #64748b; text-transform: uppercase; text-align: center; border-bottom: 1px solid #e2e8f0;
-        }
+        .rating-table th { background-color: #f8fafc; padding: 12px; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; text-align: center; border-bottom: 1px solid #e2e8f0; }
         .rating-table th.text-left { text-align: left; }
         .rating-table td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
         .rating-table tr:last-child td { border-bottom: none; }
         .rating-topic { font-weight: 500; color: #334155; min-width: 150px; }
         
         .radio-cell { text-align: center; }
-        .custom-radio {
-            appearance: none; width: 24px; height: 24px; border: 2px solid #cbd5e1; border-radius: 50%;
-            cursor: pointer; position: relative; transition: all 0.2s; margin: 0 auto; display: block;
-        }
+        .custom-radio { appearance: none; width: 24px; height: 24px; border: 2px solid #cbd5e1; border-radius: 50%; cursor: pointer; position: relative; transition: all 0.2s; margin: 0 auto; display: block; }
         .custom-radio:checked { border-color: #2563eb; background-color: #2563eb; }
-        .custom-radio:checked::after {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 8px; height: 8px; background: white; border-radius: 50%;
-        }
+        .custom-radio:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: white; border-radius: 50%; }
         .custom-radio:hover { border-color: #94a3b8; }
 
-        .check-item {
-            display: flex; flex-direction: column; padding: 16px; background: #f8fafc;
-            border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 12px; transition: all 0.2s;
-        }
+        .check-item { display: flex; flex-direction: column; padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 12px; transition: all 0.2s; }
         .check-item:hover { border-color: #cbd5e1; background: #fff; }
         
         .segmented-control { display: flex; background: #e2e8f0; padding: 4px; border-radius: 8px; width: fit-content; }
         .segment-radio { display: none; }
-        .segment-label {
-            padding: 6px 16px; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer;
-            color: #64748b; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
-        }
+        .segment-label { padding: 6px 16px; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: #64748b; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
         .segment-radio[value="ผ่าน"]:checked + .segment-label { background: #059669; color: white; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .segment-radio[value="ไม่ผ่าน"]:checked + .segment-label { background: #dc2626; color: white; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
 
@@ -115,12 +101,7 @@
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         .multi-select-container { position: relative; }
-        .multi-select-dropdown {
-            display: none; position: absolute; top: 100%; left: 0; z-index: 50;
-            background: white; border: 1px solid #e2e8f0; border-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); width: 220px; padding: 8px;
-            max-height: 300px; overflow-y: auto;
-        }
+        .multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; z-index: 50; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); width: 220px; padding: 8px; max-height: 300px; overflow-y: auto; }
         .multi-select-dropdown.show { display: block; }
         
         #detailContent { font-family: 'Sarabun', sans-serif; color: #000; background: white; }
@@ -160,7 +141,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.0 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.2  Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -184,7 +165,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 6.0 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 6.2 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -666,9 +647,6 @@
                     if (zVal !== 'all') {
                         if (isSingleZoneUser) { 
                             // Partial match for Branch name or full match
-                            // Note: r.branch includes ID, but zVal might be name only if select option value is name.
-                            // But TomSelect value is what we put in option value.
-                            // If isSingleZoneUser, options are branch names.
                             if (!r.branch.includes(zVal)) return false; 
                         } 
                         else { 
@@ -728,10 +706,9 @@
             if (res.success) {
                 globalAllBranches = res.data; let rawBranches = res.data;
                 
-                // Allow seeing history from other users in SAME Zone (Broaden the filter)
+                // Allow seeing history from other users in SAME Zone
                 if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
                     const allowed = currentUser.permissionArea.split(',').map(z => z.trim());
-                    // Filter: Keep branches where Region OR Zone OR ID matches permission
                     rawBranches = rawBranches.filter(b => allowed.includes(b.region) || allowed.includes(b.zone) || allowed.includes(b.id));
                 } else if (currentUser.role.toLowerCase() === 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
                     const allowed = currentUser.permissionArea.split(',').map(z => z.trim());
@@ -743,10 +720,7 @@
                 
                 isSingleZoneUser = (zoneList.length === 1);
                 
-                // --- Dashboard Zone/Branch Filter (TomSelect) ---
-                const dSel = document.getElementById('dashFilterZone');
-                dSel.innerHTML = '';
-                
+                const dSel = document.getElementById('dashFilterZone'); dSel.innerHTML = '';
                 if (isSingleZoneUser) {
                     const z = zoneList[0];
                     dSel.innerHTML = '<option value="all">ทุกสาขา (All Branches)</option>';
@@ -757,13 +731,11 @@
                 }
                 initTomSelect('dashFilterZone'); // Init
                 
-                // --- History Zone Filter (TomSelect) ---
                 const hSel = document.getElementById('histFilterZone'); 
                 hSel.innerHTML = '<option value="all">ทุกเขต</option>';
                 zoneList.forEach(z => hSel.innerHTML += `<option value="${z}">${z}</option>`);
                 initTomSelect('histFilterZone'); // Init
                 
-                // Init Branch filter too (empty for now)
                 initTomSelect('histFilterBranch'); 
                 
                 if(auditRecords.length > 0) filterDashboardData();
@@ -971,7 +943,93 @@
         function fixDriveUrl(url) { if (url && url.includes("drive.google.com") && url.includes("id=")) { const match = url.match(/id=([^&]+)/); if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=s1000`; } return url; }
         function getVal(arr, key) { const f = arr.find(x => x.q === key); return f ? f.res : '-'; }
         function formatNoDecimal(v) { const n = parseFloat((v||'').toString().replace(/,/g,'')); return isNaN(n) ? (v||'-') : n.toLocaleString('en-US', {maximumFractionDigits:0}); }
-        function openDetail(id) { const rec = auditRecords.find(r => r.id == id); if(!rec) return; const nplB = formatNoDecimal(getVal(rec.details, 'NPL (บาท)')), ar = formatNoDecimal(getVal(rec.details, 'AR')), netAr = formatNoDecimal(getVal(rec.details, 'NET AR')); const p = (v) => v !== '-' ? v+'%' : '-'; const empName = `${getVal(rec.details, 'ชื่อ')} ${getVal(rec.details, 'นามสกุล')} (${getVal(rec.details, 'รหัสพนักงาน')})`; let content = `<div class="text-center mb-6 pb-4 border-b-2 border-primary"><h2 class="text-2xl font-bold">รายงานตรวจสอบ</h2><div class="flex justify-between text-sm"><span>${rec.branch}</span><span>${rec.date}</span></div></div> <table class="w-full text-xs border-collapse border border-slate-300 mb-6"> <tr class="bg-slate-50"><td colspan="5" class="border border-slate-300 p-4 text-center"><span class="font-bold text-2xl">พนักงาน: ${empName}</span></td></tr> <tr><td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ไซต์</div><div>${getVal(rec.details, 'ไซต์')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">เป้า</div><div>${getVal(rec.details, 'เป้าหมาย')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ทำได้</div><div>${getVal(rec.details, 'ยอดทำได้')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD1</div><div>${p(getVal(rec.details, 'OD1 %'))}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD2</div><div>${p(getVal(rec.details, 'OD2 %'))}</div></td></tr> <tr><td class="border p-2 text-center"><div class="font-bold text-slate-500">OD3</div><div>${p(getVal(rec.details, 'OD3 %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL%</div><div>${p(getVal(rec.details, 'NPL %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL(บาท)</div><div class="text-red-600 font-bold">${nplB}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">AR</div><div>${ar}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NET AR</div><div>${netAr}</div></td></tr> </table>`; content += genReportTable('ทักษะพนักงาน', [{label:'บุคลิกภาพ', key:'บุคลิกภาพ'}, {label:'การขาย', key:'การขาย'}], rec.details); content += genReportTable('ความรู้ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:'สินค้าM'}, {label:'สินเชื่อ CTV', key:'สินค้าCTV'}, {label:'สินเชื่อ HL', key:'สินค้าHL'}, {label:'โปรโมชั่น', key:'โปรโมชั่น'}], rec.details); content += genReportTable('สภาพสาขา (5ส.)', [{label:'หน้าสาขา', key:'ความสะอาดหน้าสาขา'}, {label:'โต๊ะทำงาน', key:'โต๊ะทำงาน'}, {label:'จุดน้ำดื่ม', key:'จุดน้ำดื่ม'}, {label:'ห้องน้ำ', key:'ห้องน้ำ'}, {label:'ที่เก็บของ', key:'ที่เก็บของ'}, {label:'หลังสาขา', key:'หลังสาขา'}], rec.details); const note = getVal(rec.details, 'area_comment'); if(note && note !== '-') content += `<div class="text-xs italic mt-2">* หมายเหตุ: ${note}</div>`; content += `<h4 class="font-bold mt-6 mb-2 border-b">Checklist</h4>`; rec.details.forEach(d => { if(!['ไซต์','เป้าหมาย','ยอดทำได้','% เทียบเป้า','OD1 %','OD2 %','OD3 %','NPL %','NPL (บาท)','AR','NET AR','รหัสพนักงาน','ชื่อ','นามสกุล','บุคลิกภาพ','การขาย','สินค้าM','สินค้าCTV','สินค้าHL','โปรโมชั่น','ความสะอาดหน้าสาขา','โต๊ะทำงาน','จุดน้ำดื่ม','ห้องน้ำ','ที่เก็บของ','หลังสาขา','area_comment'].includes(d.q)) { content += `<div class="flex gap-3 text-sm border-b py-2"><span class="px-2 rounded text-[10px] font-bold ${d.res==='ผ่าน'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${d.res}</span><div class="flex-1"><div>${d.q}</div>${d.note?`<div class="text-xs text-gray-500">${d.note}</div>`:''}${d.image?`<img src="${fixDriveUrl(d.image)}" onclick="viewImage(this.src)" class="h-16 mt-1 rounded cursor-pointer">`:''}</div></div>`; } }); let sig = rec.signature; if(sig && sig.includes('drive')) sig = fixDriveUrl(sig); content += `<div class="mt-8 text-center border p-4 rounded"><img src="${sig}" class="h-16 mx-auto"><div class="text-xs mt-2">${rec.auditor}</div></div>`; document.getElementById('detailContent').innerHTML = content; document.getElementById('detailModal').classList.remove('hidden'); }
+        function openDetail(id) { 
+            const rec = auditRecords.find(r => r.id == id); if(!rec) return; 
+            const nplB = formatNoDecimal(getVal(rec.details, 'NPL (บาท)'));
+            const ar = formatNoDecimal(getVal(rec.details, 'AR'));
+            const netAr = formatNoDecimal(getVal(rec.details, 'NET AR')); 
+            const p = (v) => v !== '-' ? v+'%' : '-'; 
+            const empName = `${getVal(rec.details, 'ชื่อ')} ${getVal(rec.details, 'นามสกุล')} (${getVal(rec.details, 'รหัสพนักงาน')})`; 
+            
+            // Generate Main Info
+            let content = `<div class="text-center mb-6 pb-4 border-b-2 border-primary"><h2 class="text-2xl font-bold">รายงานตรวจสอบ</h2><div class="flex justify-between text-sm"><span>${rec.branch}</span><span>${rec.date}</span></div></div> <table class="w-full text-xs border-collapse border border-slate-300 mb-6"> <tr class="bg-slate-50"><td colspan="5" class="border border-slate-300 p-4 text-center"><span class="font-bold text-2xl">พนักงาน: ${empName}</span></td></tr> <tr><td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ไซต์</div><div>${getVal(rec.details, 'ไซต์')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">เป้า</div><div>${getVal(rec.details, 'เป้าหมาย')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ทำได้</div><div>${getVal(rec.details, 'ยอดทำได้')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD1</div><div>${p(getVal(rec.details, 'OD1 %'))}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD2</div><div>${p(getVal(rec.details, 'OD2 %'))}</div></td></tr> <tr><td class="border p-2 text-center"><div class="font-bold text-slate-500">OD3</div><div>${p(getVal(rec.details, 'OD3 %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL%</div><div>${p(getVal(rec.details, 'NPL %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL(บาท)</div><div class="text-red-600 font-bold">${nplB}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">AR</div><div>${ar}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NET AR</div><div>${netAr}</div></td></tr> </table>`; 
+            
+            // Generate Matrix Tables for Ratings
+            content += genMatrixTable('ทักษะพนักงาน', [{label:'บุคลิกภาพ', key:'บุคลิกภาพ'}, {label:'การขาย', key:'การขาย'}], rec.details); 
+            content += genMatrixTable('ความรู้ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:'สินค้าM'}, {label:'สินเชื่อ CTV', key:'สินค้าCTV'}, {label:'สินเชื่อ HL', key:'สินค้าHL'}, {label:'โปรโมชั่น', key:'โปรโมชั่น'}], rec.details); 
+            content += genMatrixTable('สภาพสาขา (5ส.)', [{label:'หน้าสาขา', key:'ความสะอาดหน้าสาขา'}, {label:'โต๊ะทำงาน', key:'โต๊ะทำงาน'}, {label:'จุดน้ำดื่ม', key:'จุดน้ำดื่ม'}, {label:'ห้องน้ำ', key:'ห้องน้ำ'}, {label:'ที่เก็บของ', key:'ที่เก็บของ'}, {label:'หลังสาขา', key:'หลังสาขา'}], rec.details); 
+            
+            const note = getVal(rec.details, 'area_comment'); if(note && note !== '-') content += `<div class="text-xs italic mt-2">* หมายเหตุ: ${note}</div>`; 
+            
+            // Checklist Section
+            content += `<h4 class="font-bold mt-6 mb-2 border-b">Checklist</h4>`; 
+            const checklistItems = [];
+            rec.details.forEach(d => { if(!['ไซต์','เป้าหมาย','ยอดทำได้','% เทียบเป้า','OD1 %','OD2 %','OD3 %','NPL %','NPL (บาท)','AR','NET AR','รหัสพนักงาน','ชื่อ','นามสกุล','บุคลิกภาพ','การขาย','สินค้าM','สินค้าCTV','สินค้าHL','โปรโมชั่น','ความสะอาดหน้าสาขา','โต๊ะทำงาน','จุดน้ำดื่ม','ห้องน้ำ','ที่เก็บของ','หลังสาขา','area_comment'].includes(d.q)) { checklistItems.push(d); } });
+            
+            content += genChecklistTable(checklistItems);
+            
+            let sig = rec.signature; if(sig && sig.includes('drive')) sig = fixDriveUrl(sig); content += `<div class="mt-8 text-center border p-4 rounded"><img src="${sig}" class="h-16 mx-auto"><div class="text-xs mt-2">${rec.auditor}</div></div>`; document.getElementById('detailContent').innerHTML = content; document.getElementById('detailModal').classList.remove('hidden'); 
+        }
+        
+        // --- NEW MATRIX TABLE GENERATOR ---
+        function genMatrixTable(title, fields, details) {
+            let h = `<h4 class="font-bold mt-4 mb-2 text-sm bg-slate-100 p-1 pl-2 border-l-4 border-slate-500">${title}</h4>`;
+            h += `<table class="w-full text-xs border-collapse border border-slate-300">`;
+            h += `<tr class="bg-slate-50">
+                    <th class="border border-slate-300 p-1 text-left">หัวข้อประเมิน</th>
+                    <th class="border border-slate-300 p-1 w-8 text-center">1</th>
+                    <th class="border border-slate-300 p-1 w-8 text-center">2</th>
+                    <th class="border border-slate-300 p-1 w-8 text-center">3</th>
+                    <th class="border border-slate-300 p-1 w-8 text-center">4</th>
+                    <th class="border border-slate-300 p-1 w-8 text-center">5</th>
+                  </tr>`;
+            
+            fields.forEach(f => {
+                const val = getVal(details, f.key); // Expected "1", "2", etc.
+                h += `<tr>`;
+                h += `<td class="border border-slate-300 p-1">${f.label}</td>`;
+                for(let i=1; i<=5; i++) {
+                    const mark = (val == i) ? '<span style="font-weight:bold; color:green; font-size:14px;">&#10003;</span>' : '';
+                    h += `<td class="border border-slate-300 p-1 text-center">${mark}</td>`;
+                }
+                h += `</tr>`;
+            });
+            return h + '</table>';
+        }
+
+        // --- NEW CHECKLIST TABLE GENERATOR ---
+        function genChecklistTable(items) {
+            if(items.length === 0) return '<div class="text-xs text-gray-400">ไม่มีรายการ</div>';
+            
+            let h = `<table class="w-full text-xs border-collapse border border-slate-300">`;
+            h += `<tr class="bg-slate-50">
+                    <th class="border border-slate-300 p-1 text-left">รายการ</th>
+                    <th class="border border-slate-300 p-1 w-12 text-center">ผ่าน</th>
+                    <th class="border border-slate-300 p-1 w-12 text-center">ไม่ผ่าน</th>
+                    <th class="border border-slate-300 p-1 text-left">หมายเหตุ / รูปภาพ</th>
+                  </tr>`;
+            
+            items.forEach(d => {
+                const isPass = d.res === 'ผ่าน';
+                const isFail = d.res === 'ไม่ผ่าน';
+                const passMark = isPass ? '<span style="font-weight:bold; color:green; font-size:14px;">&#10003;</span>' : '';
+                const failMark = isFail ? '<span style="font-weight:bold; color:red; font-size:14px;">&#10003;</span>' : '';
+                
+                h += `<tr>`;
+                h += `<td class="border border-slate-300 p-1">${d.q}</td>`;
+                h += `<td class="border border-slate-300 p-1 text-center bg-green-50/30">${passMark}</td>`;
+                h += `<td class="border border-slate-300 p-1 text-center bg-red-50/30">${failMark}</td>`;
+                
+                let extra = d.note || '';
+                if(d.image) {
+                     extra += `<br><a href="${fixDriveUrl(d.image)}" target="_blank" class="text-blue-500 underline">[ดูรูปภาพ]</a>`;
+                }
+                h += `<td class="border border-slate-300 p-1 text-gray-600">${extra}</td>`;
+                h += `</tr>`;
+            });
+            return h + '</table>';
+        }
+
         function downloadExcel() { const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head><body>${document.getElementById('detailContent').innerHTML}</body></html>`; const blob = new Blob([template], {type: 'application/vnd.ms-excel'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Audit_Report_${new Date().toISOString().slice(0,10)}.xls`; a.click(); }
         function printReport() { const iframe = document.createElement('iframe'); document.body.appendChild(iframe); const doc = iframe.contentWindow.document; doc.write(`<html><head><script src="https://cdn.tailwindcss.com"><\/script><link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"><style>body{font-family:'Sarabun';font-size:12px} table{width:100%;border-collapse:collapse} th,td{border:1px solid #ccc;padding:4px} img{max-height:150px}</style></head><body>${document.getElementById('detailContent').innerHTML}</body><script>window.onload=function(){setTimeout(function(){window.print();},1000)}<\/script></html>`); doc.close(); setTimeout(() => document.body.removeChild(iframe), 5000); }
         // Change Password Logic

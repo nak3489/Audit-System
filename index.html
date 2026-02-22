@@ -207,6 +207,9 @@
                 <a href="#" onclick="switchView('view-history'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-clock-rotate-left w-6 group-hover:text-warning transition-colors"></i><span class="font-medium">ประวัติการตรวจ</span>
                 </a>
+                <a href="#" onclick="switchView('view-settings'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
+                    <i class="fa-brands fa-line text-lg w-6 group-hover:text-green-400 transition-colors"></i><span class="font-medium">การแจ้งเตือน</span>
+                </a>
                 <a href="#" onclick="openChangePasswordModal(); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-key w-6 group-hover:text-orange-400 transition-colors"></i><span class="font-medium">เปลี่ยนรหัสผ่าน</span>
                 </a>
@@ -218,9 +221,6 @@
                 </a>
                 <a href="#" onclick="switchView('view-questions'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-list-check w-6 group-hover:text-pink-400 transition-colors"></i><span class="font-medium">ตั้งค่าแบบฟอร์ม</span>
-                </a>
-                <a href="#" onclick="switchView('view-settings'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
-                    <i class="fa-solid fa-bell w-6 group-hover:text-yellow-400 transition-colors"></i><span class="font-medium">การแจ้งเตือน</span>
                 </a>
                 <a href="#" onclick="switchView('view-logs'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link admin-only hidden flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-file-shield w-6 group-hover:text-cyan-400 transition-colors"></i><span class="font-medium">System Logs</span>
@@ -385,14 +385,106 @@
                     </div>
                 </div>
 
-                <!-- 6. Notifications Settings -->
-                <div id="view-settings" class="page-view fade-in hidden max-w-2xl mx-auto">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-                        <h3 class="font-bold text-slate-800 text-lg mb-6 flex items-center gap-2"><i class="fa-solid fa-bell text-yellow-500"></i> ตั้งค่าการแจ้งเตือน</h3>
-                        <form onsubmit="handleSaveSettings(event)" class="space-y-6">
-                            <div><label class="input-label">Line Notify Token</label><div class="flex gap-2"><input type="text" id="settingLineToken" class="input-box font-mono text-sm" placeholder="Ex: xxxxxxxxxx"><a href="https://notify-bot.line.me/my/" target="_blank" class="bg-slate-100 text-slate-600 px-3 py-2 rounded border border-slate-200 hover:bg-slate-200 flex items-center text-xs whitespace-nowrap">Get Token</a></div></div>
-                            <div><label class="input-label">Email Notification</label><input type="email" id="settingEmail" class="input-box" placeholder="admin@example.com"></div>
-                            <div class="pt-4 border-t"><button type="submit" class="w-full bg-slate-800 text-white py-3 rounded-lg hover:bg-slate-700 font-bold transition">บันทึกการตั้งค่า</button></div>
+                <!-- 6. Notifications Settings / Guide -->
+                <div id="view-settings" class="page-view fade-in hidden max-w-5xl mx-auto">
+                    
+                    <!-- User Guide Section (Visible to ALL) -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-10 mb-8">
+                        <div class="flex flex-col md:flex-row gap-10">
+                            <!-- Left: QR Code -->
+                            <div class="w-full md:w-1/3 flex flex-col items-center justify-start border border-slate-100 rounded-2xl p-6 bg-slate-50/50">
+                                <h4 class="font-bold text-slate-800 mb-6 text-lg">สแกนเพื่อรับการแจ้งเตือน</h4>
+                                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 relative">
+                                    <!-- 📍 จุดที่ 1: ใส่ลิงก์รูปภาพ QR Code ของคุณที่ src="..." ด้านล่างนี้ -->
+                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ" alt="LINE QR Code" class="w-48 h-48 object-contain">
+                                    <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                                        <i class="fa-brands fa-line text-[80px] text-[#00B900]"></i>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-slate-500 text-center leading-relaxed">ใช้แอปพลิเคชัน LINE สแกน QR Code<br>เพื่อเพิ่มเพื่อนกับระบบแจ้งเตือน</p>
+                            </div>
+
+                            <!-- Right: Guide Steps -->
+                            <div class="w-full md:w-2/3">
+                                <h3 class="font-bold text-slate-800 text-lg mb-8 flex items-center gap-2">
+                                    <i class="fa-brands fa-line text-[#00B900] text-2xl"></i> คู่มือการใช้งาน (User Guide)
+                                </h3>
+                                
+                                <div class="space-y-8 relative before:absolute before:inset-0 before:ml-4 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+                                    
+                                    <!-- Step 1 -->
+                                    <div class="relative flex items-start gap-6">
+                                        <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm shrink-0 z-10 shadow-md">1</div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-slate-800 mb-1">เพิ่มเพื่อน (Add Friend)</h4>
+                                            <p class="text-sm text-slate-500 mb-3">สแกน QR Code ด้านซ้ายมือ หรือค้นหา ID ของบอทเพื่อทำการเพิ่มเพื่อน</p>
+                                            
+                                            <!-- 📍 จุดที่ 2: ใส่ลิงก์รูปภาพคู่มือ (รูปที่ 1) ที่ src="..." ด้านล่างนี้ (หากใส่รูปแล้วสามารถลบ div Step 1 ทิ้งได้เลย) -->
+                                            <img src="https://lh3.googleusercontent.com/d/1miVjWLx-kA7nNn0yhb44viOwbzfcLVOl" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm">
+                                            <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
+                                                Step 1: Add Friend
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 2 -->
+                                    <div class="relative flex items-start gap-6">
+                                        <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm shrink-0 z-10 shadow-md">2</div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-slate-800 mb-1">ลงทะเบียน (Register)</h4>
+                                            <p class="text-sm text-slate-500 mb-3">พิมพ์คำว่า <span class="text-primary font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100">ลงทะเบียน</span> ส่งไปหาบอท เพื่อยืนยันตัวตน</p>
+                                            
+                                            <!-- 📍 จุดที่ 3: ใส่ลิงก์รูปภาพคู่มือ (รูปที่ 2) ที่ src="..." ด้านล่างนี้ -->
+                                            <!-- <img src="ใส่ลิงก์รูปที่_2_ตรงนี้" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm"> -->
+                                            <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
+                                                Step 2: Type Register
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 3 -->
+                                    <div class="relative flex items-start gap-6">
+                                        <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm shrink-0 z-10 shadow-md">3</div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-slate-800 mb-1">เสร็จสิ้น (Success)</h4>
+                                            <p class="text-sm text-slate-500 mb-3">ระบบจะตอบกลับยืนยัน ท่านจะได้รับการแจ้งเตือนทันทีเมื่อมีการส่งรายงานใหม่</p>
+                                            
+                                            <!-- 📍 จุดที่ 4: ใส่ลิงก์รูปภาพคู่มือ (รูปที่ 3) ที่ src="..." ด้านล่างนี้ -->
+                                            <!-- <img src="ใส่ลิงก์รูปที่_3_ตรงนี้" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm"> -->
+                                            <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
+                                                Step 3: Confirmation
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Configuration Section (Hidden for normal users) -->
+                    <div class="admin-only hidden bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-10 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-full -z-10"></div>
+                        <h3 class="font-bold text-slate-800 text-lg mb-6 flex items-center gap-2 border-b border-slate-100 pb-4">
+                            <i class="fa-solid fa-gears text-slate-400"></i> ตั้งค่าการเชื่อมต่อ API (เฉพาะ Admin)
+                        </h3>
+                        <form onsubmit="handleSaveSettings(event)" class="space-y-6 max-w-2xl">
+                            <div>
+                                <label class="input-label">Line Notify Token</label>
+                                <div class="flex flex-col sm:flex-row gap-2">
+                                    <input type="text" id="settingLineToken" class="input-box font-mono text-sm w-full" placeholder="Ex: xxxxxxxxxx">
+                                    <a href="https://notify-bot.line.me/my/" target="_blank" class="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 flex items-center justify-center text-xs whitespace-nowrap transition shadow-sm font-bold">Get Token</a>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="input-label">Email Notification</label>
+                                <input type="email" id="settingEmail" class="input-box w-full" placeholder="admin@example.com">
+                            </div>
+                            <div class="pt-4">
+                                <button type="submit" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-bold transition shadow-md flex items-center gap-2">
+                                    <i class="fa-solid fa-save"></i> บันทึกการตั้งค่า
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

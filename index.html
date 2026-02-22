@@ -12,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     
-    <!-- Leaflet JS for Advanced Map -->
+    <!-- Leaflet JS for Advanced Map (No Watermark) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -151,7 +151,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.5 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.7 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 5.8.5 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 5.8.7 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -406,7 +406,7 @@
                                 <h4 class="font-bold text-slate-800 mb-6 text-lg">สแกนเพื่อรับการแจ้งเตือน</h4>
                                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 relative">
                                     <!-- 📍 จุดที่ 1: ใส่ลิงก์รูปภาพ QR Code ของคุณที่ src="..." ด้านล่างนี้ -->
-                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ/?size=200x200&data=https://line.me/R/ti/p/@yourbotid" alt="LINE QR Code" class="w-48 h-48 object-contain">
+                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ" alt="LINE QR Code" class="w-48 h-48 object-contain">
                                     <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
                                         <i class="fa-brands fa-line text-[80px] text-[#00B900]"></i>
                                     </div>
@@ -627,6 +627,9 @@
         let isSingleZoneUser = false; 
         let employeeCount = 0;
         let currentLeafletMap = null;
+        let osmLayer = null;
+        let satelliteLayer = null;
+        let autoSyncTimer = null;
         
         // Tom Select Instances
         const tsInstances = {};
@@ -659,6 +662,21 @@
             fetchQuestionsFromAPI(); 
             switchView('view-dashboard'); 
             startInactivityTimer();
+            startAutoRefresh();
+        }
+
+        // --- AUTO REFRESH SYSTEM ---
+        function startAutoRefresh() {
+            clearInterval(autoSyncTimer);
+            // 1. ซิงค์ข้อมูลใหม่อัตโนมัติแบบเงียบๆ ทุกๆ 60 วินาที
+            autoSyncTimer = setInterval(() => {
+                if (currentUser) fetchHistory(false); 
+            }, 60000); 
+
+            // 2. ดึงข้อมูลใหม่ทันทีเมื่อผู้ใช้สลับกลับมาที่หน้าต่างเบราว์เซอร์นี้
+            window.addEventListener('focus', () => {
+                if (currentUser) fetchHistory(false);
+            });
         }
 
         // --- TOM SELECT HELPER ---
@@ -853,7 +871,7 @@
                     document.getElementById('headerDate').innerText = new Date().toLocaleDateString('th-TH'); 
                     checkDraft(); 
                 }
-                if (id === 'view-history') filterHistoryTable();
+                if (id === 'view-history') { filterHistoryTable(); fetchHistory(false); }
                 if (id === 'view-users') fetchUsers();
                 if (id === 'view-logs') fetchLogs(); 
                 if (id === 'view-questions') renderQuestionsConfig();
@@ -1248,8 +1266,8 @@
             }
         }
 
-        async function fetchHistory(render=true) { 
-            if(render) toggleLoading(true); const res = await callAPI('getHistory'); if(render) toggleLoading(false); if(res.success) { let rawRecords = res.data;
+        async function fetchHistory(showLoader=true) { 
+            if(showLoader) toggleLoading(true); const res = await callAPI('getHistory'); if(showLoader) toggleLoading(false); if(res.success) { let rawRecords = res.data;
                 // Security Check on History: Ensure user sees all permitted zone data, regardless of Auditor
                 if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
                     const allowed = currentUser.permissionArea.split(',').map(s => s.trim());
@@ -1261,7 +1279,8 @@
                     // Note: zoneList is already populated with allowed zones
                     rawRecords = rawRecords.filter(r => zoneList.includes(r.zone));
                 }
-                auditRecords = rawRecords; filterDashboardData(); if(render) filterHistoryTable();
+                auditRecords = rawRecords; filterDashboardData(false); 
+                if(!document.getElementById('view-history').classList.contains('hidden')) filterHistoryTable(false);
             } 
         }
         
@@ -1298,6 +1317,24 @@
         }
         function renderHistoryTable(records) { document.getElementById('auditLogContainer').innerHTML = records.map(r => ` <tr class="border-b hover:bg-slate-50"><td class="p-3">${r.date}</td><td class="p-3 font-bold">${r.branch}</td><td class="p-3">${r.auditor}</td> <td class="p-3"><span class="px-2 py-1 rounded-md text-xs border ${r.result==='ผ่าน'?'bg-green-50 text-green-700':'bg-red-50 text-red-700'} font-bold">${r.result}</span></td> <td class="p-3 text-center flex items-center justify-center gap-2"> <button onclick='openDetail("${r.id}")' class="text-primary text-xs border border-primary px-3 py-1 rounded hover:bg-primary hover:text-white transition">View</button> <button onclick='openMap("${r.id}")' class="text-cyan-500 text-xs border border-cyan-500 px-3 py-1 rounded hover:bg-cyan-500 hover:text-white transition"><i class="fa-solid fa-map-location-dot"></i> Map</button> ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteAudit('${r.id}')" class="text-red-500 text-xs border border-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white"><i class="fa-solid fa-trash"></i></button>` : ''} </td></tr>`).join(''); }
         
+        window.switchMapLayer = function(type) {
+            if(!currentLeafletMap) return;
+            const btnMap = document.getElementById('btnMapLayer');
+            const btnSat = document.getElementById('btnSatLayer');
+            
+            if(type === 'street') {
+                currentLeafletMap.removeLayer(satelliteLayer);
+                osmLayer.addTo(currentLeafletMap);
+                btnMap.className = "px-4 py-1.5 bg-blue-600 text-white rounded-md text-sm font-bold transition shadow-sm";
+                btnSat.className = "px-4 py-1.5 bg-transparent text-slate-600 hover:bg-slate-100 rounded-md text-sm font-bold transition";
+            } else {
+                currentLeafletMap.removeLayer(osmLayer);
+                satelliteLayer.addTo(currentLeafletMap);
+                btnSat.className = "px-4 py-1.5 bg-blue-600 text-white rounded-md text-sm font-bold transition shadow-sm";
+                btnMap.className = "px-4 py-1.5 bg-transparent text-slate-600 hover:bg-slate-100 rounded-md text-sm font-bold transition";
+            }
+        };
+
         function openMap(id) { 
             const rec = auditRecords.find(r => r.id == id); if (!rec) return; 
             
@@ -1310,51 +1347,52 @@
             } 
             
             const navigateUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`; 
+            // URL สำหรับ Street View
+            const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}`;
             
             const htmlContent = ` 
             <div class="relative w-full h-[85vh] bg-slate-200 rounded-xl overflow-hidden font-sans text-left shadow-sm border border-slate-200 group"> 
+                <!-- ปุ่มย้อนกลับ -->
                 <button onclick="switchView('view-history')" class="absolute top-4 left-4 z-[500] bg-white text-slate-700 hover:text-primary px-4 py-2 rounded-lg shadow-md font-bold transition flex items-center border border-slate-200"> 
                     <i class="fa-solid fa-arrow-left mr-2"></i> ย้อนกลับ 
                 </button> 
                 
-                <!-- Container สำหรับแผนที่ใหม่ -->
+                <!-- ปุ่มสลับแผนที่ / ดาวเทียม -->
+                <div class="absolute top-4 right-4 z-[500] flex bg-white p-1 rounded-lg shadow-md border border-slate-200">
+                    <button id="btnMapLayer" onclick="switchMapLayer('street')" class="px-4 py-1.5 bg-blue-600 text-white rounded-md text-sm font-bold transition shadow-sm">แผนที่ถนน</button>
+                    <button id="btnSatLayer" onclick="switchMapLayer('satellite')" class="px-4 py-1.5 bg-transparent text-slate-600 hover:bg-slate-100 rounded-md text-sm font-bold transition">ดาวเทียม</button>
+                </div>
+                
+                <!-- Container สำหรับแผนที่ -->
                 <div id="leafletMapContainer" class="w-full h-full z-0 relative"></div>
             </div>`; 
             
             document.getElementById('view-map').innerHTML = htmlContent; 
             switchView('view-map'); 
 
-            // Initialize Advanced Map (Leaflet) หลังจาก DOM พร้อม
+            // Initialize Leaflet หลังจาก DOM พร้อม
             setTimeout(() => {
                 if (currentLeafletMap) { 
                     currentLeafletMap.remove(); 
                 }
 
-                // สร้างแผนที่ใหม่ ซูม 17
-                currentLeafletMap = L.map('leafletMapContainer', { zoomControl: false }).setView([lat, lon], 17);
-                L.control.zoom({ position: 'topright' }).addTo(currentLeafletMap);
+                // สร้างแผนที่ใหม่ ย้ายที่ปุ่ม Zoom ไปขวาล่างไม่ให้บังปุ่มสลับ Map
+                currentLeafletMap = L.map('leafletMapContainer', { zoomControl: false }).setView([lat, lon], 16);
+                L.control.zoom({ position: 'bottomright' }).addTo(currentLeafletMap);
 
-                // ตั้งค่า Layer 1: แผนที่ดาวเทียม (Esri)
-                const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
+                // ตั้งค่า Layer 1: แผนที่ถนน (ใช้ OpenStreetMap ฟรี ไม่มีลายน้ำ)
+                osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+                    maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' 
+                });
+
+                // ตั้งค่า Layer 2: แผนที่ดาวเทียม (ใช้ของ Esri เพราะมีความคมชัดครอบคลุมทั่วโลก ฟรี)
+                satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
                     maxZoom: 19,
                     attribution: 'Tiles &copy; Esri'
                 });
 
-                // ตั้งค่า Layer 2: แผนที่ถนนปกติ (OSM)
-                const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-                    maxZoom: 19,
-                    attribution: '&copy; OpenStreetMap contributors'
-                });
-
-                // กำหนดค่าเริ่มต้นให้เปิดดาวเทียม
-                satelliteLayer.addTo(currentLeafletMap);
-
-                // เพิ่มปุ่มควบคุมเปิด/ปิดสลับ Layer ด้านขวาบน
-                const baseMaps = {
-                    "ดาวเทียม (Satellite)": satelliteLayer,
-                    "แผนที่ถนน (Street)": osmLayer
-                };
-                L.control.layers(baseMaps, null, { position: 'topright' }).addTo(currentLeafletMap);
+                // เริ่มต้นด้วยแผนที่ถนน
+                osmLayer.addTo(currentLeafletMap);
 
                 // ค้นหารูปภาพประกอบมาใส่ในหมุด (ถ้ามี)
                 let popupImg = 'https://cdn-icons-png.flaticon.com/512/219/219983.png';
@@ -1376,14 +1414,14 @@
                     `,
                     iconSize: [52, 52],
                     iconAnchor: [26, 52],
-                    popupAnchor: [0, -52]
+                    popupAnchor: [0, -45] // ปรับ offset ให้พอดีกับหัวหมุด
                 });
 
                 const marker = L.marker([lat, lon], {icon: customIcon}).addTo(currentLeafletMap);
 
-                // ข้อมูลแสดงใน Popup ตอนกดหมุด (แทนที่กรอบเดิม)
+                // ข้อมูลแสดงใน Popup
                 const popupHtml = `
-                    <div class="font-sans w-[280px] sm:w-[320px] text-slate-800">
+                    <div class="font-sans w-[280px] sm:w-[320px] text-slate-800 p-1">
                         <div class="flex items-center gap-3 mb-4 pr-6">
                             <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl shadow-md shrink-0">
                                 <i class="fa-solid fa-store"></i>
@@ -1409,24 +1447,31 @@
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="openAuditGallery('${rec.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-100 border-0 cursor-pointer w-full"><i class="fa-solid fa-images"></i> ดูรูปภาพ</button>
-                            <a href="${navigateUrl}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-100 no-underline cursor-pointer"><i class="fa-solid fa-location-arrow"></i> นำทาง</a>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="openAuditGallery('${rec.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1 shadow-sm border-0 cursor-pointer w-full"><i class="fa-solid fa-images"></i> รูปภาพ</button>
+                            <a href="${streetViewUrl}" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1 shadow-sm no-underline cursor-pointer w-full"><i class="fa-solid fa-street-view"></i> สตรีทวิว</a>
+                            <a href="${navigateUrl}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1 shadow-sm no-underline cursor-pointer w-full"><i class="fa-solid fa-location-arrow"></i> นำทาง</a>
                         </div>
                     </div>
                 `;
 
-                // ผูกข้อมูล Popup เข้ากับ Marker
+                // ผูกข้อมูล Popup เข้ากับ Marker (แต่ยังไม่สั่งเปิดทันที)
                 marker.bindPopup(popupHtml, { 
                     minWidth: 280, 
                     maxWidth: 350, 
-                    offset: [0, -35],
-                    autoPanPadding: [20, 20]
-                }).openPopup();
+                    autoPanPadding: [20, 60] // เพิ่มขอบกันชนด้านบน เพื่อไม่ให้ popup ไปทับปุ่มย้อนกลับ
+                });
 
-                // แก้ไขปัญหาการ Resize Map
-                setTimeout(() => { currentLeafletMap.invalidateSize(); }, 200);
-            }, 350);
+                // แก้ไขปัญหาการ Resize Map: คอยให้กรอบแผนที่กางจนเสร็จก่อน แล้วค่อยเปิด Popup
+                setTimeout(() => { 
+                    if (currentLeafletMap) {
+                        currentLeafletMap.invalidateSize(); // แก้บัคแผนที่แหว่ง
+                        currentLeafletMap.setView([lat, lon], 16, {animate: false}); // บังคับให้หมุดอยู่กึ่งกลางเป๊ะๆ
+                        setTimeout(() => { marker.openPopup(); }, 150); // ดีเลย์เปิด popup หลังจากจัดขนาดและตำแหน่งเสร็จแล้ว
+                    }
+                }, 500); 
+
+            }, 400); // ดีเลย์การสร้างแผนที่รอ Switch View ทำงานให้เสร็จก่อน
         }
         
         let galleryImages = [], galleryIndex = 0; function changeGalleryImage(step) { if (galleryImages.length === 0) return; galleryIndex = (galleryIndex + step + galleryImages.length) % galleryImages.length; const img = document.getElementById('galleryImg'); if(img) img.src = galleryImages[galleryIndex].url; const title = document.getElementById('galleryTitle'); if(title) title.innerText = galleryImages[galleryIndex].title; const count = document.getElementById('galleryCount'); if(count) count.innerText = `${galleryIndex + 1} / ${galleryImages.length}`; }

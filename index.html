@@ -141,7 +141,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.2 Fixed & Searchable</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.3 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 5.8.2 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 5.8.3 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -922,9 +922,24 @@
             for(const k in map5S) { if(raw[k] !== undefined) details.push({q: map5S[k], res: raw[k], note: ''}); }
             if(raw['area_comment']) details.push({q: 'area_comment', res: raw['area_comment'], note: ''});
             
-            questions.forEach(q => { if(raw[q.id]) details.push({ q: q.title, res: raw[q.id], note: raw[`note_${q.id}`], image: currentAuditImages[q.id] || "" }); }); 
+            let totalQ = 0; let passQ = 0;
+            questions.forEach(q => { 
+                if(raw[q.id]) {
+                    details.push({ q: q.title, res: raw[q.id], note: raw[`note_${q.id}`], image: currentAuditImages[q.id] || "" }); 
+                    totalQ++; 
+                    if(raw[q.id] === 'ผ่าน') passQ++;
+                }
+            }); 
             
-            const rec = { id: Date.now().toString(), date: new Date().toLocaleString('th-TH'), auditor: currentUser.name, zone: document.getElementById('zoneSelect').value, branch: document.getElementById('branchSelect').value, gps: document.getElementById('gpsCoords').value, result: details.some(d=>d.res==='ไม่ผ่าน')?'ไม่ผ่าน':'ผ่าน', summary: document.getElementById('summaryComment').value, signature: sigCanvas.toDataURL(), details: details }; 
+            let finalRes = 'ผ่าน';
+            if(totalQ > 0) { 
+                // ถ้าจำนวนข้อที่ผ่าน มากกว่า 50% ของข้อทั้งหมด ให้เป็น ผ่าน
+                finalRes = (passQ / totalQ > 0.5) ? 'ผ่าน' : 'ไม่ผ่าน'; 
+            } else { 
+                finalRes = details.some(d=>d.res==='ไม่ผ่าน')?'ไม่ผ่าน':'ผ่าน'; 
+            }
+            
+            const rec = { id: Date.now().toString(), date: new Date().toLocaleString('th-TH'), auditor: currentUser.name, zone: document.getElementById('zoneSelect').value, branch: document.getElementById('branchSelect').value, gps: document.getElementById('gpsCoords').value, result: finalRes, summary: document.getElementById('summaryComment').value, signature: sigCanvas.toDataURL(), details: details }; 
             
             toggleLoading(true); 
             const res = await callAPI('submitAudit', { record: rec }); 

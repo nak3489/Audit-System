@@ -141,7 +141,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.1 Fixed & Searchable</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.2 Fixed & Searchable</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 5.8.1 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 5.8.2 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -327,7 +327,18 @@
                     <div class="mb-6 flex justify-between items-end"><div><h2 class="text-3xl font-display font-bold text-slate-800">บันทึกการตรวจสาขา</h2><p class="text-slate-500 mt-1">กรุณากรอกข้อมูลตามความเป็นจริงและครบถ้วน</p></div><div class="text-right hidden sm:block"><div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Date</div><div class="text-slate-700 font-mono font-bold text-lg bg-white px-3 py-1 rounded shadow-sm border" id="headerDate">-</div></div></div>
                     <form id="auditForm" onsubmit="submitAudit(event)" oninput="saveDraft()">
                         <div class="card"><div class="card-header border-l-4 border-blue-500"><i class="fa-solid fa-store text-blue-500 text-lg"></i><h3 class="card-title">ข้อมูลสาขา (Branch Info)</h3></div><div class="card-body"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="lg:col-span-3 bg-blue-50 border border-blue-100 rounded-xl p-4 flex flex-col md:flex-row items-center gap-4"><div class="flex-1 w-full"><label class="input-label">พิกัด GPS <span class="text-red-500">*</span></label><div class="relative"><input type="text" id="gpsCoords" class="input-box font-mono pl-10" readonly placeholder="กรุณากดปุ่ม Check-in"><i class="fa-solid fa-location-dot absolute left-3 top-3 text-blue-500"></i></div></div><button type="button" onclick="getLocation()" class="w-full md:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center gap-2"><i class="fa-solid fa-location-crosshairs"></i> Check-in</button></div><div class="input-group"><label class="input-label">เขต (Zone)</label><div class="relative"><select id="zoneSelect" onchange="handleZoneChange()" class="input-box appearance-none cursor-pointer w-full"><option value="">-- รอข้อมูล --</option></select></div></div><div class="input-group"><label class="input-label">สาขา (Branch)</label><div class="relative"><select id="branchSelect" class="input-box appearance-none cursor-pointer w-full disabled:bg-slate-100" disabled><option value="">-- เลือกเขตก่อน --</option></select></div></div><div class="input-group"><label class="input-label">ไซต์สาขา</label><input type="text" id="f_site" class="input-box" placeholder="เช่น S, M, L"></div></div><div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-6"><div class="input-group"><label class="input-label">เป้าหมาย (Target)</label><input type="number" id="f_target" oninput="calculatePerformance()" class="input-box" placeholder="0.00"></div><div class="input-group"><label class="input-label">ทำได้จริง (Actual)</label><input type="number" id="f_actual" oninput="calculatePerformance()" class="input-box font-bold text-blue-600" placeholder="0.00"></div><div class="input-group"><label class="input-label">% เทียบเป้า</label><input type="text" id="f_percent" class="input-box bg-green-50 text-green-700 font-bold text-center" readonly placeholder="0%"></div></div><div class="mt-4 border-t border-slate-100 pt-4 grid grid-cols-2 md:grid-cols-4 gap-4"><div class="input-group"><label class="input-label">OD1 %</label><input type="text" id="f_od1" class="input-box" placeholder="%"></div><div class="input-group"><label class="input-label">OD2 %</label><input type="text" id="f_od2" class="input-box" placeholder="%"></div><div class="input-group"><label class="input-label">OD3 %</label><input type="text" id="f_od3" class="input-box" placeholder="%"></div><div class="input-group"><label class="input-label">NPL %</label><input type="text" id="f_npl_percent" class="input-box font-bold text-red-600" placeholder="%"></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2"><div class="input-group"><label class="input-label">AR (บาท)</label><input type="text" id="f_ar" oninput="calculateDebt()" onblur="formatInputCurrency(this)" class="input-box" placeholder="0.00"></div><div class="input-group"><label class="input-label">NET AR (บาท)</label><input type="text" id="f_net_ar" oninput="calculateDebt()" onblur="formatInputCurrency(this)" class="input-box" placeholder="0.00"></div><div class="input-group"><label class="input-label">NPL (บาท) <span class="text-xs font-normal text-slate-400">(AR - NET AR)</span></label><input type="text" id="f_npl_baht" class="input-box bg-slate-100 font-bold text-red-600" readonly placeholder="0.00"></div></div></div></div>
-                        <div class="card"><div class="card-header border-l-4 border-purple-500"><i class="fa-solid fa-user-tie text-purple-500 text-lg"></i><h3 class="card-title">การประเมินพนักงาน (Employee)</h3></div><div class="card-body"><div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"><div class="input-group"><label class="input-label">รหัสพนักงาน</label><input type="text" id="emp_id" class="input-box text-lg text-center font-mono" placeholder="รหัสพนักงาน"></div><div class="input-group"><label class="input-label">ชื่อ (First Name)</label><input type="text" id="emp_firstname" class="input-box text-lg" placeholder="ระบุชื่อจริง"></div><div class="input-group"><label class="input-label">นามสกุล (Last Name)</label><input type="text" id="emp_lastname" class="input-box text-lg" placeholder="ระบุนามสกุล"></div></div><div class="rating-table-container mb-6"><table class="rating-table"><thead><tr><th class="text-left pl-4">หัวข้อประเมิน (ทักษะ)</th><th width="60">1<br><span class="font-normal text-[10px]">แย่</span></th><th width="60">2<br><span class="font-normal text-[10px]">พอใช้</span></th><th width="60">3<br><span class="font-normal text-[10px]">เฉยๆ</span></th><th width="60">4<br><span class="font-normal text-[10px]">ดี</span></th><th width="60">5<br><span class="font-normal text-[10px]">ดีมาก</span></th></tr></thead><tbody><tr><td class="rating-topic pl-4">บุคลิกภาพ/การแต่งกาย</td><td class="radio-cell"><input type="radio" name="rate_person" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_person" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_person" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_person" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_person" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">ทักษะการขาย/บริการ</td><td class="radio-cell"><input type="radio" name="rate_sale" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_sale" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_sale" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_sale" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_sale" value="5" class="custom-radio"></td></tr></tbody></table></div><label class="input-label mb-2">ความรู้ผลิตภัณฑ์</label><div class="rating-table-container"><table class="rating-table"><thead><tr><th class="text-left pl-4">ผลิตภัณฑ์</th><th width="60">1<br><span class="font-normal text-[10px]">แย่</span></th><th width="60">2<br><span class="font-normal text-[10px]">พอใช้</span></th><th width="60">3<br><span class="font-normal text-[10px]">เฉยๆ</span></th><th width="60">4<br><span class="font-normal text-[10px]">ดี</span></th><th width="60">5<br><span class="font-normal text-[10px]">ดีมาก</span></th></tr></thead><tbody><tr><td class="rating-topic pl-4">สินเชื่อ M</td><td class="radio-cell"><input type="radio" name="rate_k_m" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_m" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_m" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_m" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_m" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">สินเชื่อ CTV</td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">สินเชื่อ HL</td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">โปรโมชั่น</td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="5" class="custom-radio"></td></tr></tbody></table></div></div></div>
+                        <div class="card">
+                            <div class="card-header border-l-4 border-purple-500 flex justify-between items-center">
+                                <div class="flex items-center gap-2"><i class="fa-solid fa-user-tie text-purple-500 text-lg"></i><h3 class="card-title">การประเมินพนักงาน (Employee)</h3></div>
+                                <span class="bg-purple-100 text-purple-700 text-xs font-bold px-2 py-1 rounded">สูงสุด 5 คน</span>
+                            </div>
+                            <div class="card-body">
+                                <div id="employeesContainer"></div>
+                                <button type="button" onclick="addEmployee()" class="w-full mt-4 border-2 border-dashed border-purple-300 text-purple-600 bg-purple-50 hover:bg-purple-100 hover:border-purple-400 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-plus"></i> เพิ่มข้อมูลพนักงาน
+                                </button>
+                            </div>
+                        </div>
                         <div class="card"><div class="card-header border-l-4 border-orange-500"><i class="fa-solid fa-broom text-orange-500 text-lg"></i><h3 class="card-title">สภาพสาขา (5ส.)</h3></div><div class="card-body"><div class="rating-table-container mb-6"><table class="rating-table"><thead><tr><th class="text-left pl-4">พื้นที่ตรวจสอบ</th><th width="60">1<br><span class="font-normal text-[10px]">แย่</span></th><th width="60">2<br><span class="font-normal text-[10px]">พอใช้</span></th><th width="60">3<br><span class="font-normal text-[10px]">เฉยๆ</span></th><th width="60">4<br><span class="font-normal text-[10px]">ดี</span></th><th width="60">5<br><span class="font-normal text-[10px]">ดีมาก</span></th></tr></thead><tbody><tr><td class="rating-topic pl-4">ความสะอาดหน้าสาขา</td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">โต๊ะทำงาน/อุปกรณ์</td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">จุดบริการน้ำดื่ม</td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">ห้องน้ำ</td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">พื้นที่เก็บของ</td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">บริเวณหลังสาขา</td><td class="radio-cell"><input type="radio" name="rate_c_back" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="5" class="custom-radio"></td></tr></tbody></table></div><div class="input-group"><label class="input-label">บันทึกเพิ่มเติม (5ส.)</label><textarea id="area_comment" rows="2" class="input-box" placeholder="ระบุสิ่งที่ต้องแก้ไขหรือคำชม..."></textarea></div></div></div>
                         <div class="card"><div class="card-header border-l-4 border-pink-500"><i class="fa-solid fa-list-check text-pink-500 text-lg"></i><h3 class="card-title">รายการตรวจสอบ (Checklist)</h3></div><div class="card-body" id="questionsContainer"><div class="text-center py-8 text-slate-400"><div class="loader mx-auto mb-3 border-slate-300"></div>กำลังโหลดรายการ...</div></div></div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"><div class="card h-full"><div class="card-header"><h3 class="card-title">สรุปผลการตรวจ</h3></div><div class="card-body h-full"><textarea id="summaryComment" class="input-box h-40 resize-none" placeholder="สรุปภาพรวม ข้อดี/ข้อเสีย และสิ่งที่ต้องเร่งดำเนินการแก้ไข..."></textarea></div></div><div class="card h-full"><div class="card-header flex justify-between"><h3 class="card-title">ลายเซ็นผู้ตรวจ</h3><button type="button" onclick="clearSignature()" class="text-xs text-red-500 font-bold hover:underline">ล้าง</button></div><div class="card-body"><div class="border border-dashed border-slate-300 rounded-lg overflow-hidden h-40 relative cursor-crosshair"><canvas id="signaturePad" class="w-full h-full absolute inset-0"></canvas><span class="absolute bottom-2 right-2 text-xs text-slate-300 pointer-events-none">เซ็นชื่อที่นี่</span></div></div></div></div>
@@ -512,6 +523,7 @@
         let questions = [{ id: 'q_default', title: 'กำลังโหลดข้อมูลจาก Server...', allowImage: false }];
         
         let isSingleZoneUser = false; 
+        let employeeCount = 0;
         
         // Tom Select Instances
         const tsInstances = {};
@@ -849,7 +861,18 @@
         function collectFormData() { const d = {}; document.querySelectorAll('#auditForm input:not([type="radio"]), #auditForm select, #auditForm textarea').forEach(el => { if(el.id) d[el.id] = el.value; }); document.querySelectorAll('input[type="radio"]:checked').forEach(r => d[r.name] = r.value); return d; }
         function saveDraft() { localStorage.setItem(STORAGE.DRAFT, JSON.stringify(collectFormData())); }
         function checkDraft() { if(localStorage.getItem(STORAGE.DRAFT)) document.getElementById('draftNotice').classList.remove('hidden'); }
-        function restoreDraft(data) { document.getElementById('zoneSelect').value = data['zoneSelect']; handleZoneChange(); setTimeout(() => { for (const k in data) { const el = document.getElementById(k); if (el) el.value = data[k]; else { const r = document.querySelector(`input[name="${k}"][value="${data[k]}"]`); if(r) r.checked = true; } } document.getElementById('draftNotice').classList.add('hidden'); }, 200); }
+        function restoreDraft(data) { 
+            if(!data) return;
+            document.getElementById('zoneSelect').value = data['zoneSelect']; handleZoneChange(); 
+            
+            let maxEmpIdx = -1;
+            for(const k in data) { if(k.startsWith('emp_id_')) { const idx = parseInt(k.replace('emp_id_', '')); if(idx > maxEmpIdx) maxEmpIdx = idx; } }
+            document.getElementById('employeesContainer').innerHTML = ''; employeeCount = 0;
+            for(let i=0; i<=maxEmpIdx; i++) { if(data[`emp_id_${i}`] !== undefined) { document.getElementById('employeesContainer').insertAdjacentHTML('beforeend', getEmployeeTemplate(i)); employeeCount = i+1; } }
+            if(employeeCount === 0) { document.getElementById('employeesContainer').innerHTML = getEmployeeTemplate(0); employeeCount = 1; }
+
+            setTimeout(() => { for (const k in data) { const el = document.getElementById(k); if (el) el.value = data[k]; else { const r = document.querySelector(`input[name="${k}"][value="${data[k]}"]`); if(r) r.checked = true; } } document.getElementById('draftNotice').classList.add('hidden'); }, 200); 
+        }
         function clearDraft() { localStorage.removeItem(STORAGE.DRAFT); document.getElementById('draftNotice').classList.add('hidden'); document.getElementById('auditForm').reset(); }
         function handleZoneChange() { 
             const z = document.getElementById('zoneSelect').value; 
@@ -876,7 +899,40 @@
             saveDraft(); 
         }
         function getLocation() { const g = document.getElementById('gpsCoords'); g.value = "กำลังค้นหา..."; navigator.geolocation.getCurrentPosition(p => { g.value = `${p.coords.latitude.toFixed(6)}, ${p.coords.longitude.toFixed(6)}`; saveDraft(); }, e => { g.value = ""; showPopup('error', 'GPS Error', e.message); }); }
-        async function submitAudit(e) { e.preventDefault(); if(!document.getElementById('gpsCoords').value) { showPopup('warning', 'แจ้งเตือน', 'ระบุพิกัด GPS'); return; } const sigCanvas = document.getElementById('signaturePad'); if(sigCanvas.toDataURL() === document.createElement('canvas').toDataURL()) { showPopup('warning', 'แจ้งเตือน', 'ลงลายเซ็น'); return; } const raw = collectFormData(); const details = []; const map = { 'f_site':'ไซต์', 'f_target':'เป้าหมาย', 'f_actual':'ยอดทำได้', 'f_percent':'% เทียบเป้า', 'f_od1':'OD1 %', 'f_od2':'OD2 %', 'f_od3':'OD3 %', 'f_npl_percent':'NPL %', 'f_ar':'AR', 'f_net_ar':'NET AR', 'f_npl_baht':'NPL (บาท)', 'emp_id':'รหัสพนักงาน', 'emp_firstname':'ชื่อ', 'emp_lastname':'นามสกุล', 'rate_person':'บุคลิกภาพ', 'rate_sale':'การขาย', 'rate_k_m':'สินค้าM', 'rate_k_ctv':'สินค้าCTV', 'rate_k_hl':'สินค้าHL', 'rate_k_promo':'โปรโมชั่น', 'rate_c_branch':'ความสะอาดหน้าสาขา', 'rate_c_desk':'โต๊ะทำงาน', 'rate_c_coffee':'จุดน้ำดื่ม', 'rate_c_toilet':'ห้องน้ำ', 'rate_c_storage':'ที่เก็บของ', 'rate_c_back':'หลังสาขา' }; for(const k in raw) { if(!questions.some(q=>q.id===k) && !k.startsWith('note_') && map[k]) details.push({ q: map[k], res: raw[k], note: '' }); } questions.forEach(q => { if(raw[q.id]) details.push({ q: q.title, res: raw[q.id], note: raw[`note_${q.id}`], image: currentAuditImages[q.id] || "" }); }); const rec = { id: Date.now().toString(), date: new Date().toLocaleString('th-TH'), auditor: currentUser.name, zone: document.getElementById('zoneSelect').value, branch: document.getElementById('branchSelect').value, gps: document.getElementById('gpsCoords').value, result: details.some(d=>d.res==='ไม่ผ่าน')?'ไม่ผ่าน':'ผ่าน', summary: document.getElementById('summaryComment').value, signature: sigCanvas.toDataURL(), details: details }; toggleLoading(true); const res = await callAPI('submitAudit', { record: rec }); toggleLoading(false); if (res.success) { Swal.fire('สำเร็จ', 'บันทึกเรียบร้อย', 'success'); clearDraft(); document.getElementById('branchSelect').disabled = true; currentAuditImages = {}; switchView('view-history'); } else { showPopup('error', 'ส่งข้อมูลล้มเหลว', 'ตรวจสอบอินเทอร์เน็ต'); } }
+        async function submitAudit(e) { 
+            e.preventDefault(); 
+            if(!document.getElementById('gpsCoords').value) { showPopup('warning', 'แจ้งเตือน', 'ระบุพิกัด GPS'); return; } 
+            const sigCanvas = document.getElementById('signaturePad'); 
+            if(sigCanvas.toDataURL() === document.createElement('canvas').toDataURL()) { showPopup('warning', 'แจ้งเตือน', 'ลงลายเซ็น'); return; } 
+            
+            const raw = collectFormData(); 
+            const details = []; 
+            
+            const mapBranch = { 'f_site':'ไซต์', 'f_target':'เป้าหมาย', 'f_actual':'ยอดทำได้', 'f_percent':'% เทียบเป้า', 'f_od1':'OD1 %', 'f_od2':'OD2 %', 'f_od3':'OD3 %', 'f_npl_percent':'NPL %', 'f_ar':'AR', 'f_net_ar':'NET AR', 'f_npl_baht':'NPL (บาท)' };
+            for(const k in mapBranch) { if(raw[k] !== undefined && raw[k] !== '') details.push({q: mapBranch[k], res: raw[k], note: ''}); }
+            
+            for(let i=0; i<=10; i++) {
+                if(raw[`emp_id_${i}`] || raw[`emp_firstname_${i}`]) {
+                    const eMap = { 'emp_id':'รหัสพนักงาน', 'emp_firstname':'ชื่อ', 'emp_lastname':'นามสกุล', 'rate_person':'บุคลิกภาพ', 'rate_sale':'การขาย', 'rate_k_m':'สินค้าM', 'rate_k_ctv':'สินค้าCTV', 'rate_k_hl':'สินค้าHL', 'rate_k_promo':'โปรโมชั่น', 'emp_note':'หมายเหตุพนักงาน' };
+                    for(const k in eMap) { if(raw[`${k}_${i}`] !== undefined) details.push({q: `${k}_${i}`, res: raw[`${k}_${i}`], note: ''}); }
+                }
+            }
+            
+            const map5S = { 'rate_c_branch':'ความสะอาดหน้าสาขา', 'rate_c_desk':'โต๊ะทำงาน', 'rate_c_coffee':'จุดน้ำดื่ม', 'rate_c_toilet':'ห้องน้ำ', 'rate_c_storage':'ที่เก็บของ', 'rate_c_back':'หลังสาขา' };
+            for(const k in map5S) { if(raw[k] !== undefined) details.push({q: map5S[k], res: raw[k], note: ''}); }
+            if(raw['area_comment']) details.push({q: 'area_comment', res: raw['area_comment'], note: ''});
+            
+            questions.forEach(q => { if(raw[q.id]) details.push({ q: q.title, res: raw[q.id], note: raw[`note_${q.id}`], image: currentAuditImages[q.id] || "" }); }); 
+            
+            const rec = { id: Date.now().toString(), date: new Date().toLocaleString('th-TH'), auditor: currentUser.name, zone: document.getElementById('zoneSelect').value, branch: document.getElementById('branchSelect').value, gps: document.getElementById('gpsCoords').value, result: details.some(d=>d.res==='ไม่ผ่าน')?'ไม่ผ่าน':'ผ่าน', summary: document.getElementById('summaryComment').value, signature: sigCanvas.toDataURL(), details: details }; 
+            
+            toggleLoading(true); 
+            const res = await callAPI('submitAudit', { record: rec }); 
+            toggleLoading(false); 
+            
+            if (res.success) { Swal.fire('สำเร็จ', 'บันทึกเรียบร้อย', 'success'); clearDraft(); document.getElementById('branchSelect').disabled = true; currentAuditImages = {}; switchView('view-history'); } 
+            else { showPopup('error', 'ส่งข้อมูลล้มเหลว', 'ตรวจสอบอินเทอร์เน็ต'); } 
+        }
         function initSignature() { const c = document.getElementById('signaturePad'); setTimeout(() => { if(!c.parentElement) return; c.width = c.parentElement.clientWidth; c.height = c.parentElement.clientHeight; const ctx = c.getContext('2d'); ctx.lineWidth=2; let drawing=false; const getPos = (e) => { const r=c.getBoundingClientRect(); return { x: (e.clientX||e.touches[0].clientX)-r.left, y: (e.clientY||e.touches[0].clientY)-r.top }; }; const start = (e) => { drawing=true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); e.preventDefault(); }; const move = (e) => { if(!drawing)return; ctx.lineTo(getPos(e).x, getPos(e).y); ctx.stroke(); e.preventDefault(); }; const end = () => drawing=false; c.addEventListener('mousedown', start); c.addEventListener('mousemove', move); c.addEventListener('mouseup', end); c.addEventListener('touchstart', start); c.addEventListener('touchmove', move); c.addEventListener('touchend', end); }, 500); }
         function clearSignature() { const c=document.getElementById('signaturePad'); c.getContext('2d').clearRect(0,0,c.width,c.height); }
         
@@ -962,6 +1018,59 @@
             }
         }
         
+        function getEmployeeTemplate(i) {
+            return `
+            <div class="employee-block bg-white border border-purple-100 shadow-sm rounded-xl p-5 mb-5 relative transition-all" id="emp_block_${i}">
+                ${i > 0 ? `<button type="button" onclick="removeEmployee(${i})" class="absolute top-4 right-4 text-red-500 hover:text-red-700 font-bold text-xs bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-trash"></i> ลบ</button>` : ''}
+                <h4 class="font-bold text-slate-700 mb-4 border-b border-slate-100 pb-2 flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xs">${i+1}</div>พนักงานคนที่ ${i+1}</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="input-group"><label class="input-label">รหัสพนักงาน</label><input type="text" id="emp_id_${i}" class="input-box text-center font-mono" placeholder="รหัสพนักงาน" required oninput="saveDraft()"></div>
+                    <div class="input-group"><label class="input-label">ชื่อ (First Name)</label><input type="text" id="emp_firstname_${i}" class="input-box" placeholder="ระบุชื่อจริง" required oninput="saveDraft()"></div>
+                    <div class="input-group"><label class="input-label">นามสกุล (Last Name)</label><input type="text" id="emp_lastname_${i}" class="input-box" placeholder="ระบุนามสกุล" required oninput="saveDraft()"></div>
+                </div>
+                
+                <div class="rating-table-container mb-4">
+                    <table class="rating-table">
+                        <thead><tr><th class="text-left pl-4">หัวข้อประเมิน (ทักษะ)</th><th width="60">1</th><th width="60">2</th><th width="60">3</th><th width="60">4</th><th width="60">5</th></tr></thead>
+                        <tbody>
+                            <tr><td class="rating-topic pl-4">บุคลิกภาพ/การแต่งกาย</td>${[1,2,3,4,5].map(v => `<td class="radio-cell"><input type="radio" name="rate_person_${i}" value="${v}" class="custom-radio" onchange="saveDraft()"></td>`).join('')}</tr>
+                            <tr><td class="rating-topic pl-4">ทักษะการขาย/บริการ</td>${[1,2,3,4,5].map(v => `<td class="radio-cell"><input type="radio" name="rate_sale_${i}" value="${v}" class="custom-radio" onchange="saveDraft()"></td>`).join('')}</tr>
+                        </tbody>
+                    </table>
+                </div>
+                <label class="input-label mb-2">ความรู้ผลิตภัณฑ์</label>
+                <div class="rating-table-container mb-4">
+                    <table class="rating-table">
+                        <thead><tr><th class="text-left pl-4">ผลิตภัณฑ์</th><th width="60">1</th><th width="60">2</th><th width="60">3</th><th width="60">4</th><th width="60">5</th></tr></thead>
+                        <tbody>
+                            <tr><td class="rating-topic pl-4">สินเชื่อ M</td>${[1,2,3,4,5].map(v => `<td class="radio-cell"><input type="radio" name="rate_k_m_${i}" value="${v}" class="custom-radio" onchange="saveDraft()"></td>`).join('')}</tr>
+                            <tr><td class="rating-topic pl-4">สินเชื่อ CTV</td>${[1,2,3,4,5].map(v => `<td class="radio-cell"><input type="radio" name="rate_k_ctv_${i}" value="${v}" class="custom-radio" onchange="saveDraft()"></td>`).join('')}</tr>
+                            <tr><td class="rating-topic pl-4">สินเชื่อ HL</td>${[1,2,3,4,5].map(v => `<td class="radio-cell"><input type="radio" name="rate_k_hl_${i}" value="${v}" class="custom-radio" onchange="saveDraft()"></td>`).join('')}</tr>
+                            <tr><td class="rating-topic pl-4">โปรโมชั่น</td>${[1,2,3,4,5].map(v => `<td class="radio-cell"><input type="radio" name="rate_k_promo_${i}" value="${v}" class="custom-radio" onchange="saveDraft()"></td>`).join('')}</tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="input-group mb-0">
+                    <label class="input-label text-purple-600"><i class="fa-regular fa-comment-dots"></i> หมายเหตุสำหรับพนักงานคนนี้</label>
+                    <input type="text" id="emp_note_${i}" class="input-box bg-purple-50/50 border-purple-200 focus:border-purple-500" placeholder="คำชมเชย หรือ สิ่งที่ต้องปรับปรุง..." oninput="saveDraft()">
+                </div>
+            </div>
+            `;
+        }
+
+        function addEmployee() {
+            if(employeeCount >= 5) { showPopup('warning','แจ้งเตือน','เพิ่มพนักงานได้สูงสุด 5 คนต่อรอบ'); return; }
+            const container = document.getElementById('employeesContainer');
+            container.insertAdjacentHTML('beforeend', getEmployeeTemplate(employeeCount));
+            employeeCount++;
+            saveDraft();
+        }
+
+        function removeEmployee(idx) {
+            const block = document.getElementById(`emp_block_${idx}`);
+            if(block) { block.remove(); saveDraft(); }
+        }
+
         function initAuditForm() {
             const zSel = document.getElementById('zoneSelect'); 
             
@@ -989,6 +1098,9 @@
             }
 
             currentAuditImages = {}; 
+            
+            document.getElementById('employeesContainer').innerHTML = getEmployeeTemplate(0);
+            employeeCount = 1;
             
             if(questions.length > 0) {
                 const activeQs = questions.filter(q => q.active !== false);
@@ -1080,14 +1192,34 @@
             const ar = formatNoDecimal(getVal(rec.details, 'AR'));
             const netAr = formatNoDecimal(getVal(rec.details, 'NET AR')); 
             const p = (v) => v !== '-' ? v+'%' : '-'; 
-            const empName = `${getVal(rec.details, 'ชื่อ')} ${getVal(rec.details, 'นามสกุล')} (${getVal(rec.details, 'รหัสพนักงาน')})`; 
             
             // Generate Main Info
-            let content = `<div class="text-center mb-6 pb-4 border-b-2 border-primary"><h2 class="text-2xl font-bold">รายงานตรวจสอบ</h2><div class="flex justify-between text-sm"><span>${rec.branch}</span><span>${rec.date}</span></div></div> <table class="w-full text-xs border-collapse border border-slate-300 mb-6"> <tr class="bg-slate-50"><td colspan="5" class="border border-slate-300 p-4 text-center"><span class="font-bold text-2xl">พนักงาน: ${empName}</span></td></tr> <tr><td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ไซต์</div><div>${getVal(rec.details, 'ไซต์')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">เป้า</div><div>${getVal(rec.details, 'เป้าหมาย')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ทำได้</div><div>${getVal(rec.details, 'ยอดทำได้')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD1</div><div>${p(getVal(rec.details, 'OD1 %'))}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD2</div><div>${p(getVal(rec.details, 'OD2 %'))}</div></td></tr> <tr><td class="border p-2 text-center"><div class="font-bold text-slate-500">OD3</div><div>${p(getVal(rec.details, 'OD3 %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL%</div><div>${p(getVal(rec.details, 'NPL %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL(บาท)</div><div class="text-red-600 font-bold">${nplB}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">AR</div><div>${ar}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NET AR</div><div>${netAr}</div></td></tr> </table>`; 
+            let content = `<div class="text-center mb-6 pb-4 border-b-2 border-primary"><h2 class="text-2xl font-bold">รายงานตรวจสอบ</h2><div class="flex justify-between text-sm"><span>${rec.branch}</span><span>${rec.date}</span></div></div> <table class="w-full text-xs border-collapse border border-slate-300 mb-6"> <tr class="bg-slate-50"><td colspan="5" class="border border-slate-300 p-4 text-center text-slate-500 font-bold">ข้อมูลการดำเนินงานสาขา</td></tr> <tr><td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ไซต์</div><div>${getVal(rec.details, 'ไซต์')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">เป้า</div><div>${getVal(rec.details, 'เป้าหมาย')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ทำได้</div><div>${getVal(rec.details, 'ยอดทำได้')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD1</div><div>${p(getVal(rec.details, 'OD1 %'))}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD2</div><div>${p(getVal(rec.details, 'OD2 %'))}</div></td></tr> <tr><td class="border p-2 text-center"><div class="font-bold text-slate-500">OD3</div><div>${p(getVal(rec.details, 'OD3 %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL%</div><div>${p(getVal(rec.details, 'NPL %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL(บาท)</div><div class="text-red-600 font-bold">${nplB}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">AR</div><div>${ar}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NET AR</div><div>${netAr}</div></td></tr> </table>`; 
             
-            // Generate Matrix Tables for Ratings
-            content += genMatrixTable('ทักษะพนักงาน', [{label:'บุคลิกภาพ', key:'บุคลิกภาพ'}, {label:'การขาย', key:'การขาย'}], rec.details); 
-            content += genMatrixTable('ความรู้ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:'สินค้าM'}, {label:'สินเชื่อ CTV', key:'สินค้าCTV'}, {label:'สินเชื่อ HL', key:'สินค้าHL'}, {label:'โปรโมชั่น', key:'โปรโมชั่น'}], rec.details); 
+            let employeeContent = ''; let foundNewEmp = false;
+            for(let i=0; i<10; i++) {
+                const eid = getVal(rec.details, `emp_id_${i}`); const fname = getVal(rec.details, `emp_firstname_${i}`);
+                if(eid !== '-' || fname !== '-') {
+                    foundNewEmp = true;
+                    const empName = `${fname} ${getVal(rec.details, `emp_lastname_${i}`)} (${eid})`;
+                    employeeContent += `<div class="bg-slate-50 border border-slate-200 p-4 rounded-xl mb-6">
+                        <h4 class="font-bold text-lg text-purple-700 border-b pb-2 mb-3"><i class="fa-solid fa-user mr-2"></i>พนักงาน: ${empName}</h4>
+                        ${genMatrixTable('ทักษะ', [{label:'บุคลิกภาพ', key:`rate_person_${i}`}, {label:'การขาย', key:`rate_sale_${i}`}], rec.details)}
+                        ${genMatrixTable('ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:`rate_k_m_${i}`}, {label:'สินเชื่อ CTV', key:`rate_k_ctv_${i}`}, {label:'สินเชื่อ HL', key:`rate_k_hl_${i}`}, {label:'โปรโมชั่น', key:`rate_k_promo_${i}`}], rec.details)}`;
+                    const empNote = getVal(rec.details, `emp_note_${i}`);
+                    if(empNote && empNote !== '-') employeeContent += `<div class="mt-3 text-sm bg-white p-2 border border-slate-200 rounded text-slate-600"><span class="font-bold text-slate-800">หมายเหตุพนักงาน:</span> ${empNote}</div>`;
+                    employeeContent += `</div>`;
+                }
+            }
+            if(!foundNewEmp) {
+                const empName = `${getVal(rec.details, 'ชื่อ')} ${getVal(rec.details, 'นามสกุล')} (${getVal(rec.details, 'รหัสพนักงาน')})`;
+                employeeContent += `<div class="bg-slate-50 border border-slate-200 p-4 rounded-xl mb-6">
+                    <h4 class="font-bold text-lg text-purple-700 border-b pb-2 mb-3"><i class="fa-solid fa-user mr-2"></i>พนักงาน: ${empName}</h4>
+                    ${genMatrixTable('ทักษะพนักงาน', [{label:'บุคลิกภาพ', key:'บุคลิกภาพ'}, {label:'การขาย', key:'การขาย'}], rec.details)}
+                    ${genMatrixTable('ความรู้ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:'สินค้าM'}, {label:'สินเชื่อ CTV', key:'สินค้าCTV'}, {label:'สินเชื่อ HL', key:'สินค้าHL'}, {label:'โปรโมชั่น', key:'โปรโมชั่น'}], rec.details)}
+                </div>`;
+            }
+            content += employeeContent;
             content += genMatrixTable('สภาพสาขา (5ส.)', [{label:'หน้าสาขา', key:'ความสะอาดหน้าสาขา'}, {label:'โต๊ะทำงาน', key:'โต๊ะทำงาน'}, {label:'จุดน้ำดื่ม', key:'จุดน้ำดื่ม'}, {label:'ห้องน้ำ', key:'ห้องน้ำ'}, {label:'ที่เก็บของ', key:'ที่เก็บของ'}, {label:'หลังสาขา', key:'หลังสาขา'}], rec.details); 
             
             const note = getVal(rec.details, 'area_comment'); if(note && note !== '-') content += `<div class="text-xs italic mt-2">* หมายเหตุ: ${note}</div>`; 
@@ -1095,7 +1227,12 @@
             // Checklist Section
             content += `<h4 class="font-bold mt-6 mb-2 border-b">Checklist</h4>`; 
             const checklistItems = [];
-            rec.details.forEach(d => { if(!['ไซต์','เป้าหมาย','ยอดทำได้','% เทียบเป้า','OD1 %','OD2 %','OD3 %','NPL %','NPL (บาท)','AR','NET AR','รหัสพนักงาน','ชื่อ','นามสกุล','บุคลิกภาพ','การขาย','สินค้าM','สินค้าCTV','สินค้าHL','โปรโมชั่น','ความสะอาดหน้าสาขา','โต๊ะทำงาน','จุดน้ำดื่ม','ห้องน้ำ','ที่เก็บของ','หลังสาขา','area_comment'].includes(d.q)) { checklistItems.push(d); } });
+            rec.details.forEach(d => { 
+                if(!['ไซต์','เป้าหมาย','ยอดทำได้','% เทียบเป้า','OD1 %','OD2 %','OD3 %','NPL %','NPL (บาท)','AR','NET AR','รหัสพนักงาน','ชื่อ','นามสกุล','บุคลิกภาพ','การขาย','สินค้าM','สินค้าCTV','สินค้าHL','โปรโมชั่น','ความสะอาดหน้าสาขา','โต๊ะทำงาน','จุดน้ำดื่ม','ห้องน้ำ','ที่เก็บของ','หลังสาขา','area_comment'].includes(d.q) 
+                    && !d.q.match(/_(0|1|2|3|4|5|6|7|8|9)$/)) { 
+                    checklistItems.push(d); 
+                } 
+            });
             
             content += genChecklistTable(checklistItems);
             
@@ -1248,4 +1385,3 @@
     </script>
 </body>
 </html>
-

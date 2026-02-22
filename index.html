@@ -12,6 +12,10 @@
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     
+    <!-- Leaflet JS for Advanced Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
@@ -103,6 +107,12 @@
         .multi-select-container { position: relative; }
         .multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; z-index: 50; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); width: 220px; padding: 8px; max-height: 300px; overflow-y: auto; }
         .multi-select-dropdown.show { display: block; }
+
+        /* Leaflet Popup Customization */
+        .leaflet-popup-content-wrapper { border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; }
+        .leaflet-popup-content { margin: 16px; font-family: 'Sarabun', sans-serif; line-height: normal; }
+        .leaflet-container a.leaflet-popup-close-button { top: 12px; right: 12px; color: #94a3b8; font-size: 20px; font-weight: 400; background: #f8fafc; border-radius: 50%; width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; padding-bottom: 2px; }
+        .leaflet-container a.leaflet-popup-close-button:hover { color: #475569; background: #f1f5f9; }
         
         #detailContent { font-family: 'Sarabun', sans-serif; color: #000; background: white; }
         #detailContent .text-sm { font-size: 11px !important; }
@@ -141,7 +151,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.4 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.5 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -165,7 +175,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 5.8.4 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 5.8.5 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -396,7 +406,7 @@
                                 <h4 class="font-bold text-slate-800 mb-6 text-lg">สแกนเพื่อรับการแจ้งเตือน</h4>
                                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 relative">
                                     <!-- 📍 จุดที่ 1: ใส่ลิงก์รูปภาพ QR Code ของคุณที่ src="..." ด้านล่างนี้ -->
-                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ" alt="LINE QR Code" class="w-48 h-48 object-contain">
+                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ/?size=200x200&data=https://line.me/R/ti/p/@yourbotid" alt="LINE QR Code" class="w-48 h-48 object-contain">
                                     <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
                                         <i class="fa-brands fa-line text-[80px] text-[#00B900]"></i>
                                     </div>
@@ -616,6 +626,7 @@
         
         let isSingleZoneUser = false; 
         let employeeCount = 0;
+        let currentLeafletMap = null;
         
         // Tom Select Instances
         const tsInstances = {};
@@ -1287,7 +1298,137 @@
         }
         function renderHistoryTable(records) { document.getElementById('auditLogContainer').innerHTML = records.map(r => ` <tr class="border-b hover:bg-slate-50"><td class="p-3">${r.date}</td><td class="p-3 font-bold">${r.branch}</td><td class="p-3">${r.auditor}</td> <td class="p-3"><span class="px-2 py-1 rounded-md text-xs border ${r.result==='ผ่าน'?'bg-green-50 text-green-700':'bg-red-50 text-red-700'} font-bold">${r.result}</span></td> <td class="p-3 text-center flex items-center justify-center gap-2"> <button onclick='openDetail("${r.id}")' class="text-primary text-xs border border-primary px-3 py-1 rounded hover:bg-primary hover:text-white transition">View</button> <button onclick='openMap("${r.id}")' class="text-cyan-500 text-xs border border-cyan-500 px-3 py-1 rounded hover:bg-cyan-500 hover:text-white transition"><i class="fa-solid fa-map-location-dot"></i> Map</button> ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteAudit('${r.id}')" class="text-red-500 text-xs border border-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white"><i class="fa-solid fa-trash"></i></button>` : ''} </td></tr>`).join(''); }
         
-        function openMap(id) { const rec = auditRecords.find(r => r.id == id); if (!rec) return; let lat = '13.7563', lon = '100.5018'; if(rec.gps && rec.gps.includes(',')) { [lat, lon] = rec.gps.split(',').map(s => s.trim()); } let branchCode = "-"; let branchName = rec.branch; if ((rec.branch || '').toString().includes(']')) { const parts = rec.branch.split(']'); branchName = parts[1].trim(); branchCode = parts[0].replace('[','').trim(); } const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`; const navigateUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`; const htmlContent = ` <div class="relative w-full h-[85vh] bg-slate-200 rounded-xl overflow-hidden font-sans text-left shadow-sm border border-slate-200 group"> <button onclick="switchView('view-history')" class="absolute top-4 left-4 z-10 bg-white text-slate-700 hover:text-primary px-4 py-2 rounded-lg shadow-md font-bold transition flex items-center border border-slate-200"> <i class="fa-solid fa-arrow-left mr-2"></i> ย้อนกลับ </button> <iframe width="100%" height="100%" src="${mapUrl}" frameborder="0" style="border:0; filter: grayscale(10%);" allowfullscreen></iframe> <div class="absolute inset-0 flex items-center justify-center pointer-events-none p-4"> <div class="pointer-events-auto bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/50 w-full max-w-sm transform transition-all duration-300 hover:scale-105"> <div class="flex justify-between items-start mb-4"> <div class="flex items-center gap-4"> <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl shadow-lg ring-4 ring-white"> <i class="fa-solid fa-store"></i> </div> <div> <h4 class="font-bold text-slate-800 text-lg leading-tight">${branchName}</h4> <div class="text-xs text-slate-500 font-bold mt-1 bg-slate-100 px-2 py-0.5 rounded-full inline-block">CODE: ${branchCode}</div> </div> </div> <button onclick="switchView('view-history')" class="text-slate-400 hover:text-slate-600 transition bg-slate-50 rounded-full w-8 h-8 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button> </div> <div class="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100"> <div class="flex items-center gap-3 text-sm"> <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-red-500 shadow-sm"><i class="fa-solid fa-map-pin"></i></div> <div class="flex-1"><div class="text-[10px] text-slate-400 font-bold uppercase">พิกัด GPS</div><div class="font-mono text-xs text-slate-700 font-bold">${lat}, ${lon}</div></div> </div> <div class="flex items-center gap-3 text-sm"> <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-blue-500 shadow-sm"><i class="fa-regular fa-calendar-check"></i></div> <div class="flex-1"><div class="text-[10px] text-slate-400 font-bold uppercase">วันที่เข้าตรวจ</div><div class="font-bold text-slate-700">${rec.date}</div></div> </div> <div class="flex items-center gap-3 text-sm"> <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-yellow-500 shadow-sm"><i class="fa-solid fa-star"></i></div> <div class="flex-1"><div class="text-[10px] text-slate-400 font-bold uppercase">ผลการประเมิน</div><div class="${rec.result === 'ผ่าน' ? 'text-green-600' : 'text-red-600'} font-bold">${rec.result}</div></div> </div> </div> <div class="grid grid-cols-2 gap-3"> <button onclick="openAuditGallery('${rec.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-200"><i class="fa-solid fa-images"></i> ดูรูปภาพ</button> <a href="${navigateUrl}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-200"><i class="fa-solid fa-location-arrow"></i> นำทาง</a> </div> </div> </div> </div>`; document.getElementById('view-map').innerHTML = htmlContent; switchView('view-map'); }
+        function openMap(id) { 
+            const rec = auditRecords.find(r => r.id == id); if (!rec) return; 
+            
+            let lat = '13.7563', lon = '100.5018'; 
+            if(rec.gps && rec.gps.includes(',')) { [lat, lon] = rec.gps.split(',').map(s => s.trim()); } 
+            
+            let branchCode = "-"; let branchName = rec.branch; 
+            if ((rec.branch || '').toString().includes(']')) { 
+                const parts = rec.branch.split(']'); branchName = parts[1].trim(); branchCode = parts[0].replace('[','').trim(); 
+            } 
+            
+            const navigateUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`; 
+            
+            const htmlContent = ` 
+            <div class="relative w-full h-[85vh] bg-slate-200 rounded-xl overflow-hidden font-sans text-left shadow-sm border border-slate-200 group"> 
+                <button onclick="switchView('view-history')" class="absolute top-4 left-4 z-[500] bg-white text-slate-700 hover:text-primary px-4 py-2 rounded-lg shadow-md font-bold transition flex items-center border border-slate-200"> 
+                    <i class="fa-solid fa-arrow-left mr-2"></i> ย้อนกลับ 
+                </button> 
+                
+                <!-- Container สำหรับแผนที่ใหม่ -->
+                <div id="leafletMapContainer" class="w-full h-full z-0 relative"></div>
+            </div>`; 
+            
+            document.getElementById('view-map').innerHTML = htmlContent; 
+            switchView('view-map'); 
+
+            // Initialize Advanced Map (Leaflet) หลังจาก DOM พร้อม
+            setTimeout(() => {
+                if (currentLeafletMap) { 
+                    currentLeafletMap.remove(); 
+                }
+
+                // สร้างแผนที่ใหม่ ซูม 17
+                currentLeafletMap = L.map('leafletMapContainer', { zoomControl: false }).setView([lat, lon], 17);
+                L.control.zoom({ position: 'topright' }).addTo(currentLeafletMap);
+
+                // ตั้งค่า Layer 1: แผนที่ดาวเทียม (Esri)
+                const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
+                    maxZoom: 19,
+                    attribution: 'Tiles &copy; Esri'
+                });
+
+                // ตั้งค่า Layer 2: แผนที่ถนนปกติ (OSM)
+                const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors'
+                });
+
+                // กำหนดค่าเริ่มต้นให้เปิดดาวเทียม
+                satelliteLayer.addTo(currentLeafletMap);
+
+                // เพิ่มปุ่มควบคุมเปิด/ปิดสลับ Layer ด้านขวาบน
+                const baseMaps = {
+                    "ดาวเทียม (Satellite)": satelliteLayer,
+                    "แผนที่ถนน (Street)": osmLayer
+                };
+                L.control.layers(baseMaps, null, { position: 'topright' }).addTo(currentLeafletMap);
+
+                // ค้นหารูปภาพประกอบมาใส่ในหมุด (ถ้ามี)
+                let popupImg = 'https://cdn-icons-png.flaticon.com/512/219/219983.png';
+                if(rec.details) {
+                    const imgDetail = rec.details.find(d => d.image && d.image.length > 10);
+                    if(imgDetail) popupImg = fixDriveUrl(imgDetail.image);
+                }
+
+                // สร้าง Custom Marker
+                const customIcon = L.divIcon({
+                    className: 'bg-transparent border-0',
+                    html: `
+                        <div class="relative flex items-center justify-center transition-transform hover:scale-110 cursor-pointer">
+                            <i class="fa-solid fa-location-dot text-[#ef4444] text-[52px] drop-shadow-lg"></i>
+                            <div class="absolute top-[5px] w-9 h-9 rounded-full border-2 border-white overflow-hidden bg-white shadow-inner pointer-events-none">
+                                <img src="${popupImg}" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                    `,
+                    iconSize: [52, 52],
+                    iconAnchor: [26, 52],
+                    popupAnchor: [0, -52]
+                });
+
+                const marker = L.marker([lat, lon], {icon: customIcon}).addTo(currentLeafletMap);
+
+                // ข้อมูลแสดงใน Popup ตอนกดหมุด (แทนที่กรอบเดิม)
+                const popupHtml = `
+                    <div class="font-sans w-[280px] sm:w-[320px] text-slate-800">
+                        <div class="flex items-center gap-3 mb-4 pr-6">
+                            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white text-xl shadow-md shrink-0">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <div class="overflow-hidden">
+                                <h4 class="font-bold text-slate-800 text-base leading-tight m-0 p-0 truncate" title="${branchName}">${branchName}</h4>
+                                <div class="text-[10px] text-slate-500 font-bold mt-1.5 uppercase tracking-wider bg-slate-100 px-2 py-0.5 rounded-full inline-block">CODE: ${branchCode}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3 mb-5 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 flex justify-center text-red-500 mt-0.5"><i class="fa-solid fa-map-pin"></i></div>
+                                <div class="flex-1"><div class="text-[10px] text-slate-400 font-bold uppercase mb-0.5">พิกัด GPS</div><div class="font-mono text-xs font-bold text-slate-700">${lat}, ${lon}</div></div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 flex justify-center text-blue-500 mt-0.5"><i class="fa-regular fa-calendar-check"></i></div>
+                                <div class="flex-1"><div class="text-[10px] text-slate-400 font-bold uppercase mb-0.5">วันที่เข้าตรวจ</div><div class="text-xs font-bold text-slate-700">${rec.date}</div></div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-6 flex justify-center text-yellow-500 mt-0.5"><i class="fa-solid fa-star"></i></div>
+                                <div class="flex-1"><div class="text-[10px] text-slate-400 font-bold uppercase mb-0.5">ผลการประเมิน</div><div class="${rec.result === 'ผ่าน' ? 'text-green-600' : 'text-red-600'} font-bold text-sm">${rec.result}</div></div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="openAuditGallery('${rec.id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-100 border-0 cursor-pointer w-full"><i class="fa-solid fa-images"></i> ดูรูปภาพ</button>
+                            <a href="${navigateUrl}" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-100 no-underline cursor-pointer"><i class="fa-solid fa-location-arrow"></i> นำทาง</a>
+                        </div>
+                    </div>
+                `;
+
+                // ผูกข้อมูล Popup เข้ากับ Marker
+                marker.bindPopup(popupHtml, { 
+                    minWidth: 280, 
+                    maxWidth: 350, 
+                    offset: [0, -35],
+                    autoPanPadding: [20, 20]
+                }).openPopup();
+
+                // แก้ไขปัญหาการ Resize Map
+                setTimeout(() => { currentLeafletMap.invalidateSize(); }, 200);
+            }, 350);
+        }
+        
         let galleryImages = [], galleryIndex = 0; function changeGalleryImage(step) { if (galleryImages.length === 0) return; galleryIndex = (galleryIndex + step + galleryImages.length) % galleryImages.length; const img = document.getElementById('galleryImg'); if(img) img.src = galleryImages[galleryIndex].url; const title = document.getElementById('galleryTitle'); if(title) title.innerText = galleryImages[galleryIndex].title; const count = document.getElementById('galleryCount'); if(count) count.innerText = `${galleryIndex + 1} / ${galleryImages.length}`; }
         function openAuditGallery(id) { const rec = auditRecords.find(r => r.id == id); if (!rec) return; galleryImages = []; if(rec.details) rec.details.forEach(d => { if(d.image) galleryImages.push({ title: d.q, url: fixDriveUrl(d.image) }); }); if(galleryImages.length === 0) { Swal.fire({ icon: 'info', title: 'ไม่พบรูปภาพ' }); return; } galleryIndex = 0; Swal.fire({ html: ` <div class="relative bg-black h-[80vh] flex flex-col rounded-lg"> <div class="absolute top-0 left-0 right-0 p-4 flex justify-between z-10 bg-gradient-to-b from-black/80 to-transparent"> <div class="text-left"><h3 id="galleryTitle" class="text-white font-bold">${galleryImages[0].title}</h3><div id="galleryCount" class="text-white/80 text-xs">1 / ${galleryImages.length}</div></div> <button onclick="Swal.close()" class="text-white text-xl"><i class="fa-solid fa-xmark"></i></button> </div> <div class="flex-1 flex items-center justify-center bg-zinc-900 relative"> <img id="galleryImg" src="${galleryImages[0].url}" class="max-w-full max-h-full object-contain"> <button onclick="changeGalleryImage(-1)" class="absolute left-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button> <button onclick="changeGalleryImage(1)" class="absolute right-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button> </div> </div>`, width: '90%', padding: 0, showConfirmButton: false, background: 'transparent' }); }
         function fixDriveUrl(url) { if (url && url.includes("drive.google.com") && url.includes("id=")) { const match = url.match(/id=([^&]+)/); if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=s1000`; } return url; }

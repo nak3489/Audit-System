@@ -326,7 +326,6 @@
                     </div>
                     <div class="mb-6 flex justify-between items-end"><div><h2 class="text-3xl font-display font-bold text-slate-800">บันทึกการตรวจสาขา</h2><p class="text-slate-500 mt-1">กรุณากรอกข้อมูลตามความเป็นจริงและครบถ้วน</p></div><div class="text-right hidden sm:block"><div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Date</div><div class="text-slate-700 font-mono font-bold text-lg bg-white px-3 py-1 rounded shadow-sm border" id="headerDate">-</div></div></div>
                     <form id="auditForm" onsubmit="submitAudit(event)" oninput="saveDraft()">
-                        <!-- ... Form Content same as before ... -->
                         <div class="card"><div class="card-header border-l-4 border-blue-500"><i class="fa-solid fa-store text-blue-500 text-lg"></i><h3 class="card-title">ข้อมูลสาขา (Branch Info)</h3></div><div class="card-body"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="lg:col-span-3 bg-blue-50 border border-blue-100 rounded-xl p-4 flex flex-col md:flex-row items-center gap-4"><div class="flex-1 w-full"><label class="input-label">พิกัด GPS <span class="text-red-500">*</span></label><div class="relative"><input type="text" id="gpsCoords" class="input-box font-mono pl-10" readonly placeholder="กรุณากดปุ่ม Check-in"><i class="fa-solid fa-location-dot absolute left-3 top-3 text-blue-500"></i></div></div><button type="button" onclick="getLocation()" class="w-full md:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-sm transition flex items-center justify-center gap-2"><i class="fa-solid fa-location-crosshairs"></i> Check-in</button></div><div class="input-group"><label class="input-label">เขต (Zone)</label><div class="relative"><select id="zoneSelect" onchange="handleZoneChange()" class="input-box appearance-none cursor-pointer w-full"><option value="">-- รอข้อมูล --</option></select></div></div><div class="input-group"><label class="input-label">สาขา (Branch)</label><div class="relative"><select id="branchSelect" class="input-box appearance-none cursor-pointer w-full disabled:bg-slate-100" disabled><option value="">-- เลือกเขตก่อน --</option></select></div></div><div class="input-group"><label class="input-label">ไซต์สาขา</label><input type="text" id="f_site" class="input-box" placeholder="เช่น S, M, L"></div></div><div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-6"><div class="input-group"><label class="input-label">เป้าหมาย (Target)</label><input type="number" id="f_target" oninput="calculatePerformance()" class="input-box" placeholder="0.00"></div><div class="input-group"><label class="input-label">ทำได้จริง (Actual)</label><input type="number" id="f_actual" oninput="calculatePerformance()" class="input-box font-bold text-blue-600" placeholder="0.00"></div><div class="input-group"><label class="input-label">% เทียบเป้า</label><input type="text" id="f_percent" class="input-box bg-green-50 text-green-700 font-bold text-center" readonly placeholder="0%"></div></div><div class="mt-4 border-t border-slate-100 pt-4 grid grid-cols-2 md:grid-cols-4 gap-4"><div class="input-group"><label class="input-label">OD1 %</label><input type="text" id="f_od1" class="input-box" placeholder="%"></div><div class="input-group"><label class="input-label">OD2 %</label><input type="text" id="f_od2" class="input-box" placeholder="%"></div><div class="input-group"><label class="input-label">OD3 %</label><input type="text" id="f_od3" class="input-box" placeholder="%"></div><div class="input-group"><label class="input-label">NPL %</label><input type="text" id="f_npl_percent" class="input-box font-bold text-red-600" placeholder="%"></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2"><div class="input-group"><label class="input-label">AR (บาท)</label><input type="text" id="f_ar" oninput="calculateDebt()" onblur="formatInputCurrency(this)" class="input-box" placeholder="0.00"></div><div class="input-group"><label class="input-label">NET AR (บาท)</label><input type="text" id="f_net_ar" oninput="calculateDebt()" onblur="formatInputCurrency(this)" class="input-box" placeholder="0.00"></div><div class="input-group"><label class="input-label">NPL (บาท) <span class="text-xs font-normal text-slate-400">(AR - NET AR)</span></label><input type="text" id="f_npl_baht" class="input-box bg-slate-100 font-bold text-red-600" readonly placeholder="0.00"></div></div></div></div>
                         <div class="card"><div class="card-header border-l-4 border-purple-500"><i class="fa-solid fa-user-tie text-purple-500 text-lg"></i><h3 class="card-title">การประเมินพนักงาน (Employee)</h3></div><div class="card-body"><div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"><div class="input-group"><label class="input-label">รหัสพนักงาน</label><input type="text" id="emp_id" class="input-box text-lg text-center font-mono" placeholder="รหัสพนักงาน"></div><div class="input-group"><label class="input-label">ชื่อ (First Name)</label><input type="text" id="emp_firstname" class="input-box text-lg" placeholder="ระบุชื่อจริง"></div><div class="input-group"><label class="input-label">นามสกุล (Last Name)</label><input type="text" id="emp_lastname" class="input-box text-lg" placeholder="ระบุนามสกุล"></div></div><div class="rating-table-container mb-6"><table class="rating-table"><thead><tr><th class="text-left pl-4">หัวข้อประเมิน (ทักษะ)</th><th width="60">1<br><span class="font-normal text-[10px]">แย่</span></th><th width="60">2<br><span class="font-normal text-[10px]">พอใช้</span></th><th width="60">3<br><span class="font-normal text-[10px]">เฉยๆ</span></th><th width="60">4<br><span class="font-normal text-[10px]">ดี</span></th><th width="60">5<br><span class="font-normal text-[10px]">ดีมาก</span></th></tr></thead><tbody><tr><td class="rating-topic pl-4">บุคลิกภาพ/การแต่งกาย</td><td class="radio-cell"><input type="radio" name="rate_person" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_person" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_person" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_person" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_person" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">ทักษะการขาย/บริการ</td><td class="radio-cell"><input type="radio" name="rate_sale" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_sale" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_sale" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_sale" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_sale" value="5" class="custom-radio"></td></tr></tbody></table></div><label class="input-label mb-2">ความรู้ผลิตภัณฑ์</label><div class="rating-table-container"><table class="rating-table"><thead><tr><th class="text-left pl-4">ผลิตภัณฑ์</th><th width="60">1<br><span class="font-normal text-[10px]">แย่</span></th><th width="60">2<br><span class="font-normal text-[10px]">พอใช้</span></th><th width="60">3<br><span class="font-normal text-[10px]">เฉยๆ</span></th><th width="60">4<br><span class="font-normal text-[10px]">ดี</span></th><th width="60">5<br><span class="font-normal text-[10px]">ดีมาก</span></th></tr></thead><tbody><tr><td class="rating-topic pl-4">สินเชื่อ M</td><td class="radio-cell"><input type="radio" name="rate_k_m" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_m" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_m" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_m" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_m" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">สินเชื่อ CTV</td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_ctv" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">สินเชื่อ HL</td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_hl" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">โปรโมชั่น</td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_k_promo" value="5" class="custom-radio"></td></tr></tbody></table></div></div></div>
                         <div class="card"><div class="card-header border-l-4 border-orange-500"><i class="fa-solid fa-broom text-orange-500 text-lg"></i><h3 class="card-title">สภาพสาขา (5ส.)</h3></div><div class="card-body"><div class="rating-table-container mb-6"><table class="rating-table"><thead><tr><th class="text-left pl-4">พื้นที่ตรวจสอบ</th><th width="60">1<br><span class="font-normal text-[10px]">แย่</span></th><th width="60">2<br><span class="font-normal text-[10px]">พอใช้</span></th><th width="60">3<br><span class="font-normal text-[10px]">เฉยๆ</span></th><th width="60">4<br><span class="font-normal text-[10px]">ดี</span></th><th width="60">5<br><span class="font-normal text-[10px]">ดีมาก</span></th></tr></thead><tbody><tr><td class="rating-topic pl-4">ความสะอาดหน้าสาขา</td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">โต๊ะทำงาน/อุปกรณ์</td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">จุดบริการน้ำดื่ม</td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">ห้องน้ำ</td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">พื้นที่เก็บของ</td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">บริเวณหลังสาขา</td><td class="radio-cell"><input type="radio" name="rate_c_back" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="5" class="custom-radio"></td></tr></tbody></table></div><div class="input-group"><label class="input-label">บันทึกเพิ่มเติม (5ส.)</label><textarea id="area_comment" rows="2" class="input-box" placeholder="ระบุสิ่งที่ต้องแก้ไขหรือคำชม..."></textarea></div></div></div>
@@ -370,7 +369,7 @@
                                 <button onclick="fetchQuestionsFromAPI()" class="text-slate-400 hover:text-primary transition p-2"><i class="fa-solid fa-rotate"></i></button>
                             </div>
                         </div>
-                        <div class="p-4 rounded-lg border border-blue-100 bg-blue-50 text-blue-800 text-sm mb-6 flex gap-3 items-center"><i class="fa-solid fa-circle-info text-xl"></i><div><span class="font-bold">Admin Notice:</span> รายการคำถามถูกดึงมาจาก Google Sheets สามารถ เพิ่ม/ลบ/แก้ไข ได้ทันที<br><span class="text-xs opacity-75">การเปลี่ยนแปลงจะมีผลกับผู้ใช้งานทุกคนหลังจากรีเฟรช</span></div></div>
+                        <div class="p-4 rounded-lg border border-blue-100 bg-blue-50 text-blue-800 text-sm mb-6 flex gap-3 items-center"><i class="fa-solid fa-circle-info text-xl"></i><div><span class="font-bold">Admin Notice:</span> รายการคำถามถูกดึงมาจาก Google Sheets สามารถ เพิ่ม/ลบ/แก้ไข หรือ ล็อกคำถาม ได้ทันที<br><span class="text-xs opacity-75">คำถามที่ถูกล็อกจะไม่สามารถลบได้ เพื่อป้องกันความผิดพลาด</span></div></div>
                         <div id="questionsListConfig" class="space-y-3"></div>
                     </div>
                 </div>
@@ -668,8 +667,60 @@
         async function callAPI(a, p = {}) { try { if (currentUser && !p.requestUser) p.requestUser = currentUser; const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: a, ...p }) }); return await r.json(); } catch (e) { return { success: false, message: e.message }; } }
         async function fetchQuestionsFromAPI(r = false) { if(r) toggleLoading(true); const res = await callAPI('getQuestions', { all: true }); if (res.success) { questions = res.data; localStorage.setItem(STORAGE.QUESTIONS, JSON.stringify(questions)); if(!document.getElementById('view-questions').classList.contains('hidden')) renderQuestionsConfig(); if(!document.getElementById('view-audit').classList.contains('hidden')) initAuditForm(); } if(r) toggleLoading(false); }
         
-        async function openAddQuestionModal(id=null,t='',ai=false) { const { value: v } = await Swal.fire({ title: id?'แก้ไข':'เพิ่ม', html: `<input id="swal-input1" class="swal2-input" value="${t}" placeholder="หัวข้อ"><div class="flex items-center justify-center mt-4 gap-2"><input type="checkbox" id="swal-input2" ${ai?'checked':''}> <label>รูปภาพ</label></div>`, focusConfirm: false, showCancelButton: true, preConfirm: () => [document.getElementById('swal-input1').value, document.getElementById('swal-input2').checked] }); if (v) { toggleLoading(true); const r = await callAPI('saveQuestion', { id: id, title: v[0], allowImage: v[1] }); toggleLoading(false); if(r.success) { fetchQuestionsFromAPI(true); Swal.fire('สำเร็จ', '', 'success'); } } }
-        async function deleteQuestion(id) { const c = await Swal.fire({ title: 'ยืนยันลบ?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33' }); if (c.isConfirmed) { toggleLoading(true); await callAPI('deleteQuestion', { id }); toggleLoading(false); fetchQuestionsFromAPI(true); } }
+        async function openAddQuestionModal(id=null,t='',ai=false, isLocked=false) {
+            const { value: v } = await Swal.fire({
+                title: id ? 'แก้ไขคำถาม' : 'เพิ่มคำถามใหม่',
+                html: `<input id="swal-input1" class="swal2-input" value="${t}" placeholder="ระบุหัวข้อคำถาม...">
+                       <div class="flex flex-col gap-3 mt-4 text-left px-2">
+                           <label class="flex items-center gap-2 cursor-pointer border border-slate-200 p-2 rounded-lg hover:bg-slate-50 transition">
+                               <input type="checkbox" id="swal-input2" class="w-5 h-5 cursor-pointer accent-primary" ${ai?'checked':''}>
+                               <span class="text-sm font-bold text-slate-700">อนุญาตให้แนบรูปภาพ</span>
+                           </label>
+                           <label class="flex items-center gap-2 cursor-pointer border border-slate-200 p-2 rounded-lg hover:bg-red-50 transition">
+                               <input type="checkbox" id="swal-input3" class="w-5 h-5 cursor-pointer accent-red-500" ${isLocked?'checked':''}>
+                               <span class="text-sm font-bold text-red-600"><i class="fa-solid fa-lock"></i> ล็อกคำถามนี้ (ห้ามลบ)</span>
+                           </label>
+                       </div>`,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                preConfirm: () => [
+                    document.getElementById('swal-input1').value,
+                    document.getElementById('swal-input2').checked,
+                    document.getElementById('swal-input3').checked
+                ]
+            });
+            if (v) {
+                if(!v[0].trim()) return showPopup('warning', 'แจ้งเตือน', 'กรุณาระบุหัวข้อคำถาม');
+                toggleLoading(true);
+                const r = await callAPI('saveQuestion', { id: id, title: v[0], allowImage: v[1], locked: v[2] });
+                toggleLoading(false);
+                if(r.success) {
+                    fetchQuestionsFromAPI(true);
+                    Swal.fire('บันทึกสำเร็จ', '', 'success');
+                } else {
+                    showPopup('error', 'ผิดพลาด', r.message);
+                }
+            }
+        }
+        
+        async function deleteQuestion(id) { 
+            const c = await Swal.fire({ title: 'ยืนยันลบคำถาม?', text: 'การกระทำนี้ไม่สามารถย้อนกลับได้', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'ใช่, ลบทิ้ง', cancelButtonText: 'ยกเลิก' }); 
+            if (c.isConfirmed) { 
+                toggleLoading(true); 
+                const r = await callAPI('deleteQuestion', { id }); 
+                toggleLoading(false); 
+                if(r.success) {
+                    fetchQuestionsFromAPI(true); 
+                } else {
+                    showPopup('error', 'ลบไม่สำเร็จ', r.message);
+                }
+            } 
+        }
+        
         async function handleSaveSettings(e) { e.preventDefault(); toggleLoading(true); const r = await callAPI('saveSettings', { lineToken: document.getElementById('settingLineToken').value, notifyEmail: document.getElementById('settingEmail').value }); toggleLoading(false); if(r.success) showPopup('success', 'สำเร็จ', ''); else showPopup('error', 'ผิดพลาด', r.message); }
 
         function switchView(id) {
@@ -790,7 +841,6 @@
             }).join('');
         }
 
-        // ... Existing Audit Form & Calculations ...
         function calculateDebt() { const ar = parseFloat(document.getElementById('f_ar').value.replace(/,/g, '')) || 0; const netAr = parseFloat(document.getElementById('f_net_ar').value.replace(/,/g, '')) || 0; document.getElementById('f_npl_baht').value = (ar - netAr).toLocaleString('en-US', {minimumFractionDigits: 2}); saveDraft(); }
         function formatInputCurrency(el) { let val = parseFloat(el.value.replace(/,/g, '')); if(!isNaN(val)) el.value = val.toLocaleString('en-US', {minimumFractionDigits: 2}); }
         function calculatePerformance() { const target = parseFloat(document.getElementById('f_target').value) || 0; const actual = parseFloat(document.getElementById('f_actual').value) || 0; document.getElementById('f_percent').value = target > 0 ? (actual / target * 100).toFixed(2) + '%' : '-'; saveDraft(); }
@@ -829,7 +879,88 @@
         async function submitAudit(e) { e.preventDefault(); if(!document.getElementById('gpsCoords').value) { showPopup('warning', 'แจ้งเตือน', 'ระบุพิกัด GPS'); return; } const sigCanvas = document.getElementById('signaturePad'); if(sigCanvas.toDataURL() === document.createElement('canvas').toDataURL()) { showPopup('warning', 'แจ้งเตือน', 'ลงลายเซ็น'); return; } const raw = collectFormData(); const details = []; const map = { 'f_site':'ไซต์', 'f_target':'เป้าหมาย', 'f_actual':'ยอดทำได้', 'f_percent':'% เทียบเป้า', 'f_od1':'OD1 %', 'f_od2':'OD2 %', 'f_od3':'OD3 %', 'f_npl_percent':'NPL %', 'f_ar':'AR', 'f_net_ar':'NET AR', 'f_npl_baht':'NPL (บาท)', 'emp_id':'รหัสพนักงาน', 'emp_firstname':'ชื่อ', 'emp_lastname':'นามสกุล', 'rate_person':'บุคลิกภาพ', 'rate_sale':'การขาย', 'rate_k_m':'สินค้าM', 'rate_k_ctv':'สินค้าCTV', 'rate_k_hl':'สินค้าHL', 'rate_k_promo':'โปรโมชั่น', 'rate_c_branch':'ความสะอาดหน้าสาขา', 'rate_c_desk':'โต๊ะทำงาน', 'rate_c_coffee':'จุดน้ำดื่ม', 'rate_c_toilet':'ห้องน้ำ', 'rate_c_storage':'ที่เก็บของ', 'rate_c_back':'หลังสาขา' }; for(const k in raw) { if(!questions.some(q=>q.id===k) && !k.startsWith('note_') && map[k]) details.push({ q: map[k], res: raw[k], note: '' }); } questions.forEach(q => { if(raw[q.id]) details.push({ q: q.title, res: raw[q.id], note: raw[`note_${q.id}`], image: currentAuditImages[q.id] || "" }); }); const rec = { id: Date.now().toString(), date: new Date().toLocaleString('th-TH'), auditor: currentUser.name, zone: document.getElementById('zoneSelect').value, branch: document.getElementById('branchSelect').value, gps: document.getElementById('gpsCoords').value, result: details.some(d=>d.res==='ไม่ผ่าน')?'ไม่ผ่าน':'ผ่าน', summary: document.getElementById('summaryComment').value, signature: sigCanvas.toDataURL(), details: details }; toggleLoading(true); const res = await callAPI('submitAudit', { record: rec }); toggleLoading(false); if (res.success) { Swal.fire('สำเร็จ', 'บันทึกเรียบร้อย', 'success'); clearDraft(); document.getElementById('branchSelect').disabled = true; currentAuditImages = {}; switchView('view-history'); } else { showPopup('error', 'ส่งข้อมูลล้มเหลว', 'ตรวจสอบอินเทอร์เน็ต'); } }
         function initSignature() { const c = document.getElementById('signaturePad'); setTimeout(() => { if(!c.parentElement) return; c.width = c.parentElement.clientWidth; c.height = c.parentElement.clientHeight; const ctx = c.getContext('2d'); ctx.lineWidth=2; let drawing=false; const getPos = (e) => { const r=c.getBoundingClientRect(); return { x: (e.clientX||e.touches[0].clientX)-r.left, y: (e.clientY||e.touches[0].clientY)-r.top }; }; const start = (e) => { drawing=true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); e.preventDefault(); }; const move = (e) => { if(!drawing)return; ctx.lineTo(getPos(e).x, getPos(e).y); ctx.stroke(); e.preventDefault(); }; const end = () => drawing=false; c.addEventListener('mousedown', start); c.addEventListener('mousemove', move); c.addEventListener('mouseup', end); c.addEventListener('touchstart', start); c.addEventListener('touchmove', move); c.addEventListener('touchend', end); }, 500); }
         function clearSignature() { const c=document.getElementById('signaturePad'); c.getContext('2d').clearRect(0,0,c.width,c.height); }
-        function renderQuestionsConfig() { const list = document.getElementById('questionsListConfig'); if(!questions || questions.length === 0) { list.innerHTML = `<tr><td colspan="3" class="text-center py-4">No Questions</td></tr>`; return; } const protectedIds = ['q1', 'q2', 'q3', 'q4']; const isAdmin = currentUser && currentUser.role.toLowerCase() === 'admin'; list.innerHTML = questions.map(q => { const safeTitle = q.title ? q.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : ""; const showActions = isAdmin || !protectedIds.includes(q.id); return `<div class="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md transition group"><div class="flex-1"><div class="font-bold text-slate-700 text-lg">${q.title}</div><div class="text-xs text-slate-400 font-mono mt-1 flex items-center gap-2"><span>ID: ${q.id}</span>${q.allowImage?'<span class="text-green-600 bg-green-50 px-2 py-0.5 rounded text-[10px] font-bold">รูปภาพ</span>':''}${!showActions?'<span class="text-red-500 bg-red-50 px-2 py-0.5 rounded text-[10px]"><i class="fa-solid fa-lock"></i> Locked</span>':''}</div></div><div class="flex gap-2">${showActions ? `<button onclick="openAddQuestionModal('${q.id}', '${safeTitle}', ${q.allowImage})" class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center"><i class="fa-solid fa-pen"></i></button><button onclick="deleteQuestion('${q.id}')" class="w-10 h-10 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition flex items-center justify-center"><i class="fa-solid fa-trash"></i></button>` : ''}</div></div>`; }).join(''); }
+        
+        // --- NEW/UPDATED RENDER QUESTIONS CONFIG ---
+        function renderQuestionsConfig() {
+            const list = document.getElementById('questionsListConfig');
+            if(!questions || questions.length === 0) { 
+                list.innerHTML = `<div class="text-center py-6 text-slate-500 bg-slate-50 rounded-xl border border-slate-200 shadow-sm">ไม่พบรายการคำถาม</div>`; 
+                return; 
+            }
+            const protectedIds = ['q1', 'q2', 'q3', 'q4']; // Default protected items if backend doesn't provide
+            const isAdmin = currentUser && currentUser.role.toLowerCase() === 'admin';
+
+            list.innerHTML = questions.map(q => {
+                const safeTitle = q.title ? q.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "";
+                
+                // Determine lock status. Explicit locked property takes precedence.
+                const isLocked = q.locked !== undefined ? q.locked : protectedIds.includes(q.id);
+                
+                // Rules: 
+                // Admin can edit all. Admin can only delete UNLOCKED.
+                // Standard users cannot edit or delete locked.
+                const canEdit = isAdmin || !isLocked;
+                const canDelete = (isAdmin && !isLocked) || (!isAdmin && !isLocked);
+
+                return `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md transition group gap-4 relative overflow-hidden">
+                    ${isLocked ? '<div class="absolute left-0 top-0 bottom-0 w-1 bg-red-400"></div>' : '<div class="absolute left-0 top-0 bottom-0 w-1 bg-slate-200"></div>'}
+                    
+                    <div class="flex-1 pl-2">
+                        <div class="font-bold text-slate-700 text-base sm:text-lg">${q.title}</div>
+                        <div class="text-xs text-slate-400 font-mono mt-1 flex flex-wrap items-center gap-2">
+                            <span class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200">ID: ${q.id}</span>
+                            ${q.allowImage?'<span class="text-green-600 bg-green-50 px-2 py-0.5 rounded border border-green-200 font-bold"><i class="fa-solid fa-camera"></i> รองรับรูปภาพ</span>':''}
+                            ${isLocked?'<span class="text-red-500 bg-red-50 px-2 py-0.5 rounded border border-red-200 font-bold"><i class="fa-solid fa-lock"></i> ถูกล็อก (ห้ามลบ)</span>':''}
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mt-2 sm:mt-0 pt-2 sm:pt-0 border-t sm:border-0 border-slate-100">
+                        ${isAdmin ? `
+                        <label class="flex items-center cursor-pointer mr-1 sm:mr-3 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition" title="ติ๊กเพื่อล็อก/ปลดล็อกคำถาม">
+                            <input type="checkbox" class="sr-only peer" ${isLocked ? 'checked' : ''} onchange="toggleQuestionLock('${q.id}', this.checked, '${safeTitle}', ${q.allowImage})">
+                            <div class="relative w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500 shadow-inner"></div>
+                            <span class="ml-2 text-xs font-bold ${isLocked ? 'text-red-600' : 'text-slate-500'} select-none hidden sm:inline-block">${isLocked ? 'ล็อกอยู่' : 'ปลดล็อก'}</span>
+                        </label>
+                        ` : ''}
+
+                        ${canEdit ? `<button onclick="openAddQuestionModal('${q.id}', '${safeTitle}', ${q.allowImage}, ${isLocked})" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center shadow-sm border border-blue-100" title="แก้ไขคำถาม"><i class="fa-solid fa-pen"></i></button>` : ''}
+                        
+                        ${canDelete ? `<button onclick="deleteQuestion('${q.id}')" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition flex items-center justify-center shadow-sm border border-red-100" title="ลบคำถาม"><i class="fa-solid fa-trash"></i></button>` : `<button class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-slate-50 text-slate-300 cursor-not-allowed flex items-center justify-center border border-slate-100" title="คำถามถูกล็อก ไม่สามารถลบได้"><i class="fa-solid fa-lock"></i></button>`}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // --- NEW FUNCTION: TOGGLE LOCK STATUS ---
+        window.toggleQuestionLock = async function(id, isLocked, title, allowImage) {
+            toggleLoading(true);
+            const r = await callAPI('saveQuestion', { id: id, title: title, allowImage: allowImage, locked: isLocked });
+            toggleLoading(false);
+            
+            if(r.success) {
+                // Update Local Data
+                const qIndex = questions.findIndex(x => x.id === id);
+                if(qIndex > -1) {
+                    questions[qIndex].locked = isLocked;
+                    localStorage.setItem(STORAGE.QUESTIONS, JSON.stringify(questions));
+                }
+                renderQuestionsConfig(); // Refresh UI
+                
+                // Show tiny success message
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: isLocked ? 'ล็อกคำถามเรียบร้อย' : 'ปลดล็อกแล้ว',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                showPopup('error', 'เกิดข้อผิดพลาด', r.message);
+                renderQuestionsConfig(); // Revert toggle visually on error
+            }
+        }
         
         function initAuditForm() {
             const zSel = document.getElementById('zoneSelect'); 
@@ -865,11 +996,11 @@
                     <div class="check-item group">
                         <div class="flex items-start justify-between mb-3">
                             <div class="flex items-start gap-3">
-                                <span class="bg-slate-100 text-slate-500 text-xs font-bold px-2 py-1 rounded mt-0.5">ข้อ ${i+1}</span>
+                                <span class="bg-slate-100 text-slate-500 text-xs font-bold px-2 py-1 rounded mt-0.5 border border-slate-200 shadow-sm">ข้อ ${i+1}</span>
                                 <div class="font-bold text-slate-700 leading-tight pt-0.5">${q.title}</div>
                             </div>
                         </div>
-                        <div class="flex flex-col md:flex-row gap-4 items-start md:items-center pl-0 md:pl-10">
+                        <div class="flex flex-col md:flex-row gap-4 items-start md:items-center pl-0 md:pl-10 mt-2">
                             <div class="segmented-control">
                                 <label>
                                     <input type="radio" name="${q.id}" value="ผ่าน" class="segment-radio" onchange="saveDraft()">
@@ -1022,7 +1153,6 @@
                 
                 let extra = d.note || '';
                 if(d.image) {
-                     // Changed from link to image tag
                      extra += `<br><img src="${fixDriveUrl(d.image)}" style="max-height:120px; width:auto; margin-top:5px; border:1px solid #ddd;">`;
                 }
                 h += `<td class="border border-slate-300 p-1 text-gray-600 align-top">${extra}</td>`;

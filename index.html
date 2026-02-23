@@ -151,7 +151,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.7 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.8 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 5.8.7 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 5.8.8 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -405,7 +405,6 @@
                             <div class="w-full md:w-1/3 flex flex-col items-center justify-start border border-slate-100 rounded-2xl p-6 bg-slate-50/50">
                                 <h4 class="font-bold text-slate-800 mb-6 text-lg">สแกนเพื่อรับการแจ้งเตือน</h4>
                                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 relative">
-                                    <!-- 📍 จุดที่ 1: ใส่ลิงก์รูปภาพ QR Code ของคุณที่ src="..." ด้านล่างนี้ -->
                                     <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ" alt="LINE QR Code" class="w-48 h-48 object-contain">
                                     <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
                                         <i class="fa-brands fa-line text-[80px] text-[#00B900]"></i>
@@ -428,8 +427,6 @@
                                         <div class="flex-1">
                                             <h4 class="font-bold text-slate-800 mb-1">เพิ่มเพื่อน (Add Friend)</h4>
                                             <p class="text-sm text-slate-500 mb-3">สแกน QR Code ด้านซ้ายมือ หรือค้นหา ID ของบอทเพื่อทำการเพิ่มเพื่อน</p>
-                                            
-                                            <!-- 📍 จุดที่ 2: ใส่ลิงก์รูปภาพคู่มือ (รูปที่ 1) ที่ src="..." ด้านล่างนี้ (หากใส่รูปแล้วสามารถลบ div Step 1 ทิ้งได้เลย) -->
                                             <img src="https://lh3.googleusercontent.com/d/1miVjWLx-kA7nNn0yhb44viOwbzfcLVOl" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm">
                                             <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
                                                 Step 1: Add Friend
@@ -443,9 +440,6 @@
                                         <div class="flex-1">
                                             <h4 class="font-bold text-slate-800 mb-1">ลงทะเบียน (Register)</h4>
                                             <p class="text-sm text-slate-500 mb-3">พิมพ์คำว่า <span class="text-primary font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100">ลงทะเบียน</span> ส่งไปหาบอท เพื่อยืนยันตัวตน</p>
-                                            
-                                            <!-- 📍 จุดที่ 3: ใส่ลิงก์รูปภาพคู่มือ (รูปที่ 2) ที่ src="..." ด้านล่างนี้ -->
-                                            <!-- <img src="ใส่ลิงก์รูปที่_2_ตรงนี้" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm"> -->
                                             <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
                                                 Step 2: Type Register
                                             </div>
@@ -458,9 +452,6 @@
                                         <div class="flex-1">
                                             <h4 class="font-bold text-slate-800 mb-1">เสร็จสิ้น (Success)</h4>
                                             <p class="text-sm text-slate-500 mb-3">ระบบจะตอบกลับยืนยัน ท่านจะได้รับการแจ้งเตือนทันทีเมื่อมีการส่งรายงานใหม่</p>
-                                            
-                                            <!-- 📍 จุดที่ 4: ใส่ลิงก์รูปภาพคู่มือ (รูปที่ 3) ที่ src="..." ด้านล่างนี้ -->
-                                            <!-- <img src="ใส่ลิงก์รูปที่_3_ตรงนี้" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm"> -->
                                             <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
                                                 Step 3: Confirmation
                                             </div>
@@ -778,7 +769,6 @@
                     if (selMonths.length > 0 && !selMonths.includes(parsed.month)) return false;
                     if (zVal !== 'all') {
                         if (isSingleZoneUser) { 
-                            // Partial match for Branch name or full match
                             if (!(r.branch || '').toString().includes(zVal)) return false; 
                         } 
                         else { 
@@ -890,7 +880,6 @@
             if (res.success) {
                 globalAllBranches = res.data; let rawBranches = res.data;
                 
-                // Allow seeing history from other users in SAME Zone
                 if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
                     const allowed = currentUser.permissionArea.split(',').map(z => z.trim());
                     rawBranches = rawBranches.filter(b => allowed.includes(b.region) || allowed.includes(b.zone) || allowed.includes(b.id));
@@ -913,12 +902,12 @@
                     dSel.innerHTML = '<option value="all">ทุกเขต (All Zones)</option>';
                     zoneList.forEach(z => dSel.innerHTML += `<option value="${z}">${z}</option>`);
                 }
-                initTomSelect('dashFilterZone'); // Init
+                initTomSelect('dashFilterZone'); 
                 
                 const hSel = document.getElementById('histFilterZone'); 
                 hSel.innerHTML = '<option value="all">ทุกเขต</option>';
                 zoneList.forEach(z => hSel.innerHTML += `<option value="${z}">${z}</option>`);
-                initTomSelect('histFilterZone'); // Init
+                initTomSelect('histFilterZone'); 
                 
                 initTomSelect('histFilterBranch'); 
                 
@@ -999,7 +988,6 @@
             const z = document.getElementById('zoneSelect').value; 
             const bSel = document.getElementById('branchSelect'); 
             
-            // Destroy previous TomSelect on branchSelect before changing options
             if(tsInstances['branchSelect']) {
                 tsInstances['branchSelect'].destroy();
                 delete tsInstances['branchSelect'];
@@ -1013,13 +1001,29 @@
                     const d = b.id && b.id !== '-' ? `[${b.id}] ${b.name}` : b.name; 
                     bSel.innerHTML += `<option value="${d}">${d}</option>`; 
                 }); 
-                initTomSelect('branchSelect'); // Re-init TomSelect
+                initTomSelect('branchSelect'); 
             } else { 
                 bSel.disabled = true; 
             } 
             saveDraft(); 
         }
         function getLocation() { const g = document.getElementById('gpsCoords'); g.value = "กำลังค้นหา..."; navigator.geolocation.getCurrentPosition(p => { g.value = `${p.coords.latitude.toFixed(6)}, ${p.coords.longitude.toFixed(6)}`; saveDraft(); }, e => { g.value = ""; showPopup('error', 'GPS Error', e.message); }); }
+        
+        window.calcPIP = function(i) {
+            const target = parseFloat(document.getElementById(`emp_target_${i}`).value) || 0;
+            const insure = parseFloat(document.getElementById(`emp_insure_${i}`).value) || 0;
+            const actual = parseFloat(document.getElementById(`emp_actual_${i}`).value) || 0;
+            const actualInsure = parseFloat(document.getElementById(`emp_actual_insure_${i}`).value) || 0;
+
+            const pipTarget = target + insure;
+            const pipActual = actual + actualInsure;
+            const pipPercent = pipTarget > 0 ? (pipActual / pipTarget * 100).toFixed(2) : 0;
+
+            document.getElementById(`emp_pip_target_${i}`).value = pipTarget > 0 ? pipTarget.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '';
+            document.getElementById(`emp_pip_actual_${i}`).value = pipActual > 0 ? pipActual.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '';
+            document.getElementById(`emp_pip_percent_${i}`).value = pipTarget > 0 ? pipPercent + '%' : '-';
+        }
+
         async function submitAudit(e) { 
             e.preventDefault(); 
             if(!document.getElementById('gpsCoords').value) { showPopup('warning', 'แจ้งเตือน', 'ระบุพิกัด GPS'); return; } 
@@ -1034,8 +1038,13 @@
             
             for(let i=0; i<=10; i++) {
                 if(raw[`emp_id_${i}`] || raw[`emp_firstname_${i}`]) {
-                    const eMap = { 'emp_id':'รหัสพนักงาน', 'emp_firstname':'ชื่อ', 'emp_lastname':'นามสกุล', 'rate_person':'บุคลิกภาพ', 'rate_sale':'การขาย', 'rate_k_m':'สินค้าM', 'rate_k_ctv':'สินค้าCTV', 'rate_k_hl':'สินค้าHL', 'rate_k_promo':'โปรโมชั่น', 'emp_note':'หมายเหตุพนักงาน' };
-                    for(const k in eMap) { if(raw[`${k}_${i}`] !== undefined) details.push({q: `${k}_${i}`, res: raw[`${k}_${i}`], note: ''}); }
+                    const eMap = { 
+                        'emp_id':'รหัสพนักงาน', 'emp_firstname':'ชื่อ', 'emp_lastname':'นามสกุล', 
+                        'emp_target': 'เป้าหมายรายบุคคล', 'emp_insure': 'ประกันรายบุคคล', 'emp_actual': 'ยอดจัดรายบุคคล', 'emp_actual_insure': 'ยอดประกันรายบุคคล',
+                        'emp_pip_target': 'เป้าหมาย PIP', 'emp_pip_actual': 'ยอดจัด PIP(ทำได้)', 'emp_pip_percent': '% PIP',
+                        'rate_person':'บุคลิกภาพ', 'rate_sale':'การขาย', 'rate_k_m':'สินค้าM', 'rate_k_ctv':'สินค้าCTV', 'rate_k_hl':'สินค้าHL', 'rate_k_promo':'โปรโมชั่น', 'emp_note':'หมายเหตุพนักงาน' 
+                    };
+                    for(const k in eMap) { if(raw[`${k}_${i}`] !== undefined && raw[`${k}_${i}`] !== '') details.push({q: `${eMap[k]}_${i}`, res: raw[`${k}_${i}`], note: ''}); }
                 }
             }
             
@@ -1054,7 +1063,6 @@
             
             let finalRes = 'ผ่าน';
             if(totalQ > 0) { 
-                // ถ้าจำนวนข้อที่ผ่าน มากกว่า 50% ของข้อทั้งหมด ให้เป็น ผ่าน
                 finalRes = (passQ / totalQ > 0.5) ? 'ผ่าน' : 'ไม่ผ่าน'; 
             } else { 
                 finalRes = details.some(d=>d.res==='ไม่ผ่าน')?'ไม่ผ่าน':'ผ่าน'; 
@@ -1072,25 +1080,18 @@
         function initSignature() { const c = document.getElementById('signaturePad'); setTimeout(() => { if(!c.parentElement) return; c.width = c.parentElement.clientWidth; c.height = c.parentElement.clientHeight; const ctx = c.getContext('2d'); ctx.lineWidth=2; let drawing=false; const getPos = (e) => { const r=c.getBoundingClientRect(); return { x: (e.clientX||e.touches[0].clientX)-r.left, y: (e.clientY||e.touches[0].clientY)-r.top }; }; const start = (e) => { drawing=true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); e.preventDefault(); }; const move = (e) => { if(!drawing)return; ctx.lineTo(getPos(e).x, getPos(e).y); ctx.stroke(); e.preventDefault(); }; const end = () => drawing=false; c.addEventListener('mousedown', start); c.addEventListener('mousemove', move); c.addEventListener('mouseup', end); c.addEventListener('touchstart', start); c.addEventListener('touchmove', move); c.addEventListener('touchend', end); }, 500); }
         function clearSignature() { const c=document.getElementById('signaturePad'); c.getContext('2d').clearRect(0,0,c.width,c.height); }
         
-        // --- NEW/UPDATED RENDER QUESTIONS CONFIG ---
         function renderQuestionsConfig() {
             const list = document.getElementById('questionsListConfig');
             if(!questions || questions.length === 0) { 
                 list.innerHTML = `<div class="text-center py-6 text-slate-500 bg-slate-50 rounded-xl border border-slate-200 shadow-sm">ไม่พบรายการคำถาม</div>`; 
                 return; 
             }
-            const protectedIds = ['q1', 'q2', 'q3', 'q4']; // Default protected items if backend doesn't provide
+            const protectedIds = ['q1', 'q2', 'q3', 'q4'];
             const isAdmin = currentUser && currentUser.role.toLowerCase() === 'admin';
 
             list.innerHTML = questions.map(q => {
                 const safeTitle = q.title ? q.title.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "";
-                
-                // Determine lock status. Explicit locked property takes precedence.
                 const isLocked = q.locked !== undefined ? q.locked : protectedIds.includes(q.id);
-                
-                // Rules: 
-                // Admin can edit all. Admin can only delete UNLOCKED.
-                // Standard users cannot edit or delete locked.
                 const canEdit = isAdmin || !isLocked;
                 const canDelete = (isAdmin && !isLocked) || (!isAdmin && !isLocked);
 
@@ -1124,22 +1125,19 @@
             }).join('');
         }
 
-        // --- NEW FUNCTION: TOGGLE LOCK STATUS ---
         window.toggleQuestionLock = async function(id, isLocked, title, allowImage) {
             toggleLoading(true);
             const r = await callAPI('saveQuestion', { id: id, title: title, allowImage: allowImage, locked: isLocked });
             toggleLoading(false);
             
             if(r.success) {
-                // Update Local Data
                 const qIndex = questions.findIndex(x => x.id === id);
                 if(qIndex > -1) {
                     questions[qIndex].locked = isLocked;
                     localStorage.setItem(STORAGE.QUESTIONS, JSON.stringify(questions));
                 }
-                renderQuestionsConfig(); // Refresh UI
+                renderQuestionsConfig(); 
                 
-                // Show tiny success message
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -1150,7 +1148,7 @@
                 });
             } else {
                 showPopup('error', 'เกิดข้อผิดพลาด', r.message);
-                renderQuestionsConfig(); // Revert toggle visually on error
+                renderQuestionsConfig(); 
             }
         }
         
@@ -1164,8 +1162,41 @@
                     <div class="input-group"><label class="input-label">ชื่อ (First Name)</label><input type="text" id="emp_firstname_${i}" class="input-box" placeholder="ระบุชื่อจริง" required oninput="saveDraft()"></div>
                     <div class="input-group"><label class="input-label">นามสกุล (Last Name)</label><input type="text" id="emp_lastname_${i}" class="input-box" placeholder="ระบุนามสกุล" required oninput="saveDraft()"></div>
                 </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 mt-4 border-t border-purple-100 pt-4">
+                    <div class="input-group">
+                        <label class="input-label">1. เป้าหมายรายบุคคล</label>
+                        <input type="number" id="emp_target_${i}" class="input-box" placeholder="0.00" oninput="calcPIP(${i}); saveDraft()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">2. ประกันรายบุคคล</label>
+                        <input type="number" id="emp_insure_${i}" class="input-box" placeholder="0.00" oninput="calcPIP(${i}); saveDraft()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">3. ยอดจัดรายบุคคล</label>
+                        <input type="number" id="emp_actual_${i}" class="input-box" placeholder="0.00" oninput="calcPIP(${i}); saveDraft()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">4. ยอดประกันรายบุคคล</label>
+                        <input type="number" id="emp_actual_insure_${i}" class="input-box" placeholder="0.00" oninput="calcPIP(${i}); saveDraft()">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-inner">
+                    <div class="input-group mb-0">
+                        <label class="input-label">เป้าหมาย PIP (1+2)</label>
+                        <input type="text" id="emp_pip_target_${i}" class="input-box bg-white font-bold text-center" readonly placeholder="0.00">
+                    </div>
+                    <div class="input-group mb-0">
+                        <label class="input-label">ยอดจัด PIP(ทำได้) (3+4)</label>
+                        <input type="text" id="emp_pip_actual_${i}" class="input-box bg-white font-bold text-blue-600 text-center" readonly placeholder="0.00">
+                    </div>
+                    <div class="input-group mb-0">
+                        <label class="input-label">% PIP</label>
+                        <input type="text" id="emp_pip_percent_${i}" class="input-box bg-green-50 text-green-700 font-bold text-center" readonly placeholder="0%">
+                    </div>
+                </div>
                 
-                <div class="rating-table-container mb-4">
+                <div class="rating-table-container mb-4 mt-4">
                     <table class="rating-table">
                         <thead><tr><th class="text-left pl-4">หัวข้อประเมิน (ทักษะ)</th><th width="60">1</th><th width="60">2</th><th width="60">3</th><th width="60">4</th><th width="60">5</th></tr></thead>
                         <tbody>
@@ -1210,7 +1241,6 @@
         function initAuditForm() {
             const zSel = document.getElementById('zoneSelect'); 
             
-            // Destroy TomSelect if exists
             if(tsInstances['zoneSelect']) {
                 tsInstances['zoneSelect'].destroy();
                 delete tsInstances['zoneSelect'];
@@ -1221,10 +1251,9 @@
                 zSel.innerHTML += `<option value="${z}">${z}</option>`; 
             });
             
-            initTomSelect('zoneSelect'); // Init TomSelect on Form Zone
+            initTomSelect('zoneSelect');
 
             if(isSingleZoneUser && zoneList.length > 0) {
-                // If using TomSelect, set value via API
                 if(tsInstances['zoneSelect']) {
                     tsInstances['zoneSelect'].setValue(zoneList[0]);
                 } else {
@@ -1268,15 +1297,10 @@
 
         async function fetchHistory(showLoader=true) { 
             if(showLoader) toggleLoading(true); const res = await callAPI('getHistory'); if(showLoader) toggleLoading(false); if(res.success) { let rawRecords = res.data;
-                // Security Check on History: Ensure user sees all permitted zone data, regardless of Auditor
                 if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
                     const allowed = currentUser.permissionArea.split(',').map(s => s.trim());
-                    // Filter matches if Zone OR Branch OR any part of them matches allowed list
-                    // Basically, if the record belongs to the Zone the user manages, show it.
                     rawRecords = rawRecords.filter(r => allowed.some(z => (r.zone || '').toString().includes(z) || (r.branch || '').toString().includes(z)));
                 } else if (currentUser.role.toLowerCase() === 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
-                    // Similar logic for Admin with restricted scope
-                    // Note: zoneList is already populated with allowed zones
                     rawRecords = rawRecords.filter(r => zoneList.includes(r.zone));
                 }
                 auditRecords = rawRecords; filterDashboardData(false); 
@@ -1290,7 +1314,6 @@
                 const z = document.getElementById('histFilterZone').value; 
                 const bSel = document.getElementById('histFilterBranch'); 
                 
-                // Re-init TomSelect for Branch
                 if(tsInstances['histFilterBranch']) {
                     tsInstances['histFilterBranch'].destroy();
                     delete tsInstances['histFilterBranch'];
@@ -1347,61 +1370,50 @@
             } 
             
             const navigateUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`; 
-            // URL สำหรับ Street View
             const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}`;
             
             const htmlContent = ` 
             <div class="relative w-full h-[85vh] bg-slate-200 rounded-xl overflow-hidden font-sans text-left shadow-sm border border-slate-200 group"> 
-                <!-- ปุ่มย้อนกลับ -->
                 <button onclick="switchView('view-history')" class="absolute top-4 left-4 z-[500] bg-white text-slate-700 hover:text-primary px-4 py-2 rounded-lg shadow-md font-bold transition flex items-center border border-slate-200"> 
                     <i class="fa-solid fa-arrow-left mr-2"></i> ย้อนกลับ 
                 </button> 
                 
-                <!-- ปุ่มสลับแผนที่ / ดาวเทียม -->
                 <div class="absolute top-4 right-4 z-[500] flex bg-white p-1 rounded-lg shadow-md border border-slate-200">
                     <button id="btnMapLayer" onclick="switchMapLayer('street')" class="px-4 py-1.5 bg-blue-600 text-white rounded-md text-sm font-bold transition shadow-sm">แผนที่ถนน</button>
                     <button id="btnSatLayer" onclick="switchMapLayer('satellite')" class="px-4 py-1.5 bg-transparent text-slate-600 hover:bg-slate-100 rounded-md text-sm font-bold transition">ดาวเทียม</button>
                 </div>
                 
-                <!-- Container สำหรับแผนที่ -->
                 <div id="leafletMapContainer" class="w-full h-full z-0 relative"></div>
             </div>`; 
             
             document.getElementById('view-map').innerHTML = htmlContent; 
             switchView('view-map'); 
 
-            // Initialize Leaflet หลังจาก DOM พร้อม
             setTimeout(() => {
                 if (currentLeafletMap) { 
                     currentLeafletMap.remove(); 
                 }
 
-                // สร้างแผนที่ใหม่ ย้ายที่ปุ่ม Zoom ไปขวาล่างไม่ให้บังปุ่มสลับ Map
                 currentLeafletMap = L.map('leafletMapContainer', { zoomControl: false }).setView([lat, lon], 16);
                 L.control.zoom({ position: 'bottomright' }).addTo(currentLeafletMap);
 
-                // ตั้งค่า Layer 1: แผนที่ถนน (ใช้ OpenStreetMap ฟรี ไม่มีลายน้ำ)
                 osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
                     maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' 
                 });
 
-                // ตั้งค่า Layer 2: แผนที่ดาวเทียม (ใช้ของ Esri เพราะมีความคมชัดครอบคลุมทั่วโลก ฟรี)
                 satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
                     maxZoom: 19,
                     attribution: 'Tiles &copy; Esri'
                 });
 
-                // เริ่มต้นด้วยแผนที่ถนน
                 osmLayer.addTo(currentLeafletMap);
 
-                // ค้นหารูปภาพประกอบมาใส่ในหมุด (ถ้ามี)
                 let popupImg = 'https://cdn-icons-png.flaticon.com/512/219/219983.png';
                 if(rec.details) {
                     const imgDetail = rec.details.find(d => d.image && d.image.length > 10);
                     if(imgDetail) popupImg = fixDriveUrl(imgDetail.image);
                 }
 
-                // สร้าง Custom Marker
                 const customIcon = L.divIcon({
                     className: 'bg-transparent border-0',
                     html: `
@@ -1414,12 +1426,11 @@
                     `,
                     iconSize: [52, 52],
                     iconAnchor: [26, 52],
-                    popupAnchor: [0, -45] // ปรับ offset ให้พอดีกับหัวหมุด
+                    popupAnchor: [0, -45] 
                 });
 
                 const marker = L.marker([lat, lon], {icon: customIcon}).addTo(currentLeafletMap);
 
-                // ข้อมูลแสดงใน Popup
                 const popupHtml = `
                     <div class="font-sans w-[280px] sm:w-[320px] text-slate-800 p-1">
                         <div class="flex items-center gap-3 mb-4 pr-6">
@@ -1455,23 +1466,21 @@
                     </div>
                 `;
 
-                // ผูกข้อมูล Popup เข้ากับ Marker (แต่ยังไม่สั่งเปิดทันที)
                 marker.bindPopup(popupHtml, { 
                     minWidth: 280, 
                     maxWidth: 350, 
-                    autoPanPadding: [20, 60] // เพิ่มขอบกันชนด้านบน เพื่อไม่ให้ popup ไปทับปุ่มย้อนกลับ
+                    autoPanPadding: [20, 60] 
                 });
 
-                // แก้ไขปัญหาการ Resize Map: คอยให้กรอบแผนที่กางจนเสร็จก่อน แล้วค่อยเปิด Popup
                 setTimeout(() => { 
                     if (currentLeafletMap) {
-                        currentLeafletMap.invalidateSize(); // แก้บัคแผนที่แหว่ง
-                        currentLeafletMap.setView([lat, lon], 16, {animate: false}); // บังคับให้หมุดอยู่กึ่งกลางเป๊ะๆ
-                        setTimeout(() => { marker.openPopup(); }, 150); // ดีเลย์เปิด popup หลังจากจัดขนาดและตำแหน่งเสร็จแล้ว
+                        currentLeafletMap.invalidateSize(); 
+                        currentLeafletMap.setView([lat, lon], 16, {animate: false}); 
+                        setTimeout(() => { marker.openPopup(); }, 150); 
                     }
                 }, 500); 
 
-            }, 400); // ดีเลย์การสร้างแผนที่รอ Switch View ทำงานให้เสร็จก่อน
+            }, 400); 
         }
         
         let galleryImages = [], galleryIndex = 0; function changeGalleryImage(step) { if (galleryImages.length === 0) return; galleryIndex = (galleryIndex + step + galleryImages.length) % galleryImages.length; const img = document.getElementById('galleryImg'); if(img) img.src = galleryImages[galleryIndex].url; const title = document.getElementById('galleryTitle'); if(title) title.innerText = galleryImages[galleryIndex].title; const count = document.getElementById('galleryCount'); if(count) count.innerText = `${galleryIndex + 1} / ${galleryImages.length}`; }
@@ -1486,7 +1495,6 @@
             const netAr = formatNoDecimal(getVal(rec.details, 'NET AR')); 
             const p = (v) => v !== '-' ? v+'%' : '-'; 
             
-            // Generate Main Info
             let content = `<div class="text-center mb-6 pb-4 border-b-2 border-primary"><h2 class="text-2xl font-bold">รายงานตรวจสอบ</h2><div class="flex justify-between text-sm"><span>${rec.branch}</span><span>${rec.date}</span></div></div> <table class="w-full text-xs border-collapse border border-slate-300 mb-6"> <tr class="bg-slate-50"><td colspan="5" class="border border-slate-300 p-4 text-center text-slate-500 font-bold">ข้อมูลการดำเนินงานสาขา</td></tr> <tr><td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ไซต์</div><div>${getVal(rec.details, 'ไซต์')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">เป้า</div><div>${getVal(rec.details, 'เป้าหมาย')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ทำได้</div><div>${getVal(rec.details, 'ยอดทำได้')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD1</div><div>${p(getVal(rec.details, 'OD1 %'))}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD2</div><div>${p(getVal(rec.details, 'OD2 %'))}</div></td></tr> <tr><td class="border p-2 text-center"><div class="font-bold text-slate-500">OD3</div><div>${p(getVal(rec.details, 'OD3 %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL%</div><div>${p(getVal(rec.details, 'NPL %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL(บาท)</div><div class="text-red-600 font-bold">${nplB}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">AR</div><div>${ar}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NET AR</div><div>${netAr}</div></td></tr> </table>`; 
             
             let employeeContent = ''; let foundNewEmp = false;
@@ -1497,6 +1505,19 @@
                     const empName = `${fname} ${getVal(rec.details, `emp_lastname_${i}`)} (${eid})`;
                     employeeContent += `<div class="bg-slate-50 border border-slate-200 p-4 rounded-xl mb-6">
                         <h4 class="font-bold text-lg text-purple-700 border-b pb-2 mb-3"><i class="fa-solid fa-user mr-2"></i>พนักงาน: ${empName}</h4>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 text-xs">
+                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">เป้าหมาย</div><div class="font-bold text-sm">${getVal(rec.details, `emp_target_${i}`)}</div></div>
+                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ประกัน</div><div class="font-bold text-sm">${getVal(rec.details, `emp_insure_${i}`)}</div></div>
+                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ยอดจัด</div><div class="font-bold text-sm">${getVal(rec.details, `emp_actual_${i}`)}</div></div>
+                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ยอดประกัน</div><div class="font-bold text-sm">${getVal(rec.details, `emp_actual_insure_${i}`)}</div></div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-4 text-xs">
+                            <div class="bg-purple-50 p-2 border border-purple-100 rounded text-center shadow-sm"><div class="text-purple-600 mb-1 font-bold">เป้าหมาย PIP</div><div class="font-bold text-sm">${getVal(rec.details, `emp_pip_target_${i}`)}</div></div>
+                            <div class="bg-blue-50 p-2 border border-blue-100 rounded text-center shadow-sm"><div class="text-blue-600 mb-1 font-bold">ยอดจัด PIP(ทำได้)</div><div class="font-bold text-sm">${getVal(rec.details, `emp_pip_actual_${i}`)}</div></div>
+                            <div class="bg-green-50 p-2 border border-green-100 rounded text-center shadow-sm"><div class="text-green-600 mb-1 font-bold">% PIP</div><div class="font-bold text-sm">${getVal(rec.details, `emp_pip_percent_${i}`)}</div></div>
+                        </div>
+
                         ${genMatrixTable('ทักษะ', [{label:'บุคลิกภาพ', key:`rate_person_${i}`}, {label:'การขาย', key:`rate_sale_${i}`}], rec.details)}
                         ${genMatrixTable('ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:`rate_k_m_${i}`}, {label:'สินเชื่อ CTV', key:`rate_k_ctv_${i}`}, {label:'สินเชื่อ HL', key:`rate_k_hl_${i}`}, {label:'โปรโมชั่น', key:`rate_k_promo_${i}`}], rec.details)}`;
                     const empNote = getVal(rec.details, `emp_note_${i}`);
@@ -1517,7 +1538,6 @@
             
             const note = getVal(rec.details, 'area_comment'); if(note && note !== '-') content += `<div class="text-xs italic mt-2">* หมายเหตุ: ${note}</div>`; 
             
-            // Checklist Section
             content += `<h4 class="font-bold mt-6 mb-2 border-b">Checklist</h4>`; 
             const checklistItems = [];
             rec.details.forEach(d => { 
@@ -1532,7 +1552,6 @@
             let sig = rec.signature; if(sig && sig.includes('drive')) sig = fixDriveUrl(sig); content += `<div class="mt-8 text-center border p-4 rounded"><img src="${sig}" class="h-16 mx-auto"><div class="text-xs mt-2">${rec.auditor}</div></div>`; document.getElementById('detailContent').innerHTML = content; document.getElementById('detailModal').classList.remove('hidden'); 
         }
         
-        // --- NEW MATRIX TABLE GENERATOR ---
         function genMatrixTable(title, fields, details) {
             let h = `<h4 class="font-bold mt-4 mb-2 text-sm bg-slate-100 p-1 pl-2 border-l-4 border-slate-500">${title}</h4>`;
             h += `<table class="w-full text-xs border-collapse border border-slate-300">`;
@@ -1546,7 +1565,7 @@
                   </tr>`;
             
             fields.forEach(f => {
-                const val = getVal(details, f.key); // Expected "1", "2", etc.
+                const val = getVal(details, f.key); 
                 h += `<tr>`;
                 h += `<td class="border border-slate-300 p-1">${f.label}</td>`;
                 for(let i=1; i<=5; i++) {
@@ -1558,7 +1577,6 @@
             return h + '</table>';
         }
 
-        // --- NEW CHECKLIST TABLE GENERATOR ---
         function genChecklistTable(items) {
             if(items.length === 0) return '<div class="text-xs text-gray-400">ไม่มีรายการ</div>';
             
@@ -1593,17 +1611,14 @@
 
         function downloadExcel() { const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head><body>${document.getElementById('detailContent').innerHTML}</body></html>`; const blob = new Blob([template], {type: 'application/vnd.ms-excel'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Audit_Report_${new Date().toISOString().slice(0,10)}.xls`; a.click(); }
         function printReport() { const iframe = document.createElement('iframe'); document.body.appendChild(iframe); const doc = iframe.contentWindow.document; doc.write(`<html><head><script src="https://cdn.tailwindcss.com"><\/script><link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"><style>body{font-family:'Sarabun';font-size:12px} table{width:100%;border-collapse:collapse} th,td{border:1px solid #ccc;padding:4px} img{max-height:150px}</style></head><body>${document.getElementById('detailContent').innerHTML}</body><script>window.onload=function(){setTimeout(function(){window.print();},1000)}<\/script></html>`); doc.close(); setTimeout(() => document.body.removeChild(iframe), 5000); }
-        // Change Password Logic
         function openChangePasswordModal() { document.getElementById('changePasswordModal').classList.remove('hidden'); document.getElementById('cp_oldPass').value=''; document.getElementById('cp_newPass').value=''; document.getElementById('cp_confirmPass').value=''; }
         async function handleChangePasswordSubmit(e) {
             e.preventDefault(); const old=document.getElementById('cp_oldPass').value, np=document.getElementById('cp_newPass').value, cp=document.getElementById('cp_confirmPass').value;
             if(np!==cp) return showPopup('error', 'รหัสผ่านไม่ตรงกัน', '');
             toggleLoading(true);
-            // Verify old password by logging in
             const v = await callAPI('login', { user: currentUser.user, pass: old });
             if(!v.success) { toggleLoading(false); return showPopup('error', 'รหัสเดิมไม่ถูกต้อง', ''); }
             
-            // Update password
             const res = await callAPI('editUser', { user: currentUser.user, name: currentUser.name, role: currentUser.role, pass: np });
             toggleLoading(false);
             if(res.success) { 
@@ -1614,7 +1629,6 @@
             }
         }
 
-        // Setup Helpers
         async function deleteAudit(id) { const c = await Swal.fire({ title: 'ลบข้อมูล?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33' }); if(c.isConfirmed) { toggleLoading(true); await callAPI('deleteAudit', { auditId: id }); toggleLoading(false); fetchHistory(); } }
         async function fetchUsers() { 
             toggleLoading(true);
@@ -1643,7 +1657,7 @@
             document.getElementById('editName').value = u.name;
             document.getElementById('editRole').value = u.role;
             document.getElementById('editPermissionArea').value = u.permissionArea || '';
-            document.getElementById('editPass').value = ''; // Reset password field
+            document.getElementById('editPass').value = ''; 
             document.getElementById('editUserModal').classList.remove('hidden');
         }
         

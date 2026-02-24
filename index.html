@@ -151,7 +151,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.8 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 5.8.7 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 5.8.8 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 5.8.7 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -428,9 +428,6 @@
                                             <h4 class="font-bold text-slate-800 mb-1">เพิ่มเพื่อน (Add Friend)</h4>
                                             <p class="text-sm text-slate-500 mb-3">สแกน QR Code ด้านซ้ายมือ หรือค้นหา ID ของบอทเพื่อทำการเพิ่มเพื่อน</p>
                                             <img src="https://lh3.googleusercontent.com/d/1miVjWLx-kA7nNn0yhb44viOwbzfcLVOl" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm">
-                                            <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
-                                                Step 1: Add Friend
-                                            </div>
                                         </div>
                                     </div>
 
@@ -440,9 +437,7 @@
                                         <div class="flex-1">
                                             <h4 class="font-bold text-slate-800 mb-1">ลงทะเบียน (Register)</h4>
                                             <p class="text-sm text-slate-500 mb-3">พิมพ์คำว่า <span class="text-primary font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100">ลงทะเบียน</span> ส่งไปหาบอท เพื่อยืนยันตัวตน</p>
-                                            <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
-                                                Step 2: Type Register
-                                            </div>
+                                            <img src="https://lh3.googleusercontent.com/d/15HDTbLHiAy4wTcwvScppomS3ncGlkhSW" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm">
                                         </div>
                                     </div>
 
@@ -452,9 +447,7 @@
                                         <div class="flex-1">
                                             <h4 class="font-bold text-slate-800 mb-1">เสร็จสิ้น (Success)</h4>
                                             <p class="text-sm text-slate-500 mb-3">ระบบจะตอบกลับยืนยัน ท่านจะได้รับการแจ้งเตือนทันทีเมื่อมีการส่งรายงานใหม่</p>
-                                            <div class="bg-slate-50 border border-slate-100 rounded-lg p-4 text-center text-xs text-slate-400 h-24 flex items-center justify-center font-mono">
-                                                Step 3: Confirmation
-                                            </div>
+                                            <img src="https://lh3.googleusercontent.com/d/17wPL6mRn2pgm24FVqPs1izj_aY6-Si9t" class="w-full max-w-sm rounded-lg border border-slate-200 shadow-sm">
                                         </div>
                                     </div>
 
@@ -471,11 +464,12 @@
                         </h3>
                         <form onsubmit="handleSaveSettings(event)" class="space-y-6 max-w-2xl">
                             <div>
-                                <label class="input-label">Line Notify Token</label>
+                                <label class="input-label text-green-600"><i class="fa-brands fa-line"></i> LINE Channel Access Token (Messaging API)</label>
                                 <div class="flex flex-col sm:flex-row gap-2">
-                                    <input type="text" id="settingLineToken" class="input-box font-mono text-sm w-full" placeholder="Ex: xxxxxxxxxx">
-                                    <a href="https://notify-bot.line.me/my/" target="_blank" class="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 flex items-center justify-center text-xs whitespace-nowrap transition shadow-sm font-bold">Get Token</a>
+                                    <input type="text" id="settingLineToken" class="input-box font-mono text-sm w-full" placeholder="ใส่ Channel Access Token (แบบยาว) จาก LINE Developers">
+                                    <a href="https://developers.line.biz/console/" target="_blank" class="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 flex items-center justify-center text-xs whitespace-nowrap transition shadow-sm font-bold">LINE Dev Console</a>
                                 </div>
+                                <p class="text-[10px] text-slate-400 mt-1">*นำ Webhook URL ของระบบไปใส่ที่หน้าตั้งค่าของ LINE ด้วย</p>
                             </div>
                             <div>
                                 <label class="input-label">Email Notification</label>
@@ -610,7 +604,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwV89uY_KDkvJNJ2CUwxNfPX6I4XqQoTMn5L7Novu-6jQDhSBC46DQUBly0j-_O_eWzCw/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbwV89uY_KDkvJNJ2CUwxNfPX6I4XqQoTMn5L7Novu-6jQDhSBC46DQUBly0j-_O_eWzCw/exec; 
         const STORAGE = { QUESTIONS: 'app_v2_questions', DRAFT: 'app_v2_draft', USER: 'audit_user_session' };
         let currentUser = null, branchData = {}, zoneList = [], auditRecords = [], currentAuditImages = {}, allBranchDetails = [], globalAllBranches = [], inactivityTimer;
         let questions = [{ id: 'q_default', title: 'กำลังโหลดข้อมูลจาก Server...', allowImage: false }];

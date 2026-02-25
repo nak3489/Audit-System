@@ -151,7 +151,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.0.2 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.0.3 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 6.0.2 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 6.0.3 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -781,7 +781,17 @@
         function toggleLoading(s) { const o = document.getElementById('loadingOverlay'); if(s) o.classList.remove('hidden'); else o.classList.add('hidden'); }
         function viewImage(url) { if (!url) return; let bigUrl = url; if(url.includes("drive.google.com") && url.includes("id=")) { const m = url.match(/id=([^&]+)/); if(m) bigUrl = `https://drive.google.com/thumbnail?id=${m[1]}&sz=s1000`; } Swal.fire({ imageUrl: bigUrl, imageAlt: 'Image', width: '90%', padding: '1em', background: '#fff', showConfirmButton: false, showCloseButton: true, customClass: { image: 'rounded-lg shadow-lg' } }); }
 
-        async function callAPI(a, p = {}) { try { if (currentUser && !p.requestUser) p.requestUser = currentUser; const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: a, ...p }) }); return await r.json(); } catch (e) { return { success: false, message: e.message }; } }
+        async function callAPI(a, p = {}) { 
+            try { 
+                if (currentUser && !p.requestUser) p.requestUser = currentUser; 
+                if (currentUser) p.sessionToken = currentUser.token || "guest"; 
+                const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: a, ...p }) }); 
+                return await r.json(); 
+            } catch (e) { 
+                return { success: false, message: e.message }; 
+            } 
+        }
+
         async function fetchQuestionsFromAPI(r = false) { if(r) toggleLoading(true); const res = await callAPI('getQuestions', { all: true }); if (res.success) { questions = res.data; localStorage.setItem(STORAGE.QUESTIONS, JSON.stringify(questions)); if(!document.getElementById('view-questions').classList.contains('hidden')) renderQuestionsConfig(); if(!document.getElementById('view-audit').classList.contains('hidden')) initAuditForm(); } if(r) toggleLoading(false); }
         
         async function openAddQuestionModal(id=null,t='',ai=false, isLocked=false) {
@@ -866,7 +876,20 @@
             }, 300);
         }
 
-        async function handleLogin(e) { e.preventDefault(); toggleLoading(true); const r = await callAPI('login', { user: document.getElementById('loginUser').value, pass: document.getElementById('loginPass').value }); toggleLoading(false); if (r.success) { currentUser = r.user; localStorage.setItem(STORAGE.USER, JSON.stringify(currentUser)); initSystemAfterLogin(); callAPI('logSystem', { user: currentUser.user, role: currentUser.role, logAction: 'LOGIN', details: 'Success' }); } else showPopup('error', 'ล้มเหลว', r.message); }
+        async function handleLogin(e) { 
+            e.preventDefault(); 
+            toggleLoading(true); 
+            const r = await callAPI('login', { user: document.getElementById('loginUser').value, pass: document.getElementById('loginPass').value }); 
+            toggleLoading(false); 
+            if (r.success) { 
+                currentUser = r.user; 
+                currentUser.token = document.getElementById('loginPass').value; 
+                localStorage.setItem(STORAGE.USER, JSON.stringify(currentUser)); 
+                initSystemAfterLogin(); 
+                callAPI('logSystem', { user: currentUser.user, role: currentUser.role, logAction: 'LOGIN', details: 'Success' }); 
+            } else showPopup('error', 'ล้มเหลว', r.message); 
+        }
+
         function logout() { Swal.fire({ title: 'ออกจากระบบ?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33' }).then((r) => { if (r.isConfirmed) { localStorage.removeItem(STORAGE.USER); location.reload(); } }); }
 
         async function fetchBranches() {
@@ -1482,6 +1505,7 @@
         function fixDriveUrl(url) { if (url && url.includes("drive.google.com") && url.includes("id=")) { const match = url.match(/id=([^&]+)/); if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=s1000`; } return url; }
         function getVal(arr, key) { const f = arr.find(x => x.q === key); return f ? f.res : '-'; }
         function formatNoDecimal(v) { const n = parseFloat((v||'').toString().replace(/,/g,'')); return isNaN(n) ? (v||'-') : n.toLocaleString('en-US', {maximumFractionDigits:0}); }
+        
         function openDetail(id) { 
             const rec = auditRecords.find(r => r.id == id); if(!rec) return; 
             const nplB = formatNoDecimal(getVal(rec.details, 'NPL (บาท)'));
@@ -1492,34 +1516,41 @@
             let content = `<div class="text-center mb-6 pb-4 border-b-2 border-primary"><h2 class="text-2xl font-bold">รายงานตรวจสอบ</h2><div class="flex justify-between text-sm"><span>${rec.branch}</span><span>${rec.date}</span></div></div> <table class="w-full text-xs border-collapse border border-slate-300 mb-6"> <tr class="bg-slate-50"><td colspan="5" class="border border-slate-300 p-4 text-center text-slate-500 font-bold">ข้อมูลการดำเนินงานสาขา</td></tr> <tr><td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ไซต์</div><div>${getVal(rec.details, 'ไซต์')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">เป้า</div><div>${getVal(rec.details, 'เป้าหมาย')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">ทำได้</div><div>${getVal(rec.details, 'ยอดทำได้')}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD1</div><div>${p(getVal(rec.details, 'OD1 %'))}</div></td> <td class="border p-2 text-center" width="20%"><div class="font-bold text-slate-500">OD2</div><div>${p(getVal(rec.details, 'OD2 %'))}</div></td></tr> <tr><td class="border p-2 text-center"><div class="font-bold text-slate-500">OD3</div><div>${p(getVal(rec.details, 'OD3 %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL%</div><div>${p(getVal(rec.details, 'NPL %'))}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NPL(บาท)</div><div class="text-red-600 font-bold">${nplB}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">AR</div><div>${ar}</div></td> <td class="border p-2 text-center"><div class="font-bold text-slate-500">NET AR</div><div>${netAr}</div></td></tr> </table>`; 
             
             let employeeContent = ''; let foundNewEmp = false;
+            
+            // --- FIX AREA: เปลี่ยนการดึงข้อมูลจากชื่อตัวแปรภาษาอังกฤษ เป็นคีย์ภาษาไทยให้ตรงกับที่บันทึก ---
             for(let i=0; i<10; i++) {
-                const eid = getVal(rec.details, `emp_id_${i}`); const fname = getVal(rec.details, `emp_firstname_${i}`);
+                const eid = getVal(rec.details, `รหัสพนักงาน_${i}`); 
+                const fname = getVal(rec.details, `ชื่อ_${i}`);
+                
                 if(eid !== '-' || fname !== '-') {
                     foundNewEmp = true;
-                    const empName = `${fname} ${getVal(rec.details, `emp_lastname_${i}`)} (${eid})`;
+                    const empName = `${fname} ${getVal(rec.details, `นามสกุล_${i}`)} (${eid})`;
                     employeeContent += `<div class="bg-slate-50 border border-slate-200 p-4 rounded-xl mb-6">
                         <h4 class="font-bold text-lg text-purple-700 border-b pb-2 mb-3"><i class="fa-solid fa-user mr-2"></i>พนักงาน: ${empName}</h4>
                         
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 text-xs">
-                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">เป้าหมาย</div><div class="font-bold text-sm">${getVal(rec.details, `emp_target_${i}`)}</div></div>
-                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ประกัน</div><div class="font-bold text-sm">${getVal(rec.details, `emp_insure_${i}`)}</div></div>
-                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ยอดจัด</div><div class="font-bold text-sm">${getVal(rec.details, `emp_actual_${i}`)}</div></div>
-                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ยอดประกัน</div><div class="font-bold text-sm">${getVal(rec.details, `emp_actual_insure_${i}`)}</div></div>
+                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">เป้าหมาย</div><div class="font-bold text-sm">${getVal(rec.details, `เป้าหมายรายบุคคล_${i}`)}</div></div>
+                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ประกัน</div><div class="font-bold text-sm">${getVal(rec.details, `ประกันรายบุคคล_${i}`)}</div></div>
+                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ยอดจัด</div><div class="font-bold text-sm">${getVal(rec.details, `ยอดจัดรายบุคคล_${i}`)}</div></div>
+                            <div class="bg-white p-2 border rounded shadow-sm"><div class="text-slate-500 mb-1">ยอดประกัน</div><div class="font-bold text-sm">${getVal(rec.details, `ยอดประกันรายบุคคล_${i}`)}</div></div>
                         </div>
                         <div class="grid grid-cols-3 gap-2 mb-4 text-xs">
-                            <div class="bg-purple-50 p-2 border border-purple-100 rounded text-center shadow-sm"><div class="text-purple-600 mb-1 font-bold">เป้าหมาย PIP</div><div class="font-bold text-sm">${getVal(rec.details, `emp_pip_target_${i}`)}</div></div>
-                            <div class="bg-blue-50 p-2 border border-blue-100 rounded text-center shadow-sm"><div class="text-blue-600 mb-1 font-bold">ยอดจัด PIP(ทำได้)</div><div class="font-bold text-sm">${getVal(rec.details, `emp_pip_actual_${i}`)}</div></div>
-                            <div class="bg-green-50 p-2 border border-green-100 rounded text-center shadow-sm"><div class="text-green-600 mb-1 font-bold">% PIP</div><div class="font-bold text-sm">${getVal(rec.details, `emp_pip_percent_${i}`)}</div></div>
+                            <div class="bg-purple-50 p-2 border border-purple-100 rounded text-center shadow-sm"><div class="text-purple-600 mb-1 font-bold">เป้าหมาย PIP</div><div class="font-bold text-sm">${getVal(rec.details, `เป้าหมาย PIP_${i}`)}</div></div>
+                            <div class="bg-blue-50 p-2 border border-blue-100 rounded text-center shadow-sm"><div class="text-blue-600 mb-1 font-bold">ยอดจัด PIP(ทำได้)</div><div class="font-bold text-sm">${getVal(rec.details, `ยอดจัด PIP(ทำได้)_${i}`)}</div></div>
+                            <div class="bg-green-50 p-2 border border-green-100 rounded text-center shadow-sm"><div class="text-green-600 mb-1 font-bold">% PIP</div><div class="font-bold text-sm">${getVal(rec.details, `% PIP_${i}`)}</div></div>
                         </div>
 
-                        ${genMatrixTable('ทักษะ', [{label:'บุคลิกภาพ', key:`rate_person_${i}`}, {label:'การขาย', key:`rate_sale_${i}`}], rec.details)}
-                        ${genMatrixTable('ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:`rate_k_m_${i}`}, {label:'สินเชื่อ CTV', key:`rate_k_ctv_${i}`}, {label:'สินเชื่อ HL', key:`rate_k_hl_${i}`}, {label:'โปรโมชั่น', key:`rate_k_promo_${i}`}], rec.details)}`;
-                    const empNote = getVal(rec.details, `emp_note_${i}`);
+                        ${genMatrixTable('ทักษะ', [{label:'บุคลิกภาพ', key:`บุคลิกภาพ_${i}`}, {label:'การขาย', key:`การขาย_${i}`}], rec.details)}
+                        ${genMatrixTable('ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:`สินค้าM_${i}`}, {label:'สินเชื่อ CTV', key:`สินค้าCTV_${i}`}, {label:'สินเชื่อ HL', key:`สินค้าHL_${i}`}, {label:'โปรโมชั่น', key:`โปรโมชั่น_${i}`}], rec.details)}`;
+                    
+                    const empNote = getVal(rec.details, `หมายเหตุพนักงาน_${i}`);
                     if(empNote && empNote !== '-') employeeContent += `<div class="mt-3 text-sm bg-white p-2 border border-slate-200 rounded text-slate-600"><span class="font-bold text-slate-800">หมายเหตุพนักงาน:</span> ${empNote}</div>`;
                     employeeContent += `</div>`;
                 }
             }
+            
             if(!foundNewEmp) {
+                // Fallback สำหรับข้อมูลเก่าแบบคนที่ 1 คนเดียว
                 const empName = `${getVal(rec.details, 'ชื่อ')} ${getVal(rec.details, 'นามสกุล')} (${getVal(rec.details, 'รหัสพนักงาน')})`;
                 employeeContent += `<div class="bg-slate-50 border border-slate-200 p-4 rounded-xl mb-6">
                     <h4 class="font-bold text-lg text-purple-700 border-b pb-2 mb-3"><i class="fa-solid fa-user mr-2"></i>พนักงาน: ${empName}</h4>
@@ -1527,6 +1558,7 @@
                     ${genMatrixTable('ความรู้ผลิตภัณฑ์', [{label:'สินเชื่อ M', key:'สินค้าM'}, {label:'สินเชื่อ CTV', key:'สินค้าCTV'}, {label:'สินเชื่อ HL', key:'สินค้าHL'}, {label:'โปรโมชั่น', key:'โปรโมชั่น'}], rec.details)}
                 </div>`;
             }
+            
             content += employeeContent;
             content += genMatrixTable('สภาพสาขา (5ส.)', [{label:'หน้าสาขา', key:'ความสะอาดหน้าสาขา'}, {label:'โต๊ะทำงาน', key:'โต๊ะทำงาน'}, {label:'จุดน้ำดื่ม', key:'จุดน้ำดื่ม'}, {label:'ห้องน้ำ', key:'ห้องน้ำ'}, {label:'ที่เก็บของ', key:'ที่เก็บของ'}, {label:'หลังสาขา', key:'หลังสาขา'}], rec.details); 
             
@@ -1686,5 +1718,3 @@
     </script>
 </body>
 </html>
-
-

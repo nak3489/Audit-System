@@ -151,7 +151,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.0.3 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.0.4 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 6.0.3 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 6.0.4 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -471,6 +471,11 @@
                                 </div>
                                 <p class="text-[10px] text-slate-400 mt-1">*นำ Webhook URL ของระบบไปใส่ที่หน้าตั้งค่าของ LINE ด้วย</p>
                             </div>
+                            <!-- 🔒 ฟิลด์สำหรับเก็บ Secret (ตรวจ Webhook Spoofing) -->
+                            <div>
+                                <label class="input-label text-green-600"><i class="fa-brands fa-line"></i> LINE Channel Secret</label>
+                                <input type="text" id="settingLineSecret" class="input-box font-mono text-sm w-full" placeholder="ใส่ Channel Secret เพื่อตรวจสอบความปลอดภัยของ Webhook">
+                            </div>
                             <div>
                                 <label class="input-label">Email Notification</label>
                                 <input type="email" id="settingEmail" class="input-box w-full" placeholder="admin@example.com">
@@ -566,7 +571,6 @@
         </div>
     </div>
     
-    <!-- ... Other Modals ... -->
     <div id="editUserModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl animate-fade-in-up">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
@@ -604,7 +608,7 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwV89uY_KDkvJNJ2CUwxNfPX6I4XqQoTMn5L7Novu-6jQDhSBC46DQUBly0j-_O_eWzCw/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbz-_fXLXCqNVjvNWAExj9i9UYTXWRvqAdUMdKeo-NPUuM-iUmEH8f0GrD3m1aeOdeLsIA/exec"; 
         const STORAGE = { QUESTIONS: 'app_v2_questions', DRAFT: 'app_v2_draft', USER: 'audit_user_session' };
         let currentUser = null, branchData = {}, zoneList = [], auditRecords = [], currentAuditImages = {}, allBranchDetails = [], globalAllBranches = [], inactivityTimer;
         let questions = [{ id: 'q_default', title: 'กำลังโหลดข้อมูลจาก Server...', allowImage: false }];
@@ -616,7 +620,13 @@
         let satelliteLayer = null;
         let autoSyncTimer = null;
         
-        // Tom Select Instances
+        // 🔒 สร้าง Client ID ประจำเบราว์เซอร์สำหรับส่ง Rate Limit
+        let clientId = localStorage.getItem('audit_clientId');
+        if(!clientId) { 
+            clientId = crypto.randomUUID ? crypto.randomUUID() : 'cid_' + Date.now(); 
+            localStorage.setItem('audit_clientId', clientId); 
+        }
+
         const tsInstances = {};
 
         function startInactivityTimer() { resetTimer(); window.addEventListener('mousemove', resetTimer); window.addEventListener('keypress', resetTimer); window.addEventListener('touchmove', resetTimer); }
@@ -650,21 +660,16 @@
             startAutoRefresh();
         }
 
-        // --- AUTO REFRESH SYSTEM ---
         function startAutoRefresh() {
             clearInterval(autoSyncTimer);
-            // 1. ซิงค์ข้อมูลใหม่อัตโนมัติแบบเงียบๆ ทุกๆ 60 วินาที
             autoSyncTimer = setInterval(() => {
                 if (currentUser) fetchHistory(false); 
             }, 60000); 
-
-            // 2. ดึงข้อมูลใหม่ทันทีเมื่อผู้ใช้สลับกลับมาที่หน้าต่างเบราว์เซอร์นี้
             window.addEventListener('focus', () => {
                 if (currentUser) fetchHistory(false);
             });
         }
 
-        // --- TOM SELECT HELPER ---
         function initTomSelect(selectorId, options = {}) {
             if (tsInstances[selectorId]) {
                 tsInstances[selectorId].destroy();
@@ -680,7 +685,6 @@
             }
         }
 
-        // --- FILTER LOGIC ---
         function toggleMonthSelect(e, dropdownId) {
             e.stopPropagation();
             document.querySelectorAll('.multi-select-dropdown').forEach(el => { if(el.id !== dropdownId) el.classList.remove('show'); });
@@ -781,10 +785,13 @@
         function toggleLoading(s) { const o = document.getElementById('loadingOverlay'); if(s) o.classList.remove('hidden'); else o.classList.add('hidden'); }
         function viewImage(url) { if (!url) return; let bigUrl = url; if(url.includes("drive.google.com") && url.includes("id=")) { const m = url.match(/id=([^&]+)/); if(m) bigUrl = `https://drive.google.com/thumbnail?id=${m[1]}&sz=s1000`; } Swal.fire({ imageUrl: bigUrl, imageAlt: 'Image', width: '90%', padding: '1em', background: '#fff', showConfirmButton: false, showCloseButton: true, customClass: { image: 'rounded-lg shadow-lg' } }); }
 
+        // 🔒 อัปเดตการส่ง clientId เพื่อทำ Rate Limit ให้ Guest ไม่ชนกัน
         async function callAPI(a, p = {}) { 
             try { 
                 if (currentUser && !p.requestUser) p.requestUser = currentUser; 
                 if (currentUser) p.sessionToken = currentUser.token || "guest"; 
+                p.clientId = clientId; 
+                
                 const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: a, ...p }) }); 
                 return await r.json(); 
             } catch (e) { 
@@ -848,7 +855,17 @@
             } 
         }
         
-        async function handleSaveSettings(e) { e.preventDefault(); toggleLoading(true); const r = await callAPI('saveSettings', { lineToken: document.getElementById('settingLineToken').value, notifyEmail: document.getElementById('settingEmail').value }); toggleLoading(false); if(r.success) showPopup('success', 'สำเร็จ', ''); else showPopup('error', 'ผิดพลาด', r.message); }
+        async function handleSaveSettings(e) { 
+            e.preventDefault(); 
+            toggleLoading(true); 
+            const r = await callAPI('saveSettings', { 
+                lineToken: document.getElementById('settingLineToken').value, 
+                lineSecret: document.getElementById('settingLineSecret').value,
+                notifyEmail: document.getElementById('settingEmail').value 
+            }); 
+            toggleLoading(false); 
+            if(r.success) showPopup('success', 'สำเร็จ', ''); else showPopup('error', 'ผิดพลาด', r.message); 
+        }
 
         function switchView(id) {
             toggleLoading(true); 
@@ -870,7 +887,15 @@
                 if (id === 'view-logs') fetchLogs(); 
                 if (id === 'view-questions') renderQuestionsConfig();
                 if (id === 'view-dashboard') filterDashboardData();
-                if (id === 'view-settings') { callAPI('getSettings').then(res => { if(res.success) { document.getElementById('settingLineToken').value = res.data.lineToken || ''; document.getElementById('settingEmail').value = res.data.notifyEmail || ''; }}); }
+                if (id === 'view-settings') { 
+                    callAPI('getSettings').then(res => { 
+                        if(res.success) { 
+                            document.getElementById('settingLineToken').value = res.data.lineToken || ''; 
+                            document.getElementById('settingLineSecret').value = res.data.lineSecret || '';
+                            document.getElementById('settingEmail').value = res.data.notifyEmail || ''; 
+                        }
+                    }); 
+                }
                 
                 toggleLoading(false);
             }, 300);
@@ -883,7 +908,7 @@
             toggleLoading(false); 
             if (r.success) { 
                 currentUser = r.user; 
-                currentUser.token = document.getElementById('loginPass').value; 
+                currentUser.token = r.token; // รับ Session Token แบบ UUID จาก Backend
                 localStorage.setItem(STORAGE.USER, JSON.stringify(currentUser)); 
                 initSystemAfterLogin(); 
                 callAPI('logSystem', { user: currentUser.user, role: currentUser.role, logAction: 'LOGIN', details: 'Success' }); 
@@ -983,8 +1008,34 @@
         function calculateDebt() { const ar = parseFloat(document.getElementById('f_ar').value.replace(/,/g, '')) || 0; const netAr = parseFloat(document.getElementById('f_net_ar').value.replace(/,/g, '')) || 0; document.getElementById('f_npl_baht').value = (ar - netAr).toLocaleString('en-US', {minimumFractionDigits: 2}); saveDraft(); }
         function formatInputCurrency(el) { let val = parseFloat(el.value.replace(/,/g, '')); if(!isNaN(val)) el.value = val.toLocaleString('en-US', {minimumFractionDigits: 2}); }
         function calculatePerformance() { const target = parseFloat(document.getElementById('f_target').value) || 0; const actual = parseFloat(document.getElementById('f_actual').value) || 0; document.getElementById('f_percent').value = target > 0 ? (actual / target * 100).toFixed(2) + '%' : '-'; saveDraft(); }
+        
         function compressImage(file, maxWidth = 1000) { return new Promise((resolve) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = (e) => { const img = new Image(); img.src = e.target.result; img.onload = () => { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; if (w > maxWidth) { h *= maxWidth / w; w = maxWidth; } canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h); resolve(canvas.toDataURL('image/jpeg', 0.7)); }; }; }); }
-        async function handleImageSelect(input, qId) { if (input.files && input.files[0]) { try { document.getElementById(`file_status_${qId}`).innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; const compressed = await compressImage(input.files[0]); currentAuditImages[qId] = compressed; document.getElementById(`file_status_${qId}`).innerHTML = `<i class="fa-solid fa-circle-check text-green-500 text-lg"></i>`; saveDraft(); } catch (e) { console.error(e); } } }
+        
+        // ⚡ แก้ไข: แยกอัปโหลดรูปภาพทันทีที่เลือก ป้องกันคอขวดตอนกด Submit 
+        async function handleImageSelect(input, qId) { 
+            if (input.files && input.files[0]) { 
+                try { 
+                    document.getElementById(`file_status_${qId}`).innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
+                    const compressed = await compressImage(input.files[0]); 
+                    
+                    // เรียก API สำหรับอัปโหลดรูปเท่านั้น
+                    const uploadRes = await callAPI('uploadImage', { image: compressed, filename: `Img_${Date.now()}.jpg` });
+
+                    if(uploadRes.success) {
+                        currentAuditImages[qId] = uploadRes.url; // เก็บเฉพาะ URL ไม่เก็บ Base64 ในหน่วยความจำแล้ว
+                        document.getElementById(`file_status_${qId}`).innerHTML = `<i class="fa-solid fa-circle-check text-green-500 text-lg"></i>`; 
+                        saveDraft(); 
+                    } else {
+                        document.getElementById(`file_status_${qId}`).innerHTML = `<i class="fa-solid fa-circle-xmark text-red-500 text-lg"></i>`;
+                        showPopup('error', 'อัปโหลดล้มเหลว', uploadRes.message);
+                    }
+                } catch (e) { 
+                    console.error(e); 
+                    document.getElementById(`file_status_${qId}`).innerHTML = `<i class="fa-solid fa-circle-xmark text-red-500 text-lg"></i>`;
+                } 
+            } 
+        }
+        
         function collectFormData() { const d = {}; document.querySelectorAll('#auditForm input:not([type="radio"]), #auditForm select, #auditForm textarea').forEach(el => { if(el.id) d[el.id] = el.value; }); document.querySelectorAll('input[type="radio"]:checked').forEach(r => d[r.name] = r.value); return d; }
         function saveDraft() { localStorage.setItem(STORAGE.DRAFT, JSON.stringify(collectFormData())); }
         function checkDraft() { if(localStorage.getItem(STORAGE.DRAFT)) document.getElementById('draftNotice').classList.remove('hidden'); }
@@ -1026,6 +1077,7 @@
         }
         function getLocation() { const g = document.getElementById('gpsCoords'); g.value = "กำลังค้นหา..."; navigator.geolocation.getCurrentPosition(p => { g.value = `${p.coords.latitude.toFixed(6)}, ${p.coords.longitude.toFixed(6)}`; saveDraft(); }, e => { g.value = ""; showPopup('error', 'GPS Error', e.message); }); }
         
+        // 🔒 แก้ไขการแสดงผล NaN ใน PIP
         window.calcPIP = function(i) {
             const target = parseFloat(document.getElementById(`emp_target_${i}`).value) || 0;
             const insure = parseFloat(document.getElementById(`emp_insure_${i}`).value) || 0;
@@ -1034,10 +1086,11 @@
 
             const pipTarget = target + insure;
             const pipActual = actual + actualInsure;
-            const pipPercent = pipTarget > 0 ? (pipActual / pipTarget * 100).toFixed(2) : 0;
+            // ป้องกัน NaN หรือ Infinity
+            const pipPercent = (pipTarget > 0) ? (pipActual / pipTarget * 100).toFixed(2) : "0.00";
 
-            document.getElementById(`emp_pip_target_${i}`).value = pipTarget > 0 ? pipTarget.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '';
-            document.getElementById(`emp_pip_actual_${i}`).value = pipActual > 0 ? pipActual.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '';
+            document.getElementById(`emp_pip_target_${i}`).value = pipTarget > 0 ? pipTarget.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00';
+            document.getElementById(`emp_pip_actual_${i}`).value = pipActual > 0 ? pipActual.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00';
             document.getElementById(`emp_pip_percent_${i}`).value = pipTarget > 0 ? pipPercent + '%' : '-';
         }
 
@@ -1072,6 +1125,7 @@
             let totalQ = 0; let passQ = 0;
             questions.forEach(q => { 
                 if(raw[q.id]) {
+                    // image ที่ดึงมา จะเป็น URL แล้ว จากที่เปลี่ยนระบบอัปโหลดแยก
                     details.push({ q: q.title, res: raw[q.id], note: raw[`note_${q.id}`], image: currentAuditImages[q.id] || "" }); 
                     totalQ++; 
                     if(raw[q.id] === 'ผ่าน') passQ++;
@@ -1517,7 +1571,6 @@
             
             let employeeContent = ''; let foundNewEmp = false;
             
-            // --- FIX AREA: เปลี่ยนการดึงข้อมูลจากชื่อตัวแปรภาษาอังกฤษ เป็นคีย์ภาษาไทยให้ตรงกับที่บันทึก ---
             for(let i=0; i<10; i++) {
                 const eid = getVal(rec.details, `รหัสพนักงาน_${i}`); 
                 const fname = getVal(rec.details, `ชื่อ_${i}`);
@@ -1550,7 +1603,6 @@
             }
             
             if(!foundNewEmp) {
-                // Fallback สำหรับข้อมูลเก่าแบบคนที่ 1 คนเดียว
                 const empName = `${getVal(rec.details, 'ชื่อ')} ${getVal(rec.details, 'นามสกุล')} (${getVal(rec.details, 'รหัสพนักงาน')})`;
                 employeeContent += `<div class="bg-slate-50 border border-slate-200 p-4 rounded-xl mb-6">
                     <h4 class="font-bold text-lg text-purple-700 border-b pb-2 mb-3"><i class="fa-solid fa-user mr-2"></i>พนักงาน: ${empName}</h4>
@@ -1638,6 +1690,7 @@
         function downloadExcel() { const template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head><body>${document.getElementById('detailContent').innerHTML}</body></html>`; const blob = new Blob([template], {type: 'application/vnd.ms-excel'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Audit_Report_${new Date().toISOString().slice(0,10)}.xls`; a.click(); }
         function printReport() { const iframe = document.createElement('iframe'); document.body.appendChild(iframe); const doc = iframe.contentWindow.document; doc.write(`<html><head><script src="https://cdn.tailwindcss.com"><\/script><link href="https://fonts.googleapis.com/css2?family=Sarabun&display=swap" rel="stylesheet"><style>body{font-family:'Sarabun';font-size:12px} table{width:100%;border-collapse:collapse} th,td{border:1px solid #ccc;padding:4px} img{max-height:150px}</style></head><body>${document.getElementById('detailContent').innerHTML}</body><script>window.onload=function(){setTimeout(function(){window.print();},1000)}<\/script></html>`); doc.close(); setTimeout(() => document.body.removeChild(iframe), 5000); }
         function openChangePasswordModal() { document.getElementById('changePasswordModal').classList.remove('hidden'); document.getElementById('cp_oldPass').value=''; document.getElementById('cp_newPass').value=''; document.getElementById('cp_confirmPass').value=''; }
+        
         async function handleChangePasswordSubmit(e) {
             e.preventDefault(); const old=document.getElementById('cp_oldPass').value, np=document.getElementById('cp_newPass').value, cp=document.getElementById('cp_confirmPass').value;
             if(np!==cp) return showPopup('error', 'รหัสผ่านไม่ตรงกัน', '');
@@ -1713,8 +1766,6 @@
         async function fetchLogs() { 
             const year = document.getElementById('logFilterYear').value; const checkedBoxes = document.querySelectorAll('.log-month-checkbox:checked'); const months = Array.from(checkedBoxes).map(cb => cb.value); updateMonthLabel('log', 'logMonthSelectLabel'); toggleLoading(true); const res=await callAPI('getLogs', { year: year, months: months }); toggleLoading(false); if(res.success) { if(res.data.length === 0) { document.getElementById('systemLogsContainer').innerHTML = '<tr><td colspan="5" class="text-center py-4 text-slate-400">ไม่พบข้อมูลในเดือนนี้</td></tr>'; } else { document.getElementById('systemLogsContainer').innerHTML = res.data.map(l=>`<tr class="border-b"><td class="p-2 text-xs">${l.timestamp}</td><td class="p-2 font-bold">${l.user}</td><td class="p-2 text-xs">${l.role}</td><td class="p-2 text-xs">${l.action}</td><td class="p-2 text-xs">${l.details}</td></tr>`).join(''); } }
         }
-        function genReportTable(title, fields, details) { let h=`<h4 class="font-bold mt-4 mb-2 text-sm bg-slate-100 p-1 pl-2 border-l-4 border-slate-500">${title}</h4><table class="w-full text-xs">`; fields.forEach(f=>{ h+=`<tr><td class="font-bold text-gray-500 w-1/2">${f.label}</td><td>${getVal(details,f.key)}</td></tr>`; }); return h+'</table>'; }
-
     </script>
 </body>
 </html>

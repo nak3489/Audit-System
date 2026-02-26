@@ -151,7 +151,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.0.6 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.0.7 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 6.0.6 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 6.0.7 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -783,7 +783,14 @@
         function toggleSidebar() { const s = document.getElementById('appSidebar'); const o = document.getElementById('mobileSidebarOverlay'); if (window.innerWidth < 768) { if (s.classList.contains('-translate-x-full')) { s.classList.remove('-translate-x-full'); o.classList.remove('hidden'); } else { s.classList.add('-translate-x-full'); o.classList.add('hidden'); } } else { if (s.classList.contains('hidden')) { s.classList.remove('hidden'); s.classList.add('flex'); } else { s.classList.add('hidden'); s.classList.remove('flex'); } } }
         function showPopup(t, ti, te) { Swal.fire({ icon: t, title: ti, text: te, confirmButtonColor: '#2563eb' }); }
         function toggleLoading(s) { const o = document.getElementById('loadingOverlay'); if(s) o.classList.remove('hidden'); else o.classList.add('hidden'); }
-        function viewImage(url) { if (!url) return; let bigUrl = url; if(url.includes("drive.google.com") && url.includes("id=")) { const m = url.match(/id=([^&]+)/); if(m) bigUrl = `https://drive.google.com/thumbnail?id=${m[1]}&sz=s1000`; } Swal.fire({ imageUrl: bigUrl, imageAlt: 'Image', width: '90%', padding: '1em', background: '#fff', showConfirmButton: false, showCloseButton: true, customClass: { image: 'rounded-lg shadow-lg' } }); }
+        
+        function viewImage(url) { 
+            if (!url) return; 
+            let bigUrl = url; 
+            let match = url.match(/id=([^&]+)/) || url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/uc\?id=([^&]+)/); 
+            if(match) bigUrl = `https://drive.google.com/thumbnail?id=${match[1]}&sz=s1000`; 
+            Swal.fire({ imageUrl: bigUrl, imageAlt: 'Image', width: '90%', padding: '1em', background: '#fff', showConfirmButton: false, showCloseButton: true, customClass: { image: 'rounded-lg shadow-lg' } }); 
+        }
 
         // 🔒 อัปเดตการส่ง clientId เพื่อทำ Rate Limit ให้ Guest ไม่ชนกัน
         async function callAPI(a, p = {}) { 
@@ -1554,9 +1561,17 @@
             }, 400); 
         }
         
-        let galleryImages = [], galleryIndex = 0; function changeGalleryImage(step) { if (galleryImages.length === 0) return; galleryIndex = (galleryIndex + step + galleryImages.length) % galleryImages.length; const img = document.getElementById('galleryImg'); if(img) img.src = galleryImages[galleryIndex].url; const title = document.getElementById('galleryTitle'); if(title) title.innerText = galleryImages[galleryIndex].title; const count = document.getElementById('galleryCount'); if(count) count.innerText = `${galleryIndex + 1} / ${galleryImages.length}`; }
+        let galleryImages = [], galleryIndex = 0; 
+        function changeGalleryImage(step) { if (galleryImages.length === 0) return; galleryIndex = (galleryIndex + step + galleryImages.length) % galleryImages.length; const img = document.getElementById('galleryImg'); if(img) img.src = galleryImages[galleryIndex].url; const title = document.getElementById('galleryTitle'); if(title) title.innerText = galleryImages[galleryIndex].title; const count = document.getElementById('galleryCount'); if(count) count.innerText = `${galleryIndex + 1} / ${galleryImages.length}`; }
         function openAuditGallery(id) { const rec = auditRecords.find(r => r.id == id); if (!rec) return; galleryImages = []; if(rec.details) rec.details.forEach(d => { if(d.image) galleryImages.push({ title: d.q, url: fixDriveUrl(d.image) }); }); if(galleryImages.length === 0) { Swal.fire({ icon: 'info', title: 'ไม่พบรูปภาพ' }); return; } galleryIndex = 0; Swal.fire({ html: ` <div class="relative bg-black h-[80vh] flex flex-col rounded-lg"> <div class="absolute top-0 left-0 right-0 p-4 flex justify-between z-10 bg-gradient-to-b from-black/80 to-transparent"> <div class="text-left"><h3 id="galleryTitle" class="text-white font-bold">${galleryImages[0].title}</h3><div id="galleryCount" class="text-white/80 text-xs">1 / ${galleryImages.length}</div></div> <button onclick="Swal.close()" class="text-white text-xl"><i class="fa-solid fa-xmark"></i></button> </div> <div class="flex-1 flex items-center justify-center bg-zinc-900 relative"> <img id="galleryImg" src="${galleryImages[0].url}" class="max-w-full max-h-full object-contain"> <button onclick="changeGalleryImage(-1)" class="absolute left-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button> <button onclick="changeGalleryImage(1)" class="absolute right-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button> </div> </div>`, width: '90%', padding: 0, showConfirmButton: false, background: 'transparent' }); }
-        function fixDriveUrl(url) { if (url && url.includes("drive.google.com") && url.includes("id=")) { const match = url.match(/id=([^&]+)/); if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=s1000`; } return url; }
+        
+        function fixDriveUrl(url) { 
+            if (!url) return ''; 
+            let match = url.match(/id=([^&]+)/) || url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/uc\?id=([^&]+)/); 
+            if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=s1000`; 
+            return url; 
+        }
+        
         function getVal(arr, key) { const f = arr.find(x => x.q === key); return f ? f.res : '-'; }
         function formatNoDecimal(v) { const n = parseFloat((v||'').toString().replace(/,/g,'')); return isNaN(n) ? (v||'-') : n.toLocaleString('en-US', {maximumFractionDigits:0}); }
         
@@ -1769,5 +1784,3 @@
     </script>
 </body>
 </html>
-
-

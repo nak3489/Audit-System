@@ -151,7 +151,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.1.1 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.1.2 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 6.1.1 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 6.1.2 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -196,17 +196,22 @@
                 </div>
                 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="p-6 border-b border-slate-800 bg-slate-900/50">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center font-bold text-white shadow-lg border border-white/10">
-                        <span id="sidebarAvatar">?</span>
+            
+            <!-- ส่วนนี้ตั้งค่าให้กดเข้าหน้าโปรไฟล์และโชว์รูปได้ -->
+            <div class="p-6 border-b border-slate-800 bg-slate-900/50 cursor-pointer hover:bg-slate-800 transition-colors group" onclick="switchView('view-profile'); if(window.innerWidth < 768) toggleSidebar();" title="ตั้งค่าโปรไฟล์ส่วนตัว">
+                <div class="flex items-center gap-3 relative">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center font-bold text-white shadow-lg border border-white/10 overflow-hidden relative shrink-0">
+                        <img id="sidebarAvatarImg" src="" class="w-full h-full object-cover hidden z-10">
+                        <span id="sidebarAvatar" class="z-0">?</span>
                     </div>
-                    <div class="overflow-hidden">
-                        <p id="sidebarName" class="text-sm font-semibold truncate max-w-[120px]">User</p>
+                    <div class="overflow-hidden pr-4 flex-1">
+                        <p id="sidebarName" class="text-sm font-semibold truncate group-hover:text-primary transition-colors">User</p>
                         <p id="sidebarRole" class="text-xs text-slate-400 uppercase tracking-wider">-</p>
                     </div>
+                    <i class="fa-solid fa-chevron-right text-slate-500 text-[10px] absolute right-0 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </div>
             </div>
+            
             <nav class="flex-1 overflow-y-auto py-4 space-y-1 px-3">
                 <a href="#" onclick="switchView('view-dashboard'); if(window.innerWidth < 768) toggleSidebar();" class="nav-link flex items-center px-4 py-3 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-all group">
                     <i class="fa-solid fa-chart-pie w-6 group-hover:text-primary transition-colors"></i><span class="font-medium">Dashboard</span>
@@ -329,6 +334,62 @@
                     </div>
                 </div>
 
+                <!-- 1.5 Profile View (หน้าโปรไฟล์ส่วนตัว) -->
+                <div id="view-profile" class="page-view fade-in hidden max-w-3xl mx-auto pb-20">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-display font-bold text-slate-800">โปรไฟล์ของฉัน</h2>
+                        <p class="text-slate-500 mt-1">จัดการข้อมูลส่วนตัวและรูปประจำตัวของคุณ</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden relative">
+                        <div class="h-32 bg-gradient-to-r from-blue-600 to-indigo-700"></div>
+                        <form onsubmit="saveProfile(event)" class="px-6 sm:px-10 pb-10 relative">
+                            
+                            <!-- ส่วนจัดการรูปโปรไฟล์ -->
+                            <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-end -mt-12 mb-8">
+                                <div class="relative group">
+                                    <div class="w-28 h-28 rounded-full border-4 border-white bg-slate-100 shadow-lg overflow-hidden flex items-center justify-center text-4xl text-slate-300 relative">
+                                        <img id="profilePreviewImg" src="" class="w-full h-full object-cover hidden z-10">
+                                        <i class="fa-solid fa-user z-0"></i>
+                                        <div id="profileUploadLoading" class="absolute inset-0 bg-black/50 z-20 hidden items-center justify-center text-white backdrop-blur-sm"><i class="fa-solid fa-spinner fa-spin text-2xl"></i></div>
+                                    </div>
+                                    <label for="uploadProfileImg" class="absolute bottom-0 right-0 w-9 h-9 bg-primary hover:bg-blue-700 text-white rounded-full flex items-center justify-center cursor-pointer shadow-md transition-transform hover:scale-110 border-2 border-white z-30">
+                                        <i class="fa-solid fa-camera text-sm"></i>
+                                    </label>
+                                    <input type="file" id="uploadProfileImg" accept="image/*" class="hidden" onchange="handleProfileImageSelect(this)">
+                                </div>
+                                <div class="pb-2">
+                                    <h3 class="font-bold text-xl text-slate-800" id="profileDisplayUsername">Username</h3>
+                                    <p class="text-xs text-slate-500 font-bold bg-slate-100 px-2 py-1 rounded inline-block mt-1" id="profileDisplayRole">Role</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="input-group md:col-span-2">
+                                    <label class="input-label">ชื่อ - นามสกุล (สำหรับแสดงในระบบและรายงาน)</label>
+                                    <input type="text" id="profileName" class="input-box text-base font-bold text-primary" required>
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">ชื่อผู้ใช้งาน (Username สำหรับล็อกอิน)</label>
+                                    <input type="text" id="profileUser" class="input-box bg-slate-50 text-slate-500 cursor-not-allowed" readonly>
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">สิทธิ์การเข้าถึงพื้นที่ (Permission Area)</label>
+                                    <input type="text" id="profileArea" class="input-box bg-slate-50 text-slate-500 cursor-not-allowed font-mono text-sm" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row justify-end gap-3">
+                                <button type="button" onclick="openChangePasswordModal()" class="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-orange-200 bg-orange-50 text-orange-600 font-bold hover:bg-orange-100 transition mr-auto flex justify-center items-center gap-2"><i class="fa-solid fa-key"></i> เปลี่ยนรหัสผ่าน</button>
+                                <button type="button" onclick="switchView('view-dashboard')" class="w-full sm:w-auto px-6 py-2.5 rounded-lg border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition">ยกเลิก</button>
+                                <button type="submit" class="w-full sm:w-auto px-8 py-2.5 bg-primary hover:bg-blue-700 text-white font-bold rounded-lg shadow-md shadow-blue-200 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-save"></i> บันทึกโปรไฟล์
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- 2. Audit Form -->
                 <div id="view-audit" class="page-view fade-in hidden max-w-5xl mx-auto pb-20">
                     <div id="draftNotice" class="hidden mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex justify-between items-center shadow-sm">
@@ -409,7 +470,7 @@
                                     <i class="fa-solid fa-qrcode text-primary"></i> สแกนรับการแจ้งเตือน
                                 </h4>
                                 <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 mb-8 relative w-full max-w-[240px] aspect-square flex items-center justify-center group">
-                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ" alt="LINE QR Code" class="w-full h-full object-contain relative z-10 group-hover:scale-105 transition-transform duration-300">
+                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ" alt="LINE QR Code" class="w-full h-full object-cover relative z-10 group-hover:scale-105 transition-transform duration-300">
                                     <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
                                         <i class="fa-brands fa-line text-[120px] text-[#00B900]"></i>
                                     </div>
@@ -659,6 +720,16 @@
             document.getElementById('sidebarName').innerText = currentUser.name;
             document.getElementById('sidebarRole').innerText = currentUser.role;
             document.getElementById('sidebarAvatar').innerText = currentUser.name.charAt(0).toUpperCase();
+            
+            // โหลดรูปโปรไฟล์ที่ Sidebar หากมี
+            const avatarImg = document.getElementById('sidebarAvatarImg');
+            if(currentUser.profileImage) {
+                avatarImg.src = currentUser.profileImage;
+                avatarImg.classList.remove('hidden');
+            } else {
+                avatarImg.classList.add('hidden');
+            }
+            
             document.getElementById('dashWelcomeName').innerText = currentUser.name;
             
             if (currentUser.role.toLowerCase() !== 'admin') {
@@ -920,6 +991,24 @@
                     }); 
                 }
                 
+                // ดึงข้อมูลแสดงในหน้า Profile
+                if (id === 'view-profile') {
+                    document.getElementById('profileName').value = currentUser.name;
+                    document.getElementById('profileUser').value = currentUser.user;
+                    document.getElementById('profileArea').value = currentUser.permissionArea || 'ALL';
+                    document.getElementById('profileDisplayUsername').innerText = currentUser.user;
+                    document.getElementById('profileDisplayRole').innerText = currentUser.role.toUpperCase();
+                    
+                    const pImg = document.getElementById('profilePreviewImg');
+                    tempProfileImageUrl = ""; // ล้างค่าชั่วคราว
+                    if(currentUser.profileImage) {
+                        pImg.src = currentUser.profileImage;
+                        pImg.classList.remove('hidden');
+                    } else {
+                        pImg.classList.add('hidden');
+                    }
+                }
+                
                 toggleLoading(false);
             }, 300);
         }
@@ -1032,6 +1121,79 @@
         function formatInputCurrency(el) { let val = parseFloat(el.value.replace(/,/g, '')); if(!isNaN(val)) el.value = val.toLocaleString('en-US', {minimumFractionDigits: 2}); }
         function calculatePerformance() { const target = parseFloat(document.getElementById('f_target').value) || 0; const actual = parseFloat(document.getElementById('f_actual').value) || 0; document.getElementById('f_percent').value = target > 0 ? (actual / target * 100).toFixed(2) + '%' : '-'; saveDraft(); }
         
+        // ------------------ ระบบ Profile ------------------
+        let tempProfileImageUrl = "";
+        
+        async function handleProfileImageSelect(input) {
+            if (input.files && input.files[0]) {
+                const loader = document.getElementById('profileUploadLoading');
+                const preview = document.getElementById('profilePreviewImg');
+                
+                try {
+                    loader.classList.remove('hidden');
+                    loader.classList.add('flex');
+                    
+                    const compressed = await compressImage(input.files[0], 500); 
+                    const uploadRes = await callAPI('uploadImage', { image: compressed, filename: `Profile_${currentUser.user}_${Date.now()}.jpg` });
+                    
+                    if(uploadRes.success) {
+                        tempProfileImageUrl = uploadRes.url;
+                        preview.src = uploadRes.url;
+                        preview.classList.remove('hidden');
+                    } else {
+                        showPopup('error', 'อัปโหลดรูปล้มเหลว', uploadRes.message);
+                    }
+                } catch(e) {
+                    showPopup('error', 'ข้อผิดพลาด', 'ไม่สามารถประมวลผลรูปภาพได้');
+                } finally {
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+                    input.value = ''; 
+                }
+            }
+        }
+        
+        async function saveProfile(e) {
+            e.preventDefault();
+            const newName = document.getElementById('profileName').value;
+            
+            toggleLoading(true);
+            const res = await callAPI('editUser', { 
+                user: currentUser.user, 
+                name: newName, 
+                role: currentUser.role,
+                profileImage: tempProfileImageUrl || currentUser.profileImage
+            });
+            toggleLoading(false);
+            
+            if(res.success) {
+                // อัปเดตข้อมูล Session
+                currentUser.name = newName;
+                if(tempProfileImageUrl) currentUser.profileImage = tempProfileImageUrl;
+                localStorage.setItem(STORAGE.USER, JSON.stringify(currentUser));
+                
+                // อัปเดต UI 
+                document.getElementById('sidebarName').innerText = currentUser.name;
+                document.getElementById('dashWelcomeName').innerText = currentUser.name;
+                
+                if(currentUser.profileImage) {
+                    const avatarImg = document.getElementById('sidebarAvatarImg');
+                    avatarImg.src = currentUser.profileImage;
+                    avatarImg.classList.remove('hidden');
+                }
+                
+                Swal.fire({
+                    title: 'สำเร็จ',
+                    text: 'อัปเดตข้อมูลโปรไฟล์เรียบร้อยแล้ว',
+                    icon: 'success',
+                    confirmButtonColor: '#2563eb'
+                });
+            } else {
+                showPopup('error', 'บันทึกไม่สำเร็จ', res.message);
+            }
+        }
+        // -------------------------------------------------
+
         function compressImage(file, maxWidth = 1000) { return new Promise((resolve) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = (e) => { const img = new Image(); img.src = e.target.result; img.onload = () => { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; if (w > maxWidth) { h *= maxWidth / w; w = maxWidth; } canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h); resolve(canvas.toDataURL('image/jpeg', 0.7)); }; }; }); }
         
         // ⚡ แก้ไข: แยกอัปโหลดรูปภาพทันทีที่เลือก ป้องกันคอขวดตอนกด Submit 

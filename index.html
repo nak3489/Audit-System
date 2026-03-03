@@ -16,7 +16,12 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- 🌟 เพิ่ม Library Cropper.js สำหรับครอบตัดรูปโปรไฟล์ให้เป็นวงกลมแบบ LINE -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -131,6 +136,15 @@
         #detailContent img { max-height: 200px !important; width: auto; object-fit: contain; }
         #detailContent .h-16 { height: 50px !important; }
         #detailContent .h-20 { height: 200px !important; }
+
+        /* 🌟 Custom CSS สำหรับ Cropper ให้เห็นเป็นรูปวงกลม */
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 50%;
+        }
+        .cropper-line, .cropper-point {
+            background-color: transparent !important;
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased h-screen overflow-hidden flex flex-col" onclick="closeMultiSelect(event)">
@@ -151,7 +165,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.1.3 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.1.5 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -175,7 +189,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 6.1.3 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 6.1.5 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -242,7 +256,7 @@
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-800 text-center">
-                <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">V 6.1.3</div>
+                <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">V 6.1.5</div>
                 <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">© 2026 ADMIN OK</div>
                 <button type="button" onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white px-4 py-2 rounded-lg transition-all text-sm font-bold">
                     <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
@@ -345,7 +359,7 @@
                         <div class="h-32 bg-gradient-to-r from-blue-600 to-indigo-700"></div>
                         <form onsubmit="saveProfile(event)" class="px-6 sm:px-10 pb-10 relative">
                             
-                            <!-- ส่วนจัดการรูปโปรไฟล์ -->
+                            <!-- ส่วนจัดการรูปโปรไฟล์แบบปรับแต่งได้ -->
                             <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-end -mt-12 mb-8">
                                 <div class="relative group">
                                     <div class="w-28 h-28 rounded-full border-4 border-white bg-slate-100 shadow-lg overflow-hidden flex items-center justify-center text-4xl text-slate-300 relative">
@@ -470,7 +484,7 @@
                                     <i class="fa-solid fa-qrcode text-primary"></i> สแกนรับการแจ้งเตือน
                                 </h4>
                                 <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 mb-8 relative w-full max-w-[240px] aspect-square flex items-center justify-center group">
-                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ" alt="LINE QR Code" class="w-full h-full object-cover relative z-10 group-hover:scale-105 transition-transform duration-300">
+                                    <img src="https://lh3.googleusercontent.com/d/1EmxRRC62H0O2phRp8F5rCCvNr8QaHndZ" alt="LINE QR Code" class="w-full h-full object-contain relative z-10 group-hover:scale-105 transition-transform duration-300">
                                     <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
                                         <i class="fa-brands fa-line text-[120px] text-[#00B900]"></i>
                                     </div>
@@ -632,6 +646,27 @@
     </div>
 
     <!-- Modals -->
+
+    <!-- 🌟 เพิ่ม Modal สำหรับการ Crop รูปโปรไฟล์โดยเฉพาะ -->
+    <div id="cropModal" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col animate-fade-in-up">
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-lg text-slate-800">เลื่อนและปรับขนาดรูปภาพ</h3>
+                <button type="button" onclick="closeCropModal()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <!-- พื้นที่สำหรับโชว์ตัว Crop -->
+            <div class="p-4 bg-slate-900 flex justify-center items-center h-[300px] sm:h-[400px]">
+                <img id="cropImage" src="" style="max-width: 100%; display: block;">
+            </div>
+            <div class="p-4 bg-white border-t border-slate-100 flex gap-3">
+                <button type="button" onclick="closeCropModal()" class="flex-1 py-2.5 rounded-lg border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition">ยกเลิก</button>
+                <button type="button" onclick="applyCropAndUpload()" class="flex-1 bg-primary text-white py-2.5 rounded-lg font-bold hover:bg-indigo-700 transition flex items-center justify-center gap-2 shadow-md shadow-blue-200">
+                    <i class="fa-solid fa-crop-simple"></i> ยืนยันรูปนี้
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="detailModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl w-full max-w-4xl shadow-2xl animate-fade-in-up flex flex-col max-h-[90vh]">
             <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl flex-shrink-0">
@@ -696,6 +731,9 @@
         let osmLayer = null;
         let satelliteLayer = null;
         let autoSyncTimer = null;
+        
+        // 🌟 ตัวแปรเก็บ Cropper Instance
+        let cropper = null;
         
         // 🔒 สร้าง Client ID ประจำเบราว์เซอร์สำหรับส่ง Rate Limit
         let clientId = localStorage.getItem('audit_clientId');
@@ -873,9 +911,7 @@
         
         function viewImage(url) { 
             if (!url) return; 
-            let bigUrl = url; 
-            let match = url.match(/id=([^&]+)/) || url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/uc\?id=([^&]+)/); 
-            if(match) bigUrl = `https://drive.google.com/thumbnail?id=${match[1]}&sz=s1000`; 
+            let bigUrl = fixDriveUrl(url); 
             Swal.fire({ imageUrl: bigUrl, imageAlt: 'Image', width: '90%', padding: '1em', background: '#fff', showConfirmButton: false, showCloseButton: true, customClass: { image: 'rounded-lg shadow-lg' } }); 
         }
 
@@ -1121,38 +1157,88 @@
         function formatInputCurrency(el) { let val = parseFloat(el.value.replace(/,/g, '')); if(!isNaN(val)) el.value = val.toLocaleString('en-US', {minimumFractionDigits: 2}); }
         function calculatePerformance() { const target = parseFloat(document.getElementById('f_target').value) || 0; const actual = parseFloat(document.getElementById('f_actual').value) || 0; document.getElementById('f_percent').value = target > 0 ? (actual / target * 100).toFixed(2) + '%' : '-'; saveDraft(); }
         
-        // ------------------ ระบบ Profile ------------------
+        function compressImage(file, maxWidth = 1000) { return new Promise((resolve) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = (e) => { const img = new Image(); img.src = e.target.result; img.onload = () => { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; if (w > maxWidth) { h *= maxWidth / w; w = maxWidth; } canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h); resolve(canvas.toDataURL('image/jpeg', 0.7)); }; }; }); }
+        
+        // ------------------ ระบบแก้ไขและ Crop Profile Image ------------------
         let tempProfileImageUrl = "";
         
-        async function handleProfileImageSelect(input) {
+        function closeCropModal() {
+            document.getElementById('cropModal').classList.add('hidden');
+            if (cropper) { cropper.destroy(); cropper = null; }
+            document.getElementById('uploadProfileImg').value = '';
+        }
+
+        // เมื่อเลือกรูป จะเด้ง Modal แบบมี Cropper
+        function handleProfileImageSelect(input) {
             if (input.files && input.files[0]) {
-                const loader = document.getElementById('profileUploadLoading');
-                const preview = document.getElementById('profilePreviewImg');
-                
-                try {
-                    loader.classList.remove('hidden');
-                    loader.classList.add('flex');
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const cropImg = document.getElementById('cropImage');
+                    cropImg.src = e.target.result;
+                    document.getElementById('cropModal').classList.remove('hidden');
                     
-                    const compressed = await compressImage(input.files[0], 500); 
-                    const uploadRes = await callAPI('uploadImage', { image: compressed, filename: `Profile_${currentUser.user}_${Date.now()}.jpg` });
-                    
-                    if(uploadRes.success) {
-                        tempProfileImageUrl = uploadRes.url;
-                        preview.src = fixDriveUrl(uploadRes.url);
-                        preview.classList.remove('hidden');
-                    } else {
-                        showPopup('error', 'อัปโหลดรูปล้มเหลว', uploadRes.message);
-                    }
-                } catch(e) {
-                    showPopup('error', 'ข้อผิดพลาด', 'ไม่สามารถประมวลผลรูปภาพได้');
-                } finally {
-                    loader.classList.add('hidden');
-                    loader.classList.remove('flex');
-                    input.value = ''; 
-                }
+                    if (cropper) cropper.destroy();
+                    // กำหนดค่าการทำงานของ Cropper.js ให้เป็นวงกลมแบบ 1:1
+                    cropper = new Cropper(cropImg, {
+                        aspectRatio: 1, 
+                        viewMode: 1,
+                        dragMode: 'move',
+                        autoCropArea: 0.9,
+                        restore: false,
+                        guides: false,
+                        center: false,
+                        highlight: false,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        toggleDragModeOnDblclick: false,
+                    });
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
         
+        // กดยืนยันจากหน้า Crop รูป
+        async function applyCropAndUpload() {
+            if (!cropper) return;
+            const loader = document.getElementById('profileUploadLoading');
+            const preview = document.getElementById('profilePreviewImg');
+            
+            // ดึงรูปที่ตัดมาแล้ว
+            const canvas = cropper.getCroppedCanvas({
+                width: 400,
+                height: 400,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+            
+            // เปลี่ยนเป็น Base64
+            const base64Image = canvas.toDataURL('image/jpeg', 0.8);
+            
+            closeCropModal();
+            
+            try {
+                loader.classList.remove('hidden');
+                loader.classList.add('flex');
+                
+                // อัปโหลดเข้าสู่ระบบ (ส่ง Base64 ไปบันทึกที่ Drive)
+                const uploadRes = await callAPI('uploadImage', { image: base64Image, filename: `Profile_${currentUser.user}_${Date.now()}.jpg` });
+                
+                if(uploadRes.success) {
+                    tempProfileImageUrl = uploadRes.url;
+                    preview.src = fixDriveUrl(uploadRes.url);
+                    preview.classList.remove('hidden');
+                } else {
+                    showPopup('error', 'อัปโหลดรูปล้มเหลว', uploadRes.message);
+                }
+            } catch(e) {
+                showPopup('error', 'ข้อผิดพลาด', 'ไม่สามารถประมวลผลรูปภาพได้');
+            } finally {
+                loader.classList.add('hidden');
+                loader.classList.remove('flex');
+            }
+        }
+        
+        // ตอนกดปุ่ม "บันทึกโปรไฟล์" ในหน้า Profile Setting
         async function saveProfile(e) {
             e.preventDefault();
             const newName = document.getElementById('profileName').value;
@@ -1167,12 +1253,10 @@
             toggleLoading(false);
             
             if(res.success) {
-                // อัปเดตข้อมูล Session
                 currentUser.name = newName;
                 if(tempProfileImageUrl) currentUser.profileImage = tempProfileImageUrl;
                 localStorage.setItem(STORAGE.USER, JSON.stringify(currentUser));
                 
-                // อัปเดต UI 
                 document.getElementById('sidebarName').innerText = currentUser.name;
                 document.getElementById('dashWelcomeName').innerText = currentUser.name;
                 
@@ -1193,21 +1277,17 @@
             }
         }
         // -------------------------------------------------
-
-        function compressImage(file, maxWidth = 1000) { return new Promise((resolve) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = (e) => { const img = new Image(); img.src = e.target.result; img.onload = () => { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; if (w > maxWidth) { h *= maxWidth / w; w = maxWidth; } canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h); resolve(canvas.toDataURL('image/jpeg', 0.7)); }; }; }); }
         
-        // ⚡ แก้ไข: แยกอัปโหลดรูปภาพทันทีที่เลือก ป้องกันคอขวดตอนกด Submit 
         async function handleImageSelect(input, qId) { 
             if (input.files && input.files[0]) { 
                 try { 
                     document.getElementById(`file_status_${qId}`).innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
                     const compressed = await compressImage(input.files[0]); 
                     
-                    // เรียก API สำหรับอัปโหลดรูปเท่านั้น
                     const uploadRes = await callAPI('uploadImage', { image: compressed, filename: `Img_${Date.now()}.jpg` });
 
                     if(uploadRes.success) {
-                        currentAuditImages[qId] = uploadRes.url; // เก็บเฉพาะ URL ไม่เก็บ Base64 ในหน่วยความจำแล้ว
+                        currentAuditImages[qId] = uploadRes.url; 
                         document.getElementById(`file_status_${qId}`).innerHTML = `<i class="fa-solid fa-circle-check text-green-500 text-lg"></i>`; 
                         saveDraft(); 
                     } else {
@@ -1743,10 +1823,12 @@
         function changeGalleryImage(step) { if (galleryImages.length === 0) return; galleryIndex = (galleryIndex + step + galleryImages.length) % galleryImages.length; const img = document.getElementById('galleryImg'); if(img) img.src = galleryImages[galleryIndex].url; const title = document.getElementById('galleryTitle'); if(title) title.innerText = galleryImages[galleryIndex].title; const count = document.getElementById('galleryCount'); if(count) count.innerText = `${galleryIndex + 1} / ${galleryImages.length}`; }
         function openAuditGallery(id) { const rec = auditRecords.find(r => r.id == id); if (!rec) return; galleryImages = []; if(rec.details) rec.details.forEach(d => { if(d.image) galleryImages.push({ title: d.q, url: fixDriveUrl(d.image) }); }); if(galleryImages.length === 0) { Swal.fire({ icon: 'info', title: 'ไม่พบรูปภาพ' }); return; } galleryIndex = 0; Swal.fire({ html: ` <div class="relative bg-black h-[80vh] flex flex-col rounded-lg"> <div class="absolute top-0 left-0 right-0 p-4 flex justify-between z-10 bg-gradient-to-b from-black/80 to-transparent"> <div class="text-left"><h3 id="galleryTitle" class="text-white font-bold">${galleryImages[0].title}</h3><div id="galleryCount" class="text-white/80 text-xs">1 / ${galleryImages.length}</div></div> <button onclick="Swal.close()" class="text-white text-xl"><i class="fa-solid fa-xmark"></i></button> </div> <div class="flex-1 flex items-center justify-center bg-zinc-900 relative"> <img id="galleryImg" src="${galleryImages[0].url}" class="max-w-full max-h-full object-contain"> <button onclick="changeGalleryImage(-1)" class="absolute left-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button> <button onclick="changeGalleryImage(1)" class="absolute right-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button> </div> </div>`, width: '90%', padding: 0, showConfirmButton: false, background: 'transparent' }); }
         
+        // 🌟 แก้ไข: ใช้ Domain รูปแบบใหม่ของ Google (lh3) ซึ่งอนุญาตให้ดึงรูปแบบไม่ติด CORB และไม่ต้องเป็น Thumbnail
         function fixDriveUrl(url) { 
             if (!url) return ''; 
             let match = url.match(/id=([^&]+)/) || url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/uc\?id=([^&]+)/); 
-            if (match) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=s1000`; 
+            // เปลี่ยนเป็นลิงก์ lh3 ที่แสดงภาพได้ 100% ไม่มีปัญหาการโดน Block
+            if (match) return `https://lh3.googleusercontent.com/d/${match[1]}`; 
             return url; 
         }
         

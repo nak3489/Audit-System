@@ -51,10 +51,47 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .nav-link.active { background-color: rgba(255, 255, 255, 0.1); border-left: 4px solid #60a5fa; }
 
-        /* Tom Select Customization */
-        .ts-control { border-radius: 0.5rem; padding: 10px 14px; border-color: #cbd5e1; font-family: 'Sarabun', sans-serif; }
-        .ts-control:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        .ts-dropdown { border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); z-index: 50; }
+        /* 🌟 บังคับความสูงและรูปแบบของตัวกรองให้เท่ากัน 100% (ปุ่ม, Select, Input) */
+        .filter-box {
+            width: 100%;
+            height: 42px !important;
+            min-height: 42px !important;
+            padding: 0 14px;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            font-size: 0.875rem; 
+            font-weight: 700;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            outline: none;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+        .filter-box:focus { border-color: #2563eb; }
+
+        /* 🌟 บังคับ Tom Select (ระบบค้นหา Dropdown) ให้สูงเท่ากับ filter-box เป๊ะๆ */
+        .ts-control {
+            border-radius: 0.5rem !important;
+            padding: 0 14px !important;
+            min-height: 42px !important;
+            height: 42px !important;
+            border-color: #cbd5e1 !important;
+            font-family: 'Sarabun', sans-serif !important;
+            background-color: #fff !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+            display: flex !important;
+            align-items: center !important;
+            font-size: 0.875rem !important;
+            font-weight: 700 !important;
+            box-sizing: border-box;
+        }
+        .ts-control .item { line-height: 1 !important; margin: 0 !important; padding: 0 !important; }
+        .ts-control:focus { border-color: #2563eb !important; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important; }
+        .ts-wrapper.single .ts-control:after { right: 14px !important; }
+        .ts-dropdown { border-radius: 0.5rem; box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.15); z-index: 9999 !important; }
 
         /* Form Styles */
         .card { 
@@ -63,11 +100,12 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); 
             border: 1px solid #e2e8f0;
             margin-bottom: 24px;
-            overflow: hidden;
+            overflow: visible; /* ป้องกันการตัด Dropdown */
         }
         .card-header {
             background: #fff; padding: 16px 24px; border-bottom: 1px solid #e2e8f0;
             display: flex; align-items: center; gap: 12px;
+            border-radius: 12px 12px 0 0;
         }
         .card-title { font-family: 'Prompt', sans-serif; font-size: 1.125rem; font-weight: 600; color: #1e293b; }
         .card-body { padding: 24px; }
@@ -109,8 +147,9 @@
         .loader::after { border-color: #FF3D00; animation-delay: 1s; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .multi-select-container { position: relative; }
-        .multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; z-index: 50; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); width: 220px; padding: 8px; max-height: 300px; overflow-y: auto; }
+        /* Dropdown เลือกหลายเดือน */
+        .multi-select-container { position: relative; z-index: 60; }
+        .multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; z-index: 9999; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.15); min-width: 100%; max-height: 350px; overflow-y: auto; margin-top: 4px; }
         .multi-select-dropdown.show { display: block; }
 
         /* Leaflet Popup Customization */
@@ -142,7 +181,6 @@
         .cropper-face {
             border-radius: 50%;
         }
-        /* ซ่อนเส้นตารางและจุดลากขยาย เพื่อให้เหมือนกรอบของ LINE */
         .cropper-line, .cropper-point, .cropper-dashed, .cropper-center {
             display: none !important;
             background-color: transparent !important;
@@ -170,7 +208,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.1.6 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.1.7 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -194,7 +232,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 6.1.6 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 6.1.7 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -260,7 +298,7 @@
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-800 text-center">
-                <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">V 6.1.6</div>
+                <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">V 6.1.7</div>
                 <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">© 2026 ADMIN OK</div>
                 <button type="button" onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white px-4 py-2 rounded-lg transition-all text-sm font-bold">
                     <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
@@ -269,8 +307,8 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col h-full relative w-full transition-all duration-300">
-            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 sm:px-6 z-10 sticky top-0">
+        <div class="flex-1 flex flex-col h-full relative w-full transition-all duration-300 overflow-hidden">
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 sm:px-6 z-10 shrink-0">
                 <div class="flex items-center gap-3">
                     <button class="text-slate-500 hover:text-primary focus:outline-none p-1 rounded-md active:bg-slate-100 mr-2" onclick="toggleSidebar()"><i class="fa-solid fa-bars text-xl"></i></button>
                     <h2 id="pageTitle" class="text-lg sm:text-xl font-bold text-slate-800 truncate">ภาพรวมระบบ</h2>
@@ -284,41 +322,38 @@
             <main id="mainContent" class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 relative w-full bg-slate-50 pb-20">
                 
                 <!-- 1. Dashboard -->
-                <div id="view-dashboard" class="page-view fade-in space-y-8">
+                <div id="view-dashboard" class="page-view fade-in space-y-8 relative">
                     
-                    <!-- Dashboard Filters -->
-                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between relative mb-6">
-                         <div class="font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-filter text-primary"></i> กรองข้อมูล:</div>
-                         <div class="flex flex-wrap gap-3 w-full md:w-auto items-center">
-                             
-                             <select id="dashFilterYear" onchange="filterDashboardData(true)" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg p-2.5 focus:ring-primary focus:border-primary cursor-pointer hover:bg-slate-100 font-bold">
-                                 <!-- JS Generated -->
-                             </select>
+                    <!-- 🌟 Dashboard Filters -->
+                    <div class="bg-[#ffedd5]/50 p-4 sm:p-5 rounded-xl border border-[#fcd34d]/60 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4 items-end relative mb-6 z-[60]">
+                         <div class="flex flex-col gap-1.5 w-full">
+                             <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">ปี (Year)</label>
+                             <select id="dashFilterYear" onchange="filterDashboardData(true)" class="filter-box cursor-pointer hover:bg-slate-50"></select>
+                         </div>
 
-                             <div class="multi-select-container">
-                                <button type="button" onclick="toggleMonthSelect(event, 'monthDropdown')" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg p-2.5 hover:bg-slate-100 flex items-center gap-2 min-w-[180px] justify-between">
-                                    <span id="monthSelectLabel">เลือกเดือน (ทั้งหมด)</span>
-                                    <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
-                                </button>
-                                <div id="monthDropdown" class="multi-select-dropdown">
-                                    <div class="flex items-center justify-between p-2 border-b border-slate-100 mb-1">
-                                        <span class="text-xs font-bold text-slate-500">เลือกเดือน</span>
-                                        <button onclick="selectAllMonths('dash')" class="text-xs text-primary hover:underline">เลือกทั้งหมด</button>
-                                    </div>
-                                    <div id="monthCheckboxes" class="space-y-1">
-                                        <!-- JS Generated -->
-                                    </div>
-                                </div>
+                         <div class="flex flex-col gap-1.5 w-full multi-select-container">
+                             <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">เดือน (Month)</label>
+                             <button type="button" onclick="toggleMonthSelect(event, 'dashMonthDropdown')" class="filter-box justify-between cursor-pointer hover:bg-slate-50">
+                                 <span id="dashMonthSelectLabel" class="truncate pr-2">(ทั้งหมด)</span>
+                                 <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 shrink-0"></i>
+                             </button>
+                             <div id="dashMonthDropdown" class="multi-select-dropdown">
+                                 <div id="dashMonthCheckboxes" class="flex flex-col">
+                                     <!-- JS Generated -->
+                                 </div>
                              </div>
+                         </div>
 
-                             <select id="dashFilterZone" onchange="filterDashboardData(true)" class="w-full md:w-64">
-                                 <option value="all">ทุกเขต (All Zones)</option>
+                         <div class="flex flex-col gap-1.5 w-full relative z-50">
+                             <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">เขต (Zone)</label>
+                             <select id="dashFilterZone" onchange="filterDashboardData(true)" class="filter-box cursor-pointer bg-white">
+                                 <option value="all">(ทั้งหมด)</option>
                                  <!-- JS Generated -->
                              </select>
                          </div>
                     </div>
 
-                    <div class="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden group">
+                    <div class="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden group z-0">
                         <div class="relative z-10">
                             <h2 class="text-3xl font-bold font-display mb-2">สวัสดี, <span id="dashWelcomeName">User</span> 👋</h2>
                             <p class="opacity-90 text-lg font-light">ยินดีต้อนรับสู่แดชบอร์ดภาพรวมระบบตรวจสอบมาตรฐานสาขา</p>
@@ -346,9 +381,9 @@
                         </div>
                     </div>
                     <!-- Zone List -->
-                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mt-8">
-                        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50"><h3 class="font-bold text-slate-800 flex items-center gap-2 text-lg"><i class="fa-solid fa-map-location-dot text-primary"></i> สถานะสาขาแยกตามเขต (Zone Status)</h3></div>
-                        <div class="p-6 bg-slate-50/20"><div id="zoneStatList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-sm"><div class="col-span-full text-center py-10 text-slate-400"><i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i><br>กำลังโหลดข้อมูล...</div></div></div>
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-visible mt-8 z-0 relative">
+                        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-2xl"><h3 class="font-bold text-slate-800 flex items-center gap-2 text-lg"><i class="fa-solid fa-map-location-dot text-primary"></i> สถานะสาขาแยกตามเขต (Zone Status)</h3></div>
+                        <div class="p-6 bg-slate-50/20 rounded-b-2xl"><div id="zoneStatList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-sm"><div class="col-span-full text-center py-10 text-slate-400"><i class="fa-solid fa-spinner fa-spin text-3xl mb-3"></i><br>กำลังโหลดข้อมูล...</div></div></div>
                     </div>
                 </div>
 
@@ -429,34 +464,56 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="card"><div class="card-header border-l-4 border-orange-500"><i class="fa-solid fa-broom text-orange-500 text-lg"></i><h3 class="card-title">สภาพสาขา (5ส.)</h3></div><div class="card-body"><div class="rating-table-container mb-6"><table class="rating-table"><thead><tr><th class="text-left pl-4">พื้นที่ตรวจสอบ</th><th width="60">1<br><span class="font-normal text-[10px]">แย่</span></th><th width="60">2<br><span class="font-normal text-[10px]">พอใช้</span></th><th width="60">3<br><span class="font-normal text-[10px]">เฉยๆ</span></th><th width="60">4<br><span class="font-normal text-[10px]">ดี</span></th><th width="60">5<br><span class="font-normal text-[10px]">ดีมาก</span></th></tr></thead><tbody><tr><td class="rating-topic pl-4">ความสะอาดหน้าสาขา</td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">โต๊ะทำงาน/อุปกรณ์</td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">จุดบริการน้ำดื่ม</td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">ห้องน้ำ</td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">พื้นที่เก็บของ</td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">บริเวณหลังสาขา</td><td class="radio-cell"><input type="radio" name="rate_c_back" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="5" class="custom-radio"></td></tr></tbody></table></div><div class="input-group"><label class="input-label">บันทึกเพิ่มเติม (5ส.)</label><textarea id="area_comment" rows="2" class="input-box" placeholder="ระบุสิ่งที่ต้องแก้ไขหรือคำชม..."></textarea></div></div></div>
+                        <div class="card"><div class="card-header border-l-4 border-orange-500"><i class="fa-solid fa-broom text-orange-500 text-lg"></i><h3 class="card-title">สภาพสาขา (5ส.)</h3></div><div class="card-body"><div class="rating-table-container mb-6"><table class="rating-table"><thead><tr><th class="text-left pl-4">พื้นที่ตรวจสอบ</th><th width="60">1<br><span class="font-normal text-[10px]">แย่</span></th><th width="60">2<br><span class="font-normal text-[10px]">พอใช้</span></th><th width="60">3<br><span class="font-normal text-[10px]">เฉยๆ</span></th><th width="60">4<br><span class="font-normal text-[10px]">ดี</span></th><th width="60">5<br><span class="font-normal text-[10px]">ดีมาก</span></th></tr></thead><tbody><tr><td class="rating-topic pl-4">ความสะอาดหน้าสาขา</td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_branch" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">โต๊ะทำงาน/อุปกรณ์</td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_desk" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">จุดบริการน้ำดื่ม</td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_coffee" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">ห้องน้ำ</td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_toilet" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">พื้นที่เก็บของ</td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_storage" value="5" class="custom-radio"></td></tr><tr><td class="rating-topic pl-4">บริเวณหลังสาขา</td><td class="radio-cell"><input type="radio" name="rate_c_back" value="1" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="2" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="3" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="4" class="custom-radio"></td><td class="radio-cell"><input type="radio" name="rate_c_back" value="5" class="custom-radio"></td></tr></tbody></table></div><div class="input-group"><label class="input-label">บันทึกเพิ่มเติม (5ส.)</label><textarea id="area_comment" rows="2" class="input-box min-h-[42px]" placeholder="ระบุสิ่งที่ต้องแก้ไขหรือคำชม..."></textarea></div></div></div>
                         <div class="card"><div class="card-header border-l-4 border-pink-500"><i class="fa-solid fa-list-check text-pink-500 text-lg"></i><h3 class="card-title">รายการตรวจสอบ (Checklist)</h3></div><div class="card-body" id="questionsContainer"><div class="text-center py-8 text-slate-400"><div class="loader mx-auto mb-3 border-slate-300"></div>กำลังโหลดรายการ...</div></div></div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"><div class="card h-full"><div class="card-header"><h3 class="card-title">สรุปผลการตรวจ</h3></div><div class="card-body h-full"><textarea id="summaryComment" class="input-box h-40 resize-none" placeholder="สรุปภาพรวม ข้อดี/ข้อเสีย และสิ่งที่ต้องเร่งดำเนินการแก้ไข..."></textarea></div></div><div class="card h-full"><div class="card-header flex justify-between"><h3 class="card-title">ลายเซ็นผู้ตรวจ</h3><button type="button" onclick="clearSignature()" class="text-xs text-red-500 font-bold hover:underline">ล้าง</button></div><div class="card-body"><div class="border border-dashed border-slate-300 rounded-lg overflow-hidden h-40 relative cursor-crosshair"><canvas id="signaturePad" class="w-full h-full absolute inset-0"></canvas><span class="absolute bottom-2 right-2 text-xs text-slate-300 pointer-events-none">เซ็นชื่อที่นี่</span></div></div></div></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"><div class="card h-full"><div class="card-header"><h3 class="card-title">สรุปผลการตรวจ</h3></div><div class="card-body h-full"><textarea id="summaryComment" class="input-box min-h-[42px] h-40 resize-none" placeholder="สรุปภาพรวม ข้อดี/ข้อเสีย และสิ่งที่ต้องเร่งดำเนินการแก้ไข..."></textarea></div></div><div class="card h-full"><div class="card-header flex justify-between"><h3 class="card-title">ลายเซ็นผู้ตรวจ</h3><button type="button" onclick="clearSignature()" class="text-xs text-red-500 font-bold hover:underline">ล้าง</button></div><div class="card-body"><div class="border border-dashed border-slate-300 rounded-lg overflow-hidden h-40 relative cursor-crosshair"><canvas id="signaturePad" class="w-full h-full absolute inset-0"></canvas><span class="absolute bottom-2 right-2 text-xs text-slate-300 pointer-events-none">เซ็นชื่อที่นี่</span></div></div></div></div>
                         <div class="flex flex-col-reverse sm:flex-row gap-4 pt-4 border-t border-slate-200 mt-8"><button type="button" onclick="switchView('view-dashboard')" class="w-full sm:w-auto px-6 py-3 rounded-lg border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition">ยกเลิก</button><button type="submit" class="w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 rounded-lg font-bold shadow-lg shadow-blue-200 transition flex items-center justify-center gap-2 text-lg"><i class="fa-solid fa-paper-plane"></i> บันทึกและส่งรายงาน</button></div>
                     </form>
                 </div>
 
                 <!-- 3. History View -->
                 <div id="view-history" class="page-view fade-in hidden">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                        <div class="p-4 sm:p-6 bg-white border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-                             <h3 class="font-bold text-lg text-slate-800">ประวัติการตรวจ</h3>
-                             <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                                 <select id="histFilterMonth" onchange="filterHistoryTable(true)" class="bg-slate-50 text-sm border border-slate-200 rounded px-2 py-1.5 cursor-pointer">
-                                     <option value="all">ทุกเดือน (All Months)</option>
-                                     <!-- JS Generated -->
-                                 </select>
-                                 <select id="histFilterZone" onchange="handleHistZoneChange(true)" class="w-40">
-                                     <option value="all">ทุกเขต</option>
-                                     <!-- JS Generated -->
-                                 </select>
-                                 <select id="histFilterBranch" onchange="filterHistoryTable(true)" class="w-40">
-                                     <option value="all">ทุกสาขา</option>
-                                 </select>
-                                 <button onclick="fetchHistory()" class="text-sm text-primary hover:bg-indigo-50 px-3 py-1.5 rounded-lg transition"><i class="fa-solid fa-sync"></i></button>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 relative overflow-visible">
+                        <!-- 🌟 History Filters -->
+                        <div class="bg-[#ffedd5]/50 p-4 sm:p-5 border-b border-[#fcd34d]/60 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end relative z-[60] rounded-t-xl">
+                             <div class="flex flex-col gap-1.5 w-full">
+                                 <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">ปี (Year)</label>
+                                 <select id="histFilterYear" onchange="filterHistoryTable(true)" class="filter-box cursor-pointer hover:bg-slate-50"></select>
                              </div>
+
+                             <div class="flex flex-col gap-1.5 w-full multi-select-container">
+                                 <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">เดือน (Month)</label>
+                                 <button type="button" onclick="toggleMonthSelect(event, 'histMonthDropdown')" class="filter-box justify-between cursor-pointer hover:bg-slate-50">
+                                     <span id="histMonthSelectLabel" class="truncate pr-2">(ทั้งหมด)</span>
+                                     <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 shrink-0"></i>
+                                 </button>
+                                 <div id="histMonthDropdown" class="multi-select-dropdown">
+                                     <div id="histMonthCheckboxes" class="flex flex-col">
+                                         <!-- JS Generated -->
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div class="flex flex-col gap-1.5 w-full relative z-50">
+                                 <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">เขต (Zone)</label>
+                                 <select id="histFilterZone" onchange="handleHistZoneChange(true)" class="filter-box cursor-pointer bg-white">
+                                     <option value="all">(ทั้งหมด)</option>
+                                     <!-- JS Generated -->
+                                 </select>
+                             </div>
+
+                             <div class="flex flex-col gap-1.5 w-full relative z-40">
+                                 <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">สาขา (Branch)</label>
+                                 <select id="histFilterBranch" onchange="filterHistoryTable(true)" class="filter-box cursor-pointer bg-white">
+                                     <option value="all">(ทั้งหมด)</option>
+                                 </select>
+                             </div>
+
+                             <button onclick="fetchHistory()" class="w-full h-[42px] bg-white border border-slate-300 text-slate-700 hover:text-primary hover:border-primary hover:bg-blue-50 rounded-lg font-bold transition flex items-center justify-center gap-2 shadow-sm shrink-0" title="รีเฟรชข้อมูล">
+                                 <i class="fa-solid fa-sync"></i> <span>รีเฟรชข้อมูล</span>
+                             </button>
                         </div>
-                        <div class="overflow-x-auto"><table class="w-full text-sm text-left text-slate-600"><thead class="bg-slate-50 border-b uppercase text-xs font-bold text-slate-500"><tr><th class="px-6 py-4 whitespace-nowrap">วันที่</th><th class="px-6 py-4 whitespace-nowrap">สาขา</th><th class="px-6 py-4 whitespace-nowrap">ผู้ตรวจ</th><th class="px-6 py-4 whitespace-nowrap">ผล</th><th class="px-6 py-4 text-center whitespace-nowrap">รายละเอียด</th></tr></thead><tbody id="auditLogContainer" class="divide-y divide-slate-100"></tbody></table></div>
+                        <div class="overflow-x-auto rounded-b-xl z-0 relative"><table class="w-full text-sm text-left text-slate-600"><thead class="bg-slate-50 border-b uppercase text-xs font-bold text-slate-500"><tr><th class="px-6 py-4 whitespace-nowrap">วันที่</th><th class="px-6 py-4 whitespace-nowrap">สาขา</th><th class="px-6 py-4 whitespace-nowrap">ผู้ตรวจ</th><th class="px-6 py-4 whitespace-nowrap">ผล</th><th class="px-6 py-4 text-center whitespace-nowrap">รายละเอียด</th></tr></thead><tbody id="auditLogContainer" class="divide-y divide-slate-100"></tbody></table></div>
                     </div>
                 </div>
 
@@ -616,36 +673,32 @@
                 
                 <!-- Logs -->
                 <div id="view-logs" class="page-view fade-in hidden">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-                        <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center bg-slate-50 gap-4">
-                             <div class="flex items-center gap-2 font-bold text-slate-800"><i class="fa-solid fa-file-shield text-cyan-500"></i> บันทึกกิจกรรม (Server Logs)</div>
-                             <div class="flex flex-wrap gap-2 w-full md:w-auto items-center">
-                                 <!-- Year Select -->
-                                 <select id="logFilterYear" onchange="fetchLogs()" class="bg-white border border-slate-300 text-xs rounded p-1.5 cursor-pointer font-bold">
-                                     <!-- Options generated by JS -->
-                                 </select>
-
-                                 <!-- Multi-Month Dropdown for Logs -->
-                                 <div class="multi-select-container relative">
-                                    <button type="button" onclick="toggleMonthSelect(event, 'logMonthDropdown')" class="bg-white border border-slate-300 text-slate-700 text-xs rounded p-1.5 hover:bg-slate-50 flex items-center gap-2 min-w-[140px] justify-between">
-                                        <span id="logMonthSelectLabel">เลือกเดือน (ปัจจุบัน)</span>
-                                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
-                                    </button>
-                                    <div id="logMonthDropdown" class="multi-select-dropdown w-[200px]">
-                                        <div class="flex items-center justify-between p-2 border-b border-slate-100 mb-1">
-                                            <span class="text-xs font-bold text-slate-500">เลือกเดือน</span>
-                                            <button onclick="selectAllMonths('log')" class="text-xs text-primary hover:underline">เลือกทั้งหมด</button>
-                                        </div>
-                                        <div id="logMonthCheckboxes" class="space-y-1 p-1">
-                                            <!-- JS Generated -->
-                                        </div>
-                                    </div>
-                                 </div>
-
-                                 <button onclick="fetchLogs()" class="text-sm text-primary hover:underline ml-2"><i class="fa-solid fa-sync"></i> Refresh</button>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 relative overflow-visible">
+                        <!-- 🌟 Logs Filters -->
+                        <div class="bg-[#ffedd5]/50 p-4 sm:p-5 border-b border-[#fcd34d]/60 grid grid-cols-1 md:grid-cols-3 gap-4 items-end relative z-[60] rounded-t-xl">
+                             <div class="flex flex-col gap-1.5 w-full">
+                                 <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">ปี (Year)</label>
+                                 <select id="logFilterYear" onchange="fetchLogs()" class="filter-box cursor-pointer hover:bg-slate-50"></select>
                              </div>
+
+                             <div class="flex flex-col gap-1.5 w-full multi-select-container">
+                                 <label class="text-[11px] font-bold text-slate-600 uppercase tracking-wide pl-1">เดือน (Month)</label>
+                                 <button type="button" onclick="toggleMonthSelect(event, 'logMonthDropdown')" class="filter-box justify-between cursor-pointer hover:bg-slate-50">
+                                     <span id="logMonthSelectLabel" class="truncate pr-2">(ทั้งหมด)</span>
+                                     <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 shrink-0"></i>
+                                 </button>
+                                 <div id="logMonthDropdown" class="multi-select-dropdown">
+                                     <div id="logMonthCheckboxes" class="flex flex-col">
+                                         <!-- JS Generated -->
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <button onclick="fetchLogs()" class="h-[42px] w-full bg-white border border-slate-300 text-slate-700 hover:text-primary hover:border-primary hover:bg-blue-50 rounded-lg font-bold transition flex items-center justify-center gap-2 shadow-sm shrink-0" title="รีเฟรชข้อมูล">
+                                 <i class="fa-solid fa-sync"></i> รีเฟรชข้อมูล
+                             </button>
                         </div>
-                        <div class="overflow-x-auto"><table class="w-full text-sm text-left text-slate-600"><thead class="bg-slate-100 text-slate-700 uppercase font-bold text-xs"><tr><th class="px-6 py-4 whitespace-nowrap">เวลา</th><th class="px-6 py-4 whitespace-nowrap">ผู้ใช้งาน</th><th class="px-6 py-4 whitespace-nowrap">Role</th><th class="px-6 py-4 whitespace-nowrap">กิจกรรม</th><th class="px-6 py-4 whitespace-nowrap">รายละเอียด</th></tr></thead><tbody id="systemLogsContainer" class="divide-y divide-slate-100 font-mono text-xs"><tr><td colspan="5" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr></tbody></table></div>
+                        <div class="overflow-x-auto rounded-b-xl z-0 relative"><table class="w-full text-sm text-left text-slate-600"><thead class="bg-slate-100 text-slate-700 uppercase font-bold text-xs"><tr><th class="px-6 py-4 whitespace-nowrap">เวลา</th><th class="px-6 py-4 whitespace-nowrap">ผู้ใช้งาน</th><th class="px-6 py-4 whitespace-nowrap">Role</th><th class="px-6 py-4 whitespace-nowrap">กิจกรรม</th><th class="px-6 py-4 whitespace-nowrap">รายละเอียด</th></tr></thead><tbody id="systemLogsContainer" class="divide-y divide-slate-100 font-mono text-xs"><tr><td colspan="5" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr></tbody></table></div>
                     </div>
                 </div>
 
@@ -836,60 +889,127 @@
             }
         }
 
+        // 🌟 ระบบจัดการเลือกหลายเดือนแบบใหม่
         function toggleMonthSelect(e, dropdownId) {
             e.stopPropagation();
             document.querySelectorAll('.multi-select-dropdown').forEach(el => { if(el.id !== dropdownId) el.classList.remove('show'); });
-            document.getElementById(dropdownId).classList.toggle('show');
+            const dropdown = document.getElementById(dropdownId);
+            if(dropdown) dropdown.classList.toggle('show');
         }
+
         function closeMultiSelect(e) {
             if(!e.target.closest('.multi-select-container')) { document.querySelectorAll('.multi-select-dropdown').forEach(el => el.classList.remove('show')); }
         }
-        function selectAllMonths(prefix) {
+
+        function triggerFilterUpdate(prefix) {
+            if(prefix === 'dash') filterDashboardData(true);
+            if(prefix === 'hist') filterHistoryTable(true);
+            if(prefix === 'log') fetchLogs();
+            updateMonthLabel(prefix, `${prefix}MonthSelectLabel`);
+        }
+
+        function checkAllStatus(prefix) {
             const boxes = document.querySelectorAll(`.${prefix}-month-checkbox`);
             const allChecked = Array.from(boxes).every(b => b.checked);
-            boxes.forEach(b => b.checked = !allChecked);
-            if(prefix === 'dash') filterDashboardData(true);
+            const someChecked = Array.from(boxes).some(b => b.checked);
+            const allBox = document.getElementById(`${prefix}-all-checkbox`);
+            if(allBox) {
+                allBox.checked = allChecked;
+                allBox.indeterminate = someChecked && !allChecked;
+            }
         }
 
         function initFilters() {
             const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             const today = new Date();
             const currentYearAD = today.getFullYear();
-            const currentMonthIdx = today.getMonth();
+            const currentMonthIdx = today.getMonth(); 
             
             const populateYear = (id) => {
-                const el = document.getElementById(id); el.innerHTML = '';
+                const el = document.getElementById(id); 
+                if(!el) return;
+                el.innerHTML = '';
                 for(let y = currentYearAD + 1; y >= currentYearAD - 2; y--) {
-                    const thaiYear = y + 543; const opt = document.createElement('option'); opt.value = y; opt.innerText = `ปี ${thaiYear}`; if(y === currentYearAD) opt.selected = true; el.appendChild(opt);
+                    const thaiYear = y + 543; const opt = document.createElement('option'); opt.value = y; opt.innerText = `${thaiYear}`; if(y === currentYearAD) opt.selected = true; el.appendChild(opt);
                 }
             };
-            populateYear('dashFilterYear'); populateYear('logFilterYear');
+            
+            populateYear('dashFilterYear'); 
+            populateYear('histFilterYear'); 
+            populateYear('logFilterYear');
 
-            const populateMultiMonth = (containerId, prefix, defaultSelected) => {
-                const container = document.getElementById(containerId); container.innerHTML = '';
+            // 🌟 สร้าง Checkbox เดือนพร้อมปุ่ม (ทั้งหมด) ไว้บนสุด
+            const populateMultiMonth = (containerId, prefix) => {
+                const container = document.getElementById(containerId);
+                if(!container) return;
+                container.innerHTML = '';
+
+                // ปุ่ม เลือกทั้งหมด (All) แบบเดียวกับรูปภาพ
+                const allLabel = document.createElement('label');
+                allLabel.className = 'flex items-center gap-2 p-3 hover:bg-orange-50 cursor-pointer border-b border-slate-200 bg-orange-50/50 sticky top-0 z-10';
+                allLabel.innerHTML = `<input type="checkbox" id="${prefix}-all-checkbox" class="w-4 h-4 text-primary rounded border-slate-300 focus:ring-primary cursor-pointer"> <span class="text-sm font-bold text-slate-800">เลือก (ทั้งหมด)</span>`;
+                
+                allLabel.onclick = (e) => {
+                    if(e.target.tagName !== 'INPUT') {
+                        const cb = document.getElementById(`${prefix}-all-checkbox`);
+                        cb.checked = !cb.checked;
+                    }
+                    const isChecked = document.getElementById(`${prefix}-all-checkbox`).checked;
+                    document.querySelectorAll(`.${prefix}-month-checkbox`).forEach(b => b.checked = isChecked);
+                    triggerFilterUpdate(prefix);
+                };
+                container.appendChild(allLabel);
+
+                // สร้างรายชื่อเดือน และบังคับให้เลือกเฉพาะ "เดือนปัจจุบัน"
                 monthNames.forEach((name, idx) => {
                     const val = idx + 1;
-                    const div = document.createElement('div'); div.className = 'flex items-center gap-2 p-1 hover:bg-slate-50 rounded cursor-pointer';
-                    div.onclick = (e) => { if(e.target.type !== 'checkbox') { const cb = div.querySelector('input'); cb.checked = !cb.checked; if(prefix === 'dash') filterDashboardData(true); } };
-                    let isChecked = defaultSelected === 'all' ? true : (idx === currentMonthIdx);
-                    div.innerHTML = `<input type="checkbox" value="${val}" class="${prefix}-month-checkbox w-4 h-4 text-primary rounded border-slate-300 focus:ring-primary cursor-pointer" ${isChecked ? 'checked' : ''} onchange="${prefix==='dash'?'filterDashboardData(true)':''}"> <span class="text-sm text-slate-700">${name}</span>`; container.appendChild(div);
+                    const lbl = document.createElement('label');
+                    lbl.className = 'flex items-center gap-2 p-2 hover:bg-slate-50 cursor-pointer';
+                    
+                    let isChecked = (idx === currentMonthIdx);
+                    
+                    lbl.innerHTML = `<input type="checkbox" value="${val}" class="${prefix}-month-checkbox w-4 h-4 text-primary rounded border-slate-300 focus:ring-primary cursor-pointer" ${isChecked ? 'checked' : ''}> <span class="text-sm text-slate-700">${name}</span>`;
+                    
+                    lbl.onclick = (e) => {
+                        if(e.target.tagName !== 'INPUT') {
+                            const cb = lbl.querySelector('input');
+                            cb.checked = !cb.checked;
+                        }
+                        checkAllStatus(prefix);
+                        triggerFilterUpdate(prefix);
+                    };
+                    container.appendChild(lbl);
                 });
-                if(prefix === 'dash') updateMonthLabel('dash', 'monthSelectLabel');
-                if(prefix === 'log') updateMonthLabel('log', 'logMonthSelectLabel');
+                
+                checkAllStatus(prefix);
+                updateMonthLabel(prefix, `${prefix}MonthSelectLabel`);
             };
-            populateMultiMonth('monthCheckboxes', 'dash', 'all'); populateMultiMonth('logMonthCheckboxes', 'log', 'current');
 
-            let optionsHtml = '';
-            for (let i = 0; i < 12; i++) {
-                let d = new Date(currentYearAD, today.getMonth() - i, 1); let y = d.getFullYear(); let m = d.getMonth(); let val = `${y}-${String(m + 1).padStart(2, '0')}`; let txt = `${monthNames[m]} ${y + 543}`; optionsHtml += `<option value="${val}">${txt}</option>`;
-            }
-            document.getElementById('histFilterMonth').innerHTML = `<option value="all">ทุกเดือน (All Months)</option>` + optionsHtml;
+            populateMultiMonth('dashMonthCheckboxes', 'dash');
+            populateMultiMonth('histMonthCheckboxes', 'hist');
+            populateMultiMonth('logMonthCheckboxes', 'log');
         }
         
         function updateMonthLabel(prefix, labelId) {
             const checked = document.querySelectorAll(`.${prefix}-month-checkbox:checked`);
             const label = document.getElementById(labelId);
-            if(checked.length === 0) label.innerText = 'ไม่ระบุ'; else if(checked.length === 12) label.innerText = 'เลือกเดือน (ทั้งหมด)'; else label.innerText = `เลือก ${checked.length} เดือน`;
+            if(!label) return;
+            
+            if(checked.length === 0) {
+                label.innerText = '(ว่าง)';
+                label.classList.add('text-slate-400');
+            } else if(checked.length === 12) {
+                label.innerText = '(ทั้งหมด)';
+                label.classList.remove('text-slate-400');
+            } else if(checked.length === 1) {
+                const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+                const val = parseInt(checked[0].value) - 1;
+                label.innerText = monthNames[val];
+                label.classList.remove('text-slate-400');
+            } else {
+                label.innerText = `เลือก ${checked.length} เดือน`;
+                label.classList.remove('text-slate-400');
+            }
         }
 
         function parseThaiDate(dateStr) {
@@ -903,7 +1023,7 @@
 
         function filterDashboardData(animate=false) {
             if(animate) toggleLoading(true);
-            updateMonthLabel('dash', 'monthSelectLabel');
+            updateMonthLabel('dash', 'dashMonthSelectLabel');
             
             setTimeout(() => {
                 const selYear = parseInt(document.getElementById('dashFilterYear').value);
@@ -915,7 +1035,10 @@
                     const parsed = parseThaiDate(r.date);
                     if (!parsed) return false;
                     if (parsed.year !== selYear) return false;
-                    if (selMonths.length > 0 && !selMonths.includes(parsed.month)) return false;
+                    // หากไม่ได้เลือกเดือนใดเลย ให้ข้ามการแสดงผล
+                    if (selMonths.length === 0) return false;
+                    if (!selMonths.includes(parsed.month)) return false;
+                    
                     if (zVal !== 'all') {
                         if (isSingleZoneUser) { 
                             if (!(r.branch || '').toString().includes(zVal)) return false; 
@@ -1116,16 +1239,16 @@
                 const dSel = document.getElementById('dashFilterZone'); dSel.innerHTML = '';
                 if (isSingleZoneUser) {
                     const z = zoneList[0];
-                    dSel.innerHTML = '<option value="all">ทุกสาขา (All Branches)</option>';
+                    dSel.innerHTML = '<option value="all">(ทั้งหมด)</option>';
                     if(branchData[z]) branchData[z].forEach(b => dSel.innerHTML += `<option value="${b.name}">[${b.id}] ${b.name}</option>`);
                 } else {
-                    dSel.innerHTML = '<option value="all">ทุกเขต (All Zones)</option>';
+                    dSel.innerHTML = '<option value="all">(ทั้งหมด)</option>';
                     zoneList.forEach(z => dSel.innerHTML += `<option value="${z}">${z}</option>`);
                 }
                 initTomSelect('dashFilterZone'); 
                 
                 const hSel = document.getElementById('histFilterZone'); 
-                hSel.innerHTML = '<option value="all">ทุกเขต</option>';
+                hSel.innerHTML = '<option value="all">(ทั้งหมด)</option>';
                 zoneList.forEach(z => hSel.innerHTML += `<option value="${z}">${z}</option>`);
                 initTomSelect('histFilterZone'); 
                 
@@ -1699,7 +1822,7 @@
                     delete tsInstances['histFilterBranch'];
                 }
                 
-                bSel.innerHTML = '<option value="all">ทุกสาขา</option>'; 
+                bSel.innerHTML = '<option value="all">(ทั้งหมด)</option>'; 
                 if(z !== 'all' && branchData[z]) { 
                     branchData[z].forEach(b => { bSel.innerHTML += `<option value="${b.name}">[${b.id}] ${b.name}</option>`; }); 
                 } 
@@ -1709,15 +1832,37 @@
                 if(animate) toggleLoading(false);
             }, animate ? 300 : 0);
         }
+
+        // 🌟 แก้ไขระบบ Filter History ให้รองรับการเลือกแบบ Multi-month
         function filterHistoryTable(animate=false) { 
             if(animate) toggleLoading(true);
+            updateMonthLabel('hist', 'histMonthSelectLabel');
+
             setTimeout(() => {
-                const m = document.getElementById('histFilterMonth').value; const z = document.getElementById('histFilterZone').value; const b = document.getElementById('histFilterBranch').value; 
-                const filtered = auditRecords.filter(r => { let matchTime = true; if (m !== 'all') { const parsed = parseThaiDate(r.date); if (parsed && parsed.year + '-' + String(parsed.month).padStart(2,'0') !== m) matchTime = false; } let matchZone = (z === 'all') || (r.zone === z); let matchBranch = (b === 'all') || ((r.branch || '').toString().includes(b)); return matchTime && matchZone && matchBranch; }); 
+                const selYear = parseInt(document.getElementById('histFilterYear').value);
+                const checkedBoxes = document.querySelectorAll('.hist-month-checkbox:checked');
+                const selMonths = Array.from(checkedBoxes).map(cb => parseInt(cb.value));
+
+                const z = document.getElementById('histFilterZone').value; 
+                const b = document.getElementById('histFilterBranch').value; 
+                
+                const filtered = auditRecords.filter(r => { 
+                    const parsed = parseThaiDate(r.date); 
+                    if (!parsed) return false;
+                    if (parsed.year !== selYear) return false;
+                    // หากไม่ได้เลือกเดือนใดเลย ให้ข้าม
+                    if (selMonths.length === 0) return false;
+                    if (!selMonths.includes(parsed.month)) return false;
+
+                    let matchZone = (z === 'all') || (r.zone === z); 
+                    let matchBranch = (b === 'all') || ((r.branch || '').toString().includes(b)); 
+                    return matchZone && matchBranch; 
+                }); 
                 renderHistoryTable(filtered); 
                 if(animate) toggleLoading(false);
             }, animate ? 300 : 0);
         }
+        
         function renderHistoryTable(records) { document.getElementById('auditLogContainer').innerHTML = records.map(r => ` <tr class="border-b hover:bg-slate-50"><td class="p-3">${r.date}</td><td class="p-3 font-bold">${r.branch}</td><td class="p-3">${r.auditor}</td> <td class="p-3"><span class="px-2 py-1 rounded-md text-xs border ${r.result==='ผ่าน'?'bg-green-50 text-green-700':'bg-red-50 text-red-700'} font-bold">${r.result}</span></td> <td class="p-3 text-center flex items-center justify-center gap-2"> <button onclick='openDetail("${r.id}")' class="text-primary text-xs border border-primary px-3 py-1 rounded hover:bg-primary hover:text-white transition">View</button> <button onclick='openMap("${r.id}")' class="text-cyan-500 text-xs border border-cyan-500 px-3 py-1 rounded hover:bg-cyan-500 hover:text-white transition"><i class="fa-solid fa-map-location-dot"></i> Map</button> ${currentUser && currentUser.role === 'admin' ? `<button onclick="deleteAudit('${r.id}')" class="text-red-500 text-xs border border-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white"><i class="fa-solid fa-trash"></i></button>` : ''} </td></tr>`).join(''); }
         
         window.switchMapLayer = function(type) {
@@ -1867,11 +2012,9 @@
         function changeGalleryImage(step) { if (galleryImages.length === 0) return; galleryIndex = (galleryIndex + step + galleryImages.length) % galleryImages.length; const img = document.getElementById('galleryImg'); if(img) img.src = galleryImages[galleryIndex].url; const title = document.getElementById('galleryTitle'); if(title) title.innerText = galleryImages[galleryIndex].title; const count = document.getElementById('galleryCount'); if(count) count.innerText = `${galleryIndex + 1} / ${galleryImages.length}`; }
         function openAuditGallery(id) { const rec = auditRecords.find(r => r.id == id); if (!rec) return; galleryImages = []; if(rec.details) rec.details.forEach(d => { if(d.image) galleryImages.push({ title: d.q, url: fixDriveUrl(d.image) }); }); if(galleryImages.length === 0) { Swal.fire({ icon: 'info', title: 'ไม่พบรูปภาพ' }); return; } galleryIndex = 0; Swal.fire({ html: ` <div class="relative bg-black h-[80vh] flex flex-col rounded-lg"> <div class="absolute top-0 left-0 right-0 p-4 flex justify-between z-10 bg-gradient-to-b from-black/80 to-transparent"> <div class="text-left"><h3 id="galleryTitle" class="text-white font-bold">${galleryImages[0].title}</h3><div id="galleryCount" class="text-white/80 text-xs">1 / ${galleryImages.length}</div></div> <button onclick="Swal.close()" class="text-white text-xl"><i class="fa-solid fa-xmark"></i></button> </div> <div class="flex-1 flex items-center justify-center bg-zinc-900 relative"> <img id="galleryImg" src="${galleryImages[0].url}" class="max-w-full max-h-full object-contain"> <button onclick="changeGalleryImage(-1)" class="absolute left-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-chevron-left"></i></button> <button onclick="changeGalleryImage(1)" class="absolute right-4 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-chevron-right"></i></button> </div> </div>`, width: '90%', padding: 0, showConfirmButton: false, background: 'transparent' }); }
         
-        // 🌟 แก้ไข: ใช้ Domain รูปแบบใหม่ของ Google (lh3) ซึ่งอนุญาตให้ดึงรูปแบบไม่ติด CORB และไม่ต้องเป็น Thumbnail
         function fixDriveUrl(url) { 
             if (!url) return ''; 
             let match = url.match(/id=([^&]+)/) || url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/uc\?id=([^&]+)/); 
-            // เปลี่ยนเป็นลิงก์ lh3 ที่แสดงภาพได้ 100% ไม่มีปัญหาการโดน Block
             if (match) return `https://lh3.googleusercontent.com/d/${match[1]}`; 
             return url; 
         }
@@ -2082,8 +2225,24 @@
 
         async function deleteUser(u) { const c=await Swal.fire({title:'ลบผู้ใช้?',text:u,icon:'warning',showCancelButton:true,confirmButtonColor:'#d33'}); if(c.isConfirmed) { toggleLoading(true); await callAPI('deleteUser',{targetUser:u}); toggleLoading(false); fetchUsers(); } }
         async function handleAddUser(e) { e.preventDefault(); toggleLoading(true); await callAPI('addUser', { user: e.target.newUsername.value, pass: e.target.newPassword.value, name: e.target.newName.value, role: e.target.newRole.value, permissionArea: e.target.newPermissionArea.value }); toggleLoading(false); fetchUsers(); e.target.reset(); }
+        
         async function fetchLogs() { 
-            const year = document.getElementById('logFilterYear').value; const checkedBoxes = document.querySelectorAll('.log-month-checkbox:checked'); const months = Array.from(checkedBoxes).map(cb => cb.value); updateMonthLabel('log', 'logMonthSelectLabel'); toggleLoading(true); const res=await callAPI('getLogs', { year: year, months: months }); toggleLoading(false); if(res.success) { if(res.data.length === 0) { document.getElementById('systemLogsContainer').innerHTML = '<tr><td colspan="5" class="text-center py-4 text-slate-400">ไม่พบข้อมูลในเดือนนี้</td></tr>'; } else { document.getElementById('systemLogsContainer').innerHTML = res.data.map(l=>`<tr class="border-b"><td class="p-2 text-xs">${l.timestamp}</td><td class="p-2 font-bold">${l.user}</td><td class="p-2 text-xs">${l.role}</td><td class="p-2 text-xs">${l.action}</td><td class="p-2 text-xs">${l.details}</td></tr>`).join(''); } }
+            updateMonthLabel('log', 'logMonthSelectLabel');
+            const year = document.getElementById('logFilterYear').value; 
+            const checkedBoxes = document.querySelectorAll('.log-month-checkbox:checked'); 
+            const months = Array.from(checkedBoxes).map(cb => cb.value); 
+            
+            toggleLoading(true); 
+            const res = await callAPI('getLogs', { year: year, months: months }); 
+            toggleLoading(false); 
+            
+            if(res.success) { 
+                if(res.data.length === 0) { 
+                    document.getElementById('systemLogsContainer').innerHTML = '<tr><td colspan="5" class="text-center py-4 text-slate-400">ไม่พบข้อมูลในเดือนที่เลือก</td></tr>'; 
+                } else { 
+                    document.getElementById('systemLogsContainer').innerHTML = res.data.map(l=>`<tr class="border-b"><td class="p-2 text-xs">${l.timestamp}</td><td class="p-2 font-bold">${l.user}</td><td class="p-2 text-xs">${l.role}</td><td class="p-2 text-xs">${l.action}</td><td class="p-2 text-xs">${l.details}</td></tr>`).join(''); 
+                } 
+            }
         }
     </script>
 </body>

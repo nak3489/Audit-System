@@ -142,8 +142,13 @@
         .cropper-face {
             border-radius: 50%;
         }
-        .cropper-line, .cropper-point {
+        /* ซ่อนเส้นตารางและจุดลากขยาย เพื่อให้เหมือนกรอบของ LINE */
+        .cropper-line, .cropper-point, .cropper-dashed, .cropper-center {
+            display: none !important;
             background-color: transparent !important;
+        }
+        .cropper-modal {
+            background-color: rgba(0, 0, 0, 0.7);
         }
     </style>
 </head>
@@ -165,7 +170,7 @@
                 <h1 class="text-4xl font-display font-bold mb-4 tracking-wide">Audit System Pro</h1>
                 <p class="text-slate-300 text-lg max-w-md mx-auto leading-relaxed">ระบบบริหารจัดการมาตรฐานสาขา Enterprise Grade</p>
                 <div class="mt-8 flex justify-center gap-2">
-                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.1.5 Enterprise</span>
+                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">v 6.1.6 Enterprise</span>
                     <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs border border-green-500/30">● Online</span>
                 </div>
             </div>
@@ -189,7 +194,7 @@
                         เข้าสู่ระบบ
                     </button>
                     <div class="text-center mt-4">
-                        <div class="text-xs text-slate-400">Version 6.1.5 Enterprise</div>
+                        <div class="text-xs text-slate-400">Version 6.1.6 Enterprise</div>
                         <div class="text-[10px] text-slate-300 mt-1 font-bold">© 2026 ADMIN OK</div>
                     </div>
                 </form>
@@ -211,7 +216,6 @@
                 <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
-            <!-- ส่วนนี้ตั้งค่าให้กดเข้าหน้าโปรไฟล์และโชว์รูปได้ -->
             <div class="p-6 border-b border-slate-800 bg-slate-900/50 cursor-pointer hover:bg-slate-800 transition-colors group" onclick="switchView('view-profile'); if(window.innerWidth < 768) toggleSidebar();" title="ตั้งค่าโปรไฟล์ส่วนตัว">
                 <div class="flex items-center gap-3 relative">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center font-bold text-white shadow-lg border border-white/10 overflow-hidden relative shrink-0">
@@ -256,7 +260,7 @@
                 </a>
             </nav>
             <div class="p-4 border-t border-slate-800 text-center">
-                <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">V 6.1.5</div>
+                <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">V 6.1.6</div>
                 <div class="text-xs text-slate-500 font-bold mb-2 opacity-60">© 2026 ADMIN OK</div>
                 <button type="button" onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white px-4 py-2 rounded-lg transition-all text-sm font-bold">
                     <i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบ
@@ -589,8 +593,17 @@
                                 <div><label class="text-xs font-bold text-slate-500 uppercase">Username</label><input name="newUsername" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required></div>
                                 <div><label class="text-xs font-bold text-slate-500 uppercase">Password</label><input name="newPassword" type="password" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required></div>
                                 <div><label class="text-xs font-bold text-slate-500 uppercase">Full Name</label><input name="newName" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required></div>
-                                <div><label class="text-xs font-bold text-slate-500 uppercase">Role</label><select name="newRole" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition"><option value="user">User (พนักงาน)</option><option value="admin">Admin (ผู้ดูแล)</option></select></div>
-                                <div><label class="text-xs font-bold text-slate-500 uppercase">Permission Area</label><input name="newPermissionArea" placeholder="เช่น BKK,UPC หรือพิมพ์ ALL เพื่อดูได้ทั้งหมด" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition"></div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase">Role (ตำแหน่ง)</label>
+                                    <input name="newRole" list="roleSuggestions" placeholder="พิมพ์ admin หรือชื่อตำแหน่ง..." class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required>
+                                    <datalist id="roleSuggestions"><option value="admin"></option><option value="Regional Manager"></option><option value="District Manager"></option><option value="User"></option></datalist>
+                                    <p class="text-[10px] text-slate-400 mt-1">*หากพิมพ์คำว่า <b>admin</b> จะเปิดเมนูตั้งค่าระบบให้</p>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-slate-500 uppercase">Permission Area</label>
+                                    <input name="newPermissionArea" placeholder="เช่น P026, K012 หรือ ALL" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition">
+                                    <p class="text-[10px] text-slate-400 mt-1">*ระบุ <b>P026</b> จะเห็นทุกเขตในภาคนั้น, ระบุ <b>ALL</b> เพื่อดูข้อมูลทั้งหมด</p>
+                                </div>
                                 <button class="w-full bg-slate-800 text-white p-3 rounded-lg font-bold hover:bg-slate-700 transition mt-2"><i class="fa-solid fa-plus mr-2"></i> บันทึกข้อมูล</button>
                              </form>
                         </div>
@@ -647,18 +660,28 @@
 
     <!-- Modals -->
 
-    <!-- 🌟 เพิ่ม Modal สำหรับการ Crop รูปโปรไฟล์โดยเฉพาะ -->
-    <div id="cropModal" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+    <!-- 🌟 เพิ่ม Modal สำหรับการ Crop รูปโปรไฟล์โดยเฉพาะ (อัปเดตใหม่สไตล์ LINE) -->
+    <div id="cropModal" class="hidden fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col animate-fade-in-up">
             <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="font-bold text-lg text-slate-800">เลื่อนและปรับขนาดรูปภาพ</h3>
+                <h3 class="font-bold text-lg text-slate-800">เลื่อนและขยายรูปภาพ</h3>
                 <button type="button" onclick="closeCropModal()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <!-- พื้นที่สำหรับโชว์ตัว Crop -->
-            <div class="p-4 bg-slate-900 flex justify-center items-center h-[300px] sm:h-[400px]">
-                <img id="cropImage" src="" style="max-width: 100%; display: block;">
+            <div class="p-0 bg-slate-900 flex justify-center items-center h-[350px] sm:h-[400px] relative w-full">
+                <img id="cropImage" src="" style="max-width: 100%; max-height: 100%; display: block;">
             </div>
-            <div class="p-4 bg-white border-t border-slate-100 flex gap-3">
+            
+            <!-- 🌟 แถบเครื่องมือ ซูม / หมุน -->
+            <div class="bg-slate-800 p-3 flex justify-center items-center gap-6 text-white border-b border-slate-700">
+                <button type="button" onclick="if(cropper) cropper.zoom(-0.1)" class="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition active:scale-95" title="ซูมออก"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                <button type="button" onclick="if(cropper) cropper.zoom(0.1)" class="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition active:scale-95" title="ซูมเข้า"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                <div class="w-px h-6 bg-slate-600"></div>
+                <button type="button" onclick="if(cropper) cropper.rotate(-90)" class="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition active:scale-95" title="หมุนซ้าย"><i class="fa-solid fa-rotate-left"></i></button>
+                <button type="button" onclick="if(cropper) cropper.rotate(90)" class="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition active:scale-95" title="หมุนขวา"><i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+
+            <div class="p-4 bg-white flex gap-3">
                 <button type="button" onclick="closeCropModal()" class="flex-1 py-2.5 rounded-lg border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 transition">ยกเลิก</button>
                 <button type="button" onclick="applyCropAndUpload()" class="flex-1 bg-primary text-white py-2.5 rounded-lg font-bold hover:bg-indigo-700 transition flex items-center justify-center gap-2 shadow-md shadow-blue-200">
                     <i class="fa-solid fa-crop-simple"></i> ยืนยันรูปนี้
@@ -692,8 +715,11 @@
             <form onsubmit="handleEditUserSubmit(event)" class="p-6 space-y-4">
                 <div><label class="text-xs font-bold text-slate-500 uppercase">Username</label><input type="text" id="editUsername" name="user" class="w-full mt-1 p-2.5 bg-slate-100 border border-slate-200 rounded-lg text-slate-500 outline-none cursor-not-allowed" readonly></div>
                 <div><label class="text-xs font-bold text-slate-500 uppercase">Full Name</label><input type="text" id="editName" name="name" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required></div>
-                <div><label class="text-xs font-bold text-slate-500 uppercase">Role</label><select id="editRole" name="role" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition"><option value="user">User</option><option value="admin">Admin</option></select></div>
-                <div><label class="text-xs font-bold text-slate-500 uppercase">Permission Area</label><input type="text" id="editPermissionArea" name="permissionArea" placeholder="BKK,UPC or ALL" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition"></div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase">Role (ตำแหน่ง)</label>
+                    <input type="text" id="editRole" name="role" list="roleSuggestions" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" required>
+                </div>
+                <div><label class="text-xs font-bold text-slate-500 uppercase">Permission Area</label><input type="text" id="editPermissionArea" name="permissionArea" placeholder="P026, K012 or ALL" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition"></div>
                 <div><label class="text-xs font-bold text-slate-500 uppercase">New Password (Optional)</label><input type="password" id="editPass" name="pass" class="w-full mt-1 p-2.5 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-primary transition" placeholder="ระบุเพื่อเปลี่ยนรหัสผ่าน"></div>
                 <div class="pt-2 flex gap-3"><button type="button" onclick="document.getElementById('editUserModal').classList.add('hidden')" class="flex-1 py-2.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50">ยกเลิก</button><button type="submit" class="flex-1 bg-primary text-white py-2.5 rounded-lg hover:bg-indigo-700">บันทึก</button></div>
             </form>
@@ -1070,12 +1096,16 @@
             if (res.success) {
                 globalAllBranches = res.data; let rawBranches = res.data;
                 
-                if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
-                    const allowed = currentUser.permissionArea.split(',').map(z => z.trim());
-                    rawBranches = rawBranches.filter(b => allowed.includes(b.region) || allowed.includes(b.zone) || allowed.includes(b.id));
-                } else if (currentUser.role.toLowerCase() === 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
-                    const allowed = currentUser.permissionArea.split(',').map(z => z.trim());
-                    rawBranches = rawBranches.filter(b => allowed.includes(b.region) || allowed.includes(b.zone) || allowed.includes(b.id));
+                let currentPerm = currentUser.permissionArea || 'ALL';
+
+                // 🌟 ให้สิทธิ์ระดับภาค P026 หรือ Regional Manager เห็นข้อมูลทั้งหมด
+                if (currentUser.role.toUpperCase() === 'P026' || currentPerm.toUpperCase() === 'P026' || currentUser.role.toUpperCase() === 'REGIONAL MANAGER') {
+                    currentPerm = 'ALL';
+                }
+
+                if (currentPerm !== 'ALL') {
+                    const allowed = currentPerm.split(',').map(z => z.trim().toUpperCase());
+                    rawBranches = rawBranches.filter(b => allowed.includes(String(b.region || '').toUpperCase()) || allowed.includes(String(b.zone || '').toUpperCase()) || allowed.includes(String(b.id || '').toUpperCase()));
                 }
                 
                 branchData = {}; zoneList = []; allBranchDetails = [];
@@ -1178,18 +1208,18 @@
                     document.getElementById('cropModal').classList.remove('hidden');
                     
                     if (cropper) cropper.destroy();
-                    // กำหนดค่าการทำงานของ Cropper.js ให้เป็นวงกลมแบบ 1:1
+                    // 🌟 กำหนดค่าให้ทำงานเหมือนแอป LINE (ขยับรูปได้ แต่กรอบวงกลมอยู่กับที่)
                     cropper = new Cropper(cropImg, {
                         aspectRatio: 1, 
-                        viewMode: 1,
-                        dragMode: 'move',
-                        autoCropArea: 0.9,
+                        viewMode: 1, // ป้องกันไม่ให้รูปเล็กกว่ากรอบ Crop แน่นอน
+                        dragMode: 'move', // ลากที่รูปภาพแทนการวาดกรอบ
+                        autoCropArea: 0.85, 
                         restore: false,
                         guides: false,
                         center: false,
                         highlight: false,
-                        cropBoxMovable: true,
-                        cropBoxResizable: true,
+                        cropBoxMovable: false, // ห้ามขยับกรอบวงกลม
+                        cropBoxResizable: false, // ห้ามเปลี่ยนขนาดกรอบวงกลม
                         toggleDragModeOnDblclick: false,
                     });
                 };
@@ -1207,12 +1237,13 @@
             const canvas = cropper.getCroppedCanvas({
                 width: 400,
                 height: 400,
+                fillColor: '#fff', // ใส่พื้นหลังสีขาวเผื่อไว้กันขอบภาพโปร่งใสกลายเป็นสีดำ
                 imageSmoothingEnabled: true,
                 imageSmoothingQuality: 'high',
             });
             
             // เปลี่ยนเป็น Base64
-            const base64Image = canvas.toDataURL('image/jpeg', 0.8);
+            const base64Image = canvas.toDataURL('image/jpeg', 0.9);
             
             closeCropModal();
             
@@ -1633,12 +1664,25 @@
 
         async function fetchHistory(showLoader=true) { 
             if(showLoader) toggleLoading(true); const res = await callAPI('getHistory'); if(showLoader) toggleLoading(false); if(res.success) { let rawRecords = res.data;
-                if (currentUser.role.toLowerCase() !== 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
-                    const allowed = currentUser.permissionArea.split(',').map(s => s.trim());
-                    rawRecords = rawRecords.filter(r => allowed.some(z => (r.zone || '').toString().includes(z) || (r.branch || '').toString().includes(z)));
-                } else if (currentUser.role.toLowerCase() === 'admin' && currentUser.permissionArea && currentUser.permissionArea !== 'ALL') {
-                    rawRecords = rawRecords.filter(r => zoneList.includes(r.zone));
+                
+                let currentPerm = currentUser.permissionArea || 'ALL';
+
+                // 🌟 ให้สิทธิ์ระดับภาค P026 หรือ Regional Manager เห็นข้อมูลทั้งหมดแบบ Admin
+                if (currentUser.role.toUpperCase() === 'P026' || currentPerm.toUpperCase() === 'P026' || currentUser.role.toUpperCase() === 'REGIONAL MANAGER') {
+                    currentPerm = 'ALL';
                 }
+
+                if (currentPerm !== 'ALL') {
+                    const allowed = currentPerm.split(',').map(s => s.trim().toUpperCase());
+                    rawRecords = rawRecords.filter(r => {
+                        const z = String(r.zone || '').toUpperCase();
+                        const b = String(r.branch || '').toUpperCase();
+                        const isZoneAllowed = zoneList.map(zl => zl.toUpperCase()).includes(z);
+                        const isBranchAllowed = allowed.some(a => z.includes(a) || b.includes(a));
+                        return isZoneAllowed || isBranchAllowed;
+                    });
+                }
+
                 auditRecords = rawRecords; filterDashboardData(false); 
                 if(!document.getElementById('view-history').classList.contains('hidden')) filterHistoryTable(false);
             } 

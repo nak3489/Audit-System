@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Audit System Pro</title>
+    
+    <!-- นำเข้า Tailwind CSS และ Font-Awesome สำหรับทำหน้า Loading (เสริมให้ดูดีขึ้น) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* 🌟 ความสูงมาตรฐานของแถบ Google คือ 36px ปรับตรงนี้ถ้ายังแหว่งหรือมีขอบขาว */
+            --google-banner-height: 10px;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #f8fafc;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        /* 🌟 คอนเทนเนอร์หลักที่ใช้ซ่อนแถบ */
+        .app-container {
+            position: absolute;
+            top: calc(-1 * var(--google-banner-height));
+            left: 0;
+            width: 100%;
+            height: calc(100% + var(--google-banner-height));
+            z-index: 10;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: transparent;
+        }
+
+        /* 🌟 หน้าจอ Loading ปิดทับระหว่างรอ Iframe โหลด ช่วยบังจังหวะที่แถบยังไม่ถูกซ่อน */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background-color: #ffffff;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* CSS สำหรับ Spinner อนิเมชั่น */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* รองรับเบราว์เซอร์มือถือยุคใหม่ */
+        @supports (height: 100dvh) {
+            body, html { height: 100dvh; }
+            .app-container { height: calc(100dvh + var(--google-banner-height)); }
+        }
+    </style>
+
+    <script>
+        // ย้ายฟังก์ชันซ่อนหน้า Loading มาไว้ใน <head> เพื่อให้โค้ดถูกโหลดก่อนที่ Iframe จะสั่ง onload()
+        function hideLoading() {
+            const loader = document.getElementById('loading-screen');
+            if (loader) {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 500); 
+                }, 800); 
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner mb-4"></div>
+        <h2 class="text-xl font-bold text-slate-800">Audit System Pro</h2>
+        <p class="text-sm text-slate-500 mt-2 flex items-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-down animate-bounce"></i> กำลังเชื่อมต่อระบบ...
+        </p>
+    </div>
+
+    <!-- Iframe Container -->
+    <div class="app-container">
+        <!-- 🌟 นำ URL Web App ของคุณมาใส่ตรง src="..." ด้านล่างนี้ -->
+        <iframe 
+            src="https://script.google.com/macros/s/AKfycbw6Y1vLH9ee6s7RjnSygQ3kVjiCjujGSqpVi012_x3UiIqdvVTXTpYjMFIbZPD1PkNhSQ/exec" 
+            allow="clipboard-read; clipboard-write; geolocation" 
+            allowfullscreen
+            onload="hideLoading()">
+        </iframe>
+    </div>
+
+</body>
+</html>
